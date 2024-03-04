@@ -19,6 +19,11 @@
   <img src="assets/ts-logo-128.png" width="64px">
 </p>
 
+## Status
+
+The Lume Typescript SDK is currently in beta. 
+Please reach out to support if you have any questions, encounter any bugs, or have any feature requests.
+
 ## Installation
 
 ```bash
