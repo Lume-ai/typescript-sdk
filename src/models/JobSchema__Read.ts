@@ -1,5 +1,5 @@
 /**
- * A job is a task that transforms the provided data with a mapper and to a target schema of its pipeline.
+ * A job runs the pipeline with newly provided source data. If the pipeline has no mapper, it will generated it. If it has a mapper, it will use the existing mapper.
  */
 export type JobSchema__Read = {
     /**

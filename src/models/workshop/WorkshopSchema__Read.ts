@@ -1,5 +1,5 @@
 /**
- * A Workshop is a task that transforms the provided data with a mapper and to a target schema of its pipeline.
+ * A Workshop is a session that allows you to edit the pipeline and mapper.
  */
 export type WorkshopSchema__Read = {
     /**

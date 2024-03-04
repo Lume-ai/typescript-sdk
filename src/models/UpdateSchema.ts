@@ -1,5 +1,5 @@
 /**
- * A pipeline is an object containing source and target schemas, and associated with a mapper that jobs can be executed on.
+ * Pipeline update payload, to edit the name or description.
  */
 export type Update = {
     /**

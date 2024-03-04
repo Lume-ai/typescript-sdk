@@ -1,6 +1,6 @@
 {
   "name": "@lume-ai/typescript-sdk",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Lume SDK for Typescript to automate data mappings with AI. Learn more at docs.lume.ai",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
