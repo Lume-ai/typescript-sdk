@@ -1,0 +1,9 @@
+/node_modules
+.DS_Store
+
+# Ignore test-related files
+/tests/api_key.ts
+
+# Build files
+/dist
+
