@@ -14,5 +14,10 @@ export type MappingRequestSchema = {
      * The target record of the data
      */
     mapped_record: Record<string, any>;
+
+     /**
+     * The mapper logic
+     */
+    spec: any
 };
 

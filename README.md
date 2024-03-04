@@ -38,14 +38,13 @@ pnpm add @lume-ai/typescript-sdk
 Create a new pipeline and map data.
 
 ```ts
-
 import { Lume } from '@lume-ai/typescript-sdk';
 
-const lume: Lume = new Lume('api_key')
+const lume: Lume = new Lume('92ead5d8ab260d9a09902a3857de0018')
 
 const createPipeline = async () => {
     const pipelineDetails = {
-        name: 'pipeline_name',
+        name: 'pipeline_name3',
         description: "description",
         target_schema: {
           type: "object",
@@ -68,7 +67,7 @@ const createPipeline = async () => {
       return createdPipeline;
 }
 
-const runJob = async (pipelineId: string) => {
+const createJob = async (pipelineId: string) => {
     const params = {
         data: [
           {
@@ -81,19 +80,33 @@ const runJob = async (pipelineId: string) => {
           },
         ],
       };
+
+      console.log("pipelineId", pipelineId, "params", params)
       const createdJob = await lume.jobsService.createJobForPipeline(
         pipelineId,
         params
       );
+
       return createdJob;
 }
 
 
 const run = async () => {
+    
+    // create pipeline and job
     const pipeline = await createPipeline();
-    const job = await runJob(pipeline.id);
-    const mappedData = await lume.jobsService.getJobDataPage(job.id);
-    console.log(mappedData);
+    const job = await createJob(pipeline.id);
+
+    // trigger the mapping generation
+    const result = await lume.jobsService.runJob(job.id);
+
+    // parse the results and iterate through all mapped records
+    const mappingsPage = await lume.resultsService.getMappingsForResult(result.id); 
+    const mappings = mappingsPage.items;
+
+    for (const mapping of mappings) {
+        console.log("mapped record", mapping.mapped_record)
+    }
 }
 
 run();
