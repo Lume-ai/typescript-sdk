@@ -40,7 +40,7 @@ Create a new pipeline and map data.
 ```ts
 import { Lume } from '@lume-ai/typescript-sdk';
 
-const lume: Lume = new Lume('92ead5d8ab260d9a09902a3857de0018')
+const lume: Lume = new Lume('api-key')
 
 const createPipeline = async () => {
     const pipelineDetails = {
