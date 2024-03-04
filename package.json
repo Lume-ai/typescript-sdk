@@ -1,7 +1,15 @@
 {
   "name": "@lume-ai/typescript-sdk",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Lume SDK for Typescript to automate data mappings with AI. Learn more at docs.lume.ai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lume-ai/typescript-sdk"
+  },
+  "homepage": "https://www.lume.ai/",
+  "bugs": {
+    "url": "https://github.com/Lume-ai/typescript-sdk/issues"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -25,7 +33,7 @@
     "integration"
   ],
   "author": "Nicolas Machado",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
