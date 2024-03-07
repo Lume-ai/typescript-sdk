@@ -6,15 +6,22 @@ export type MappingSchema = {
      * The index of the record in the data
      */
     index: number;
+
     /**
-     * The source record of the data. This is optional and can be retrieved from the provided index.
+     * The source record of the data.
      */
     source_record: Record<string, any>;
+
     /**
      * The target record of the data
      */
     mapped_record: Record<string, any>;
+
+    /**
+     * The message of the mapping
+     */
     message?: string;
+    
     /**
      * The specification of the mapping task
      */
