@@ -3,7 +3,7 @@ import { MappingRequestSchema } from "../MappingRequestSchema";
 /**
  * Represents a run workshop payload with a sample mapping request.
  */
-export type WorkshopWithSample = {
+export type WorkshopWithSamplePayload = {
     /**
      * The sample mapping request for the workshop.
      */

@@ -3,7 +3,7 @@ import { MapperSchema } from "../MapperSchema";
 /**
  * Represents a run workshop payload with mapper changes.
  */
-export type WorkshopWithMapper = {
+export type WorkshopWithMapperPayload = {
     /**
      * An array of mapper configurations for the workshop.
      */

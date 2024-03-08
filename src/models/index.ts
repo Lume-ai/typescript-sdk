@@ -1,7 +1,7 @@
 export * from './workshop/WorkshopSchema';
-export * from './workshop/WorkshopWithMapper';
-export * from './workshop/WorkshopWithSample';
-export * from './workshop/WorkshopWithSchema'; 
+export * from './workshop/WorkshopWithMapperPayload';
+export * from './workshop/WorkshopWithSamplePayload';
+export * from './workshop/WorkshopWithSchemaPayload'; 
 
 export * from './JobSchema';
 export * from './CreateJobPayload';

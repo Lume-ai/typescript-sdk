@@ -1,7 +1,7 @@
 /**
  * Represents a run workshop payload with a target schema.
  */
-export type WorkshopWithSchema = {
+export type WorkshopWithSchemaPayload = {
     /**
      * The target schema definition for the workshop.
      */
