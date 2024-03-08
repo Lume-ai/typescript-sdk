@@ -1,5 +1,5 @@
 import { ResultSchema, SuccessSchema, WorkshopWithMapper, WorkshopWithSample, WorkshopWithSchema } from '../models';
-import { WorkshopSchema__Read } from '../models/workshop/WorkshopSchema__Read';
+import { WorkshopSchema } from '../models/workshop/WorkshopSchema';
 import { PaginatedResponse } from '../types/pagination';
 import { BaseService } from './BaseService';
 
@@ -22,8 +22,8 @@ export class WorkshopService extends BaseService {
      * @param workshopId The ID of the workshop to fetch details for.
      * @returns A promise that resolves to the workshop details.
      */
-    public async getWorkshop(workshopId: string): Promise<WorkshopSchema__Read> {
-        return this.get<WorkshopSchema__Read>(`/workshops/${workshopId}`);
+    public async getWorkshop(workshopId: string): Promise<WorkshopSchema> {
+        return this.get<WorkshopSchema>(`/workshops/${workshopId}`);
     }
 
     /**
@@ -31,8 +31,8 @@ export class WorkshopService extends BaseService {
      * @param jobId The ID of the job to create the workshop for.
      * @returns A promise that resolves to the created workshop.
      */
-    public async createWorkshopForJob(jobId: string): Promise<WorkshopSchema__Read> { // Replace any with a more specific type if available
-        return this.post<WorkshopSchema__Read>(`/jobs/${jobId}/workshops`);
+    public async createWorkshopForJob(jobId: string): Promise<WorkshopSchema> { // Replace any with a more specific type if available
+        return this.post<WorkshopSchema>(`/jobs/${jobId}/workshops`);
     }
 
     /**
@@ -79,8 +79,8 @@ export class WorkshopService extends BaseService {
      * @param workshopId The ID of the workshop to deploy.
      * @returns A promise that resolves to the deployed workshop details.
      */
-    public async deployWorkshop(workshopId: string): Promise<WorkshopSchema__Read> {
-        return this.post<WorkshopSchema__Read>(`/workshops/${workshopId}/deploy`);
+    public async deployWorkshop(workshopId: string): Promise<WorkshopSchema> {
+        return this.post<WorkshopSchema>(`/workshops/${workshopId}/deploy`);
     }
 
     /**
@@ -93,4 +93,37 @@ export class WorkshopService extends BaseService {
     public async getResultsForWorkshop(workshopId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<ResultSchema>> {
         return this.fetchPaginatedData<ResultSchema>(`/workshops/${workshopId}/results`, page, size);
     }
+
+
+    /**
+     * Section 2: Workflow abstractions 
+     * 
+     * The following methods are abstractions for common workflows that involve multiple API calls.
+     * These methods are provided for convenience and to simplify common use cases.
+     *  
+     * These methods are not part of the Lume API, but are provided as a convenience to users of the Lume SDK.
+     * 
+     **/
+
+    /**
+     * Creates a workshop for job and runs the workshop with mapper edits.
+     * @param jobId The ID of the job to create the workshop for.
+     * @param mapperDetails The mapper to apply to the workshop (optional, defaults to null).
+     * @returns A promise that resolves to a paginated response of results.
+     */
+    public async editWithMapper(jobId: string, mapperDetails: WorkshopWithMapper) {
+        const autoDeploy = mapperDetails.auto_deploy || false;
+
+        const workshop = await this.createWorkshopForJob(jobId);
+      
+        let result: ResultSchema = await this.runWorkshopMapper(
+          workshop.id,
+          mapperDetails
+        );
+              
+        return result;
+      }
+
+    
+
 }

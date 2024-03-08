@@ -2,9 +2,9 @@
 
 import { PaginatedResponse } from "../types/pagination";
 import { BaseService } from "./BaseService";
-import { JobSchema__Read } from '../models/JobSchema__Read';
-import { WorkshopSchema__Read } from '../models/workshop/WorkshopSchema__Read';
-import { JobSchema__Write } from "../models";
+import { JobSchema } from '../models/JobSchema';
+import { WorkshopSchema } from '../models/workshop/WorkshopSchema';
+import { CreateJobPayload } from "../models";
 
 /**
  * Service class for interacting with job-related operations.
@@ -20,8 +20,8 @@ export class JobsService extends BaseService {
      * @param jobId The ID of the job to fetch details for.
      * @returns A promise that resolves to the job details.
      */
-    public async getJob(jobId: string): Promise<JobSchema__Read> {
-        return this.get<JobSchema__Read>(`/jobs/${jobId}`);
+    public async getJob(jobId: string): Promise<JobSchema> {
+        return this.get<JobSchema>(`/jobs/${jobId}`);
     }
 
     /**
@@ -31,8 +31,8 @@ export class JobsService extends BaseService {
      * @param size The number of items per page.
      * @returns A promise that resolves to a paginated response of job data.
      */
-    public async getJobDataPage(jobId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<JobSchema__Read>> {
-        return this.fetchPaginatedData<JobSchema__Read>(`/jobs/${jobId}/data`, page, size);
+    public async getJobDataPage(jobId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<JobSchema>> {
+        return this.fetchPaginatedData<JobSchema>(`/jobs/${jobId}/data`, page, size);
     }
 
       /**
@@ -42,18 +42,18 @@ export class JobsService extends BaseService {
      * @param size The number of items per page (optional, defaults to 50).
      * @returns A promise that resolves to a paginated response of job data.
      */
-    public async getJobsForPipeline(pipelineId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<JobSchema__Read>> {
-        return this.fetchPaginatedData<JobSchema__Read>(`/pipelines/${pipelineId}/jobs`, page, size);
+    public async getJobsForPipeline(pipelineId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<JobSchema>> {
+        return this.fetchPaginatedData<JobSchema>(`/pipelines/${pipelineId}/jobs`, page, size);
     }
 
     /**
      * Creates a new job for the specified pipeline.
      * @param pipelineId The ID of the pipeline.
-     * @param jobDetails Details of the job to create (JobSchema__Write).
+     * @param createJobPayload Details of the job to create (CreateJobPayload).
      * @returns A promise that resolves to the created job.
      */
-    public async createJobForPipeline(pipelineId: string, jobDetails: JobSchema__Write): Promise<JobSchema__Read> { // Replace any with a specific type for job creation
-        return this.post<JobSchema__Read>(`/pipelines/${pipelineId}/jobs`, jobDetails);
+    public async createJobForPipeline(pipelineId: string, createJobPayload: CreateJobPayload): Promise<JobSchema> { // Replace any with a specific type for job creation
+        return this.post<JobSchema>(`/pipelines/${pipelineId}/jobs`, createJobPayload);
     }
 
     /**
@@ -61,8 +61,8 @@ export class JobsService extends BaseService {
      * @param jobId The ID of the job to run.
      * @returns A promise that resolves to the updated job details.
      */
-    public async runJob(jobId: string): Promise<JobSchema__Read> {
-        return this.post<JobSchema__Read>(`/jobs/${jobId}/run`);
+    public async runJob(jobId: string): Promise<JobSchema> {
+        return this.post<JobSchema>(`/jobs/${jobId}/run`);
     }
 
     /**
@@ -72,7 +72,7 @@ export class JobsService extends BaseService {
      * @param size The number of items per page (optional, defaults to 50).
      * @returns A promise that resolves to a paginated response of workshops.
      */
-    public async getWorkshopsForJob(jobId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<WorkshopSchema__Read>> {
-        return this.fetchPaginatedData<WorkshopSchema__Read>(`/jobs/${jobId}/workshops`, page, size);
+    public async getWorkshopsForJob(jobId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<WorkshopSchema>> {
+        return this.fetchPaginatedData<WorkshopSchema>(`/jobs/${jobId}/workshops`, page, size);
     }
 }

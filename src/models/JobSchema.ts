@@ -1,7 +1,7 @@
 /**
  * A job runs the pipeline with newly provided source data. If the pipeline has no mapper, it will generated it. If it has a mapper, it will use the existing mapper.
  */
-export type JobSchema__Read = {
+export type JobSchema = {
     /**
      * The unique identifier of this object
      */

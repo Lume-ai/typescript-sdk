@@ -1,4 +1,4 @@
-export type JobSchema__Write = {
+export type CreateJobPayload = {
     /**
      * The data to be transformed by the job
      */

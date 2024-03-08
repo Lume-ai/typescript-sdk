@@ -1,7 +1,7 @@
 /**
  * A Workshop is a session that allows you to edit the pipeline and mapper.
  */
-export type WorkshopSchema__Read = {
+export type WorkshopSchema = {
     /**
      * The unique identifier of this object
      */
@@ -21,13 +21,13 @@ export type WorkshopSchema__Read = {
     /**
      * The status of the Workshop
      */
-    readonly status: WorkshopSchema__Read.status;
+    readonly status: WorkshopSchema.status;
     /**
      * The date and time this object was last updated
      */
     readonly updated_at: (string | null);
 };
-export namespace WorkshopSchema__Read {
+export namespace WorkshopSchema {
     /**
      * The status of the Workshop
      */

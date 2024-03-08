@@ -1,4 +1,4 @@
-import { PipelineSchema__Write } from "../../src/models";
+import { CreatePipelinePayload } from "../../src/models";
 import { PipelineService } from "../../src/services/PipelineService";
 import { API_KEY } from "../api_key";
 
@@ -56,7 +56,7 @@ describe("PipelineService", () => {
   describe("updatePipeline", () => {
     test("should update a pipeline", async () => {
       const pipelineId = "456"; 
-      const pipelineDetails: PipelineSchema__Write = {
+      const pipelineDetails: CreatePipelinePayload = {
          name: "ordered_test",
          description: "ordered_test",
       };

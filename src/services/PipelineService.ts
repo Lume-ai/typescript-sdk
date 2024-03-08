@@ -1,8 +1,8 @@
 // services/PipelineService.ts
 
-import { PipelineSchema__Read } from '../models/PipelineSchema__Read';
-import { PipelineSchema__Write } from '../models/PipelineSchema__Write';
-import { WorkshopSchema__Read } from '../models/workshop/WorkshopSchema__Read';
+import { PipelineSchema } from '../models/PipelineSchema';
+import { CreatePipelinePayload } from '../models/CreatePipelinePayload';
+import { WorkshopSchema } from '../models/workshop/WorkshopSchema';
 import { PaginatedResponse } from "../types/pagination";
 import { BaseService } from "./BaseService";
 
@@ -26,17 +26,17 @@ export class PipelineService extends BaseService {
      * @param size The number of items per page (optional, defaults to 50).
      * @returns A promise that resolves to a paginated response of pipeline data.
      */
-    public async getPipelineDataPage(page: number = 1, size: number = 50): Promise<PaginatedResponse<PipelineSchema__Read>> {
-        return this.fetchPaginatedData<PipelineSchema__Read>(`/pipelines`, page, size);
+    public async getPipelineDataPage(page: number = 1, size: number = 50): Promise<PaginatedResponse<PipelineSchema>> {
+        return this.fetchPaginatedData<PipelineSchema>(`/pipelines`, page, size);
     }
 
      /**
      * Creates a new pipeline with the provided details.
-     * @param pipelineDetails Details of the pipeline to create.
+     * @param createPipelinePayload Details of the pipeline to create (CreatePipelinePayload).
      * @returns A promise that resolves to the created pipeline.
      */
-    public async createPipeline(pipelineDetails: PipelineSchema__Write): Promise<PipelineSchema__Read> { 
-        return this.post<PipelineSchema__Read>('/pipelines', pipelineDetails);
+    public async createPipeline(createPipelinePayload: CreatePipelinePayload): Promise<PipelineSchema> { 
+        return this.post<PipelineSchema>('/pipelines', createPipelinePayload);
     }
 
     /**
@@ -44,18 +44,18 @@ export class PipelineService extends BaseService {
      * @param pipelineId The ID of the pipeline to fetch details for.
      * @returns A promise that resolves to the pipeline details.
      */
-    public async getPipeline(pipelineId: string): Promise<PipelineSchema__Read> {
-        return this.get<PipelineSchema__Read>(`/pipelines/${pipelineId}`);
+    public async getPipeline(pipelineId: string): Promise<PipelineSchema> {
+        return this.get<PipelineSchema>(`/pipelines/${pipelineId}`);
     }
 
       /**
      * Updates an existing pipeline with the provided details.
      * @param pipelineId The ID of the pipeline to update.
-     * @param pipelineDetails Details of the pipeline to update.
+     * @param updatePipelinePayload Details of the pipeline to update (CreatePipelinePayload).
      * @returns A promise that resolves to the updated pipeline details.
      */
-    public async updatePipeline(pipelineId: string, pipelineDetails: PipelineSchema__Write): Promise<PipelineSchema__Read> {
-        return this.put<PipelineSchema__Read>(`/pipelines/${pipelineId}`, pipelineDetails);
+    public async updatePipeline(pipelineId: string, updatePipelinePayload: CreatePipelinePayload): Promise<PipelineSchema> {
+        return this.put<PipelineSchema>(`/pipelines/${pipelineId}`, updatePipelinePayload);
     }
 
     /**
@@ -74,8 +74,8 @@ export class PipelineService extends BaseService {
      * @param size The number of items per page (optional, defaults to 50).
      * @returns A promise that resolves to a paginated response of workshops.
      */
-    public async getWorkshopsForPipeline(pipelineId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<WorkshopSchema__Read>> {
-        return this.fetchPaginatedData<WorkshopSchema__Read>(`/pipelines/${pipelineId}/workshops`, page, size);
+    public async getWorkshopsForPipeline(pipelineId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<WorkshopSchema>> {
+        return this.fetchPaginatedData<WorkshopSchema>(`/pipelines/${pipelineId}/workshops`, page, size);
     }
 
      /**
@@ -84,7 +84,7 @@ export class PipelineService extends BaseService {
      * @param workshopDetails Details of the workshop to create.
      * @returns A promise that resolves to the created workshop.
      */
-    public async createWorkshopForPipeline(pipelineId: string): Promise<WorkshopSchema__Read> {
-        return this.post<WorkshopSchema__Read>(`/pipelines/${pipelineId}/workshops`);
+    public async createWorkshopForPipeline(pipelineId: string): Promise<WorkshopSchema> {
+        return this.post<WorkshopSchema>(`/pipelines/${pipelineId}/workshops`);
     }
 }
