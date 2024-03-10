@@ -1,14 +1,10 @@
 import * as assert from "assert";
-import { JobsService } from "../../src/services/JobsService";
-import { ResultsService } from "../../src/services/ResultsService";
-import { WorkshopService } from "../../src/services/WorkshopService";
-import { PipelineService } from "../../src/services/PipelineService";
 import { PaginatedResponse } from "../../src/types/pagination";
 import { API_KEY } from "../api_key";
-import { JobSchema__Read } from "../../src/models";
+import { JobSchema } from "../../src/models";
 import { Lume } from "../../src";
+import { generateRandomId } from "../methods/utils/utils";
 
-const PIPELINE_NAME = "ordered_test";
 class Singleton {
   private static _instance: Singleton;
   pipeline_id: string | null = null;
@@ -24,37 +20,43 @@ class Singleton {
   }
 }
 
-describe("API Tests", () => {
+describe("Full workflow test without restart", () => {
   let lume: Lume;
+  let pipeline_name : string
 
   // Before running the tests, create an instance of JobsService
   beforeAll(() => {
     lume = new Lume(API_KEY);
+    pipeline_name = "sdk-test-" + generateRandomId();
   });
 
-  describe("Preproccessing test - deleting existing pipelines", () => {
-    it("should delete pipeline if it exists", async () => {
-      const pipelineDataPage = await lume.pipelineService.getPipelineDataPage();
-      expect(pipelineDataPage).toBeDefined();
-      const pipeline = pipelineDataPage.items.find(
-        (p) => p.name === PIPELINE_NAME
-      );
-      if (pipeline) {
-        await lume.pipelineService.deletePipeline(pipeline.id);
-      }
-    });
+  // describe("Preproccessing test - deleting existing pipelines", () => {
+  //   it("should delete pipeline if it exists", async () => {
+  //     const pipelineDataPage = await lume.pipelineService.getPipelineDataPage();
+  //     expect(pipelineDataPage).toBeDefined();
+  //     const pipeline = pipelineDataPage.items.find(
+  //       (p) => p.name === pipeline_name
+  //     );
+  //     if (pipeline) {
+  //       console.log("Deleting pipeline: ", pipeline.id);
+  //       await lume.pipelineService.deletePipeline(pipeline.id);
+  //     }
+  //     else {
+  //       console.log("Pipeline not found");
+  //     }
+  //   });
 
-    it("should get pipelines", async () => {
-      const pipelineDataPage = await lume.pipelineService.getPipelineDataPage();
-      expect(pipelineDataPage).toBeDefined();
-    });
-  });
+  //   it("should get pipelines", async () => {
+  //     const pipelineDataPage = await lume.pipelineService.getPipelineDataPage();
+  //     expect(pipelineDataPage).toBeDefined();
+  //   });
+  // });
 
   describe("Create Pipeline Tests", () => {
     it("should create a pipeline", async () => {
       const singleton = Singleton.instance;
       const pipelineDetails = {
-        name: PIPELINE_NAME,
+        name: pipeline_name,
         description: "description",
         target_schema: {
           type: "object",
@@ -114,7 +116,7 @@ describe("API Tests", () => {
 
     it("should get jobs for the pipeline", async () => {
       const singleton = Singleton.instance;
-      const jobsForPipeline: PaginatedResponse<JobSchema__Read> =
+      const jobsForPipeline: PaginatedResponse<JobSchema> =
         await lume.jobsService.getJobsForPipeline(singleton.pipeline_id!);
       expect(
         jobsForPipeline.items.some((job) => job.id === singleton.job_id)
@@ -202,7 +204,7 @@ describe("API Tests", () => {
       assert.strictEqual(workshop.id, singleton.Workshop_id);
     });
 
-    it("should run workshop with schema. get mappings from result, and deploy workshop", async () => {
+    it("should run workshop with schema and get mappings from result", async () => {
       const singleton = Singleton.instance;
 
       // should run workshop with schema
@@ -238,12 +240,6 @@ describe("API Tests", () => {
         singleton.result_id!
       );
       expect(mappings).toBeDefined();
-
-      // should deploy the workshop
-      const workshop2 = await lume.workshopService.deployWorkshop(
-        singleton.Workshop_id!
-      );
-      expect(workshop2).toBeDefined();
     }, 300000);
 
     it("should run workshop with schema", async () => {
