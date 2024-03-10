@@ -2,8 +2,8 @@
 
 import { PaginatedResponse } from "../types/pagination";
 import { BaseService } from "./BaseService";
-import { JobSchema } from '../models/JobSchema';
-import { WorkshopSchema } from '../models/workshop/WorkshopSchema';
+import { JobSchema } from '../models/Job';
+import { WorkshopSchema } from '../models/workshop/Workshop';
 import { CreateJobPayload } from "../models";
 
 /**

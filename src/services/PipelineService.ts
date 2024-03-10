@@ -1,8 +1,8 @@
 // services/PipelineService.ts
 
-import { PipelineSchema } from '../models/PipelineSchema';
+import { PipelineSchema } from '../models/Pipeline';
 import { CreatePipelinePayload } from '../models/CreatePipelinePayload';
-import { WorkshopSchema } from '../models/workshop/WorkshopSchema';
+import { WorkshopSchema } from '../models/workshop/Workshop';
 import { PaginatedResponse } from "../types/pagination";
 import { BaseService } from "./BaseService";
 

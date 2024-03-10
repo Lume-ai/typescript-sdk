@@ -1,5 +1,5 @@
 import { ResultSchema, SuccessSchema, WorkshopWithMapperPayload, WorkshopWithSamplePayload, WorkshopWithSchemaPayload } from '../models';
-import { WorkshopSchema } from '../models/workshop/WorkshopSchema';
+import { WorkshopSchema } from '../models/workshop/Workshop';
 import { PaginatedResponse } from '../types/pagination';
 import { BaseService } from './BaseService';
 

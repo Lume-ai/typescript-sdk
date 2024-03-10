@@ -1,7 +1,7 @@
 /**
  * An object that displays the result of a mapping task.
  */
-export type ResultSchema = {
+export type Result = {
   /**
    * The unique identifier of this object
    */

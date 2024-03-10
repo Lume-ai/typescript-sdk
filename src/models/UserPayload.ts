@@ -1,7 +1,7 @@
 /**
  * Represents a user request object.
  */
-export type UserRequest = {
+export type UserPayload = {
     /**
      * The name of the user.
      */

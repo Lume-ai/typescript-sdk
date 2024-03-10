@@ -1,6 +1,6 @@
 import { PaginatedResponse } from '../types/pagination';
 import { BaseService } from './BaseService';
-import { MappingRequestSchema } from '../models/MappingRequestSchema';
+import { MappingRequestSchema } from '../models/workshop/MappingRequestSchema';
 import { ResultSchema, MappingSchema } from '../models';
 
 /**

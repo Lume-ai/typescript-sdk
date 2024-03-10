@@ -1,7 +1,7 @@
 /**
  * A pipeline is an object containing a target schema, and associated with a mapper that jobs can be executed on.
  */
-export type PipelineSchema = {
+export type Pipeline = {
     /**
      * The unique identifier of this object
      */

@@ -1,7 +1,7 @@
 /**
- * Represents a user schema object.
+ * Represents a user object.
  */
-export type UserSchema = {
+export type User= {
     /**
      * The unique identifier of the user.
      */

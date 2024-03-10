@@ -1,7 +1,7 @@
 /**
  * Pipeline update payload, to edit the name or description.
  */
-export type Update = {
+export type PipelineUpdatePayload = {
     /**
      * The name of the pipeline. Must be unique within the organization.
      */
