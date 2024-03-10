@@ -12,8 +12,8 @@ export * from './workshop/Workshop';
 export * from './workshop/WorkshopWithSchemaPayload';
 
 // All types
-export * from './CreateJobPayload';
-export * from './CreatePipelinePayload';
+export * from './JobCreatePayload';
+export * from './PipelineCreatePayload';
 export * from './Job';
 export * from './Mapping';
 export * from './Pipeline';
