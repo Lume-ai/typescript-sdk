@@ -7,12 +7,27 @@ import { JobsService } from './services/JobsService';
 import { ResultsService } from './services/ResultsService';
 import { WorkshopService } from './services/WorkshopService';
 import { PipelineService } from './services/PipelineService';
+import {
+  WorkshopSchema,
+  WorkshopWithMapperPayload,
+  WorkshopWithSamplePayload,
+  WorkshopWithSchemaPayload,
+  JobSchema,
+  CreateJobPayload,
+  MapperSchema,
+  MappingRequestSchema,
+  MappingSchema,
+  PipelineSchema,
+  CreatePipelinePayload,
+  ResultSchema,
+  SuccessSchema
+} from './models/index';
 
 /**
  * Main entry point for interacting with Lume services.
  * Provides access to various services such as UserService, JobsService, PipelineService, etc.
  */
-export class Lume {
+class Lume {
   userService: UserService;
   jobsService: JobsService;
   pipelineService: PipelineService;
@@ -33,4 +48,21 @@ export class Lume {
     this.resultsService = new ResultsService(apiKey);
     this.workshopService = new WorkshopService(apiKey);
   }
+}
+
+export {
+  Lume,
+  WorkshopSchema,
+  WorkshopWithMapperPayload,
+  WorkshopWithSamplePayload,
+  WorkshopWithSchemaPayload,
+  JobSchema,
+  CreateJobPayload,
+  MapperSchema,
+  MappingRequestSchema,
+  MappingSchema,
+  PipelineSchema,
+  CreatePipelinePayload,
+  ResultSchema,
+  SuccessSchema
 }
