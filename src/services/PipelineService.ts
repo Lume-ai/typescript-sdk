@@ -1,7 +1,7 @@
 // services/PipelineService.ts
 
+import { PipelineCreatePayload, PipelineUpdatePayload } from '../models';
 import { Pipeline } from '../models/Pipeline';
-import { CreatePipelinePayload } from '../models/CreatePipelinePayload';
 import { Workshop } from '../models/workshop/Workshop';
 import { PaginatedResponse } from "../types/pagination";
 import { BaseService } from "./BaseService";
@@ -32,11 +32,11 @@ export class PipelineService extends BaseService {
 
      /**
      * Creates a new pipeline with the provided details.
-     * @param createPipelinePayload Details of the pipeline to create (CreatePipelinePayload).
+     * @param pipelineCreatePayload Details of the pipeline to create (PipelineCreatePayload).
      * @returns A promise that resolves to the created pipeline.
      */
-    public async createPipeline(createPipelinePayload: CreatePipelinePayload): Promise<Pipeline> { 
-        return this.post<Pipeline>('/pipelines', createPipelinePayload);
+    public async createPipeline(pipelineCreatePayload: PipelineCreatePayload): Promise<Pipeline> { 
+        return this.post<Pipeline>('/pipelines', pipelineCreatePayload);
     }
 
     /**
@@ -51,11 +51,11 @@ export class PipelineService extends BaseService {
       /**
      * Updates an existing pipeline with the provided details.
      * @param pipelineId The ID of the pipeline to update.
-     * @param updatePipelinePayload Details of the pipeline to update (CreatePipelinePayload).
+     * @param pipelineUpdatePayload Details of the pipeline to update (PipelineUpdatePayload).
      * @returns A promise that resolves to the updated pipeline details.
      */
-    public async updatePipeline(pipelineId: string, updatePipelinePayload: CreatePipelinePayload): Promise<Pipeline> {
-        return this.put<Pipeline>(`/pipelines/${pipelineId}`, updatePipelinePayload);
+    public async updatePipeline(pipelineId: string, pipelineUpdatePayload: PipelineUpdatePayload): Promise<Pipeline> {
+        return this.put<Pipeline>(`/pipelines/${pipelineId}`, pipelineUpdatePayload);
     }
 
     /**
