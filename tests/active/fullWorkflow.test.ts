@@ -1,9 +1,9 @@
 import * as assert from "assert";
 import { PaginatedResponse } from "../../src/types/pagination";
-import { API_KEY } from "../api_key";
-import { JobSchema } from "../../src/models";
+import { Job } from "../../src/models";
 import { Lume } from "../../src";
 import { generateRandomId } from "../methods/utils/utils";
+import { API_KEY } from "../api_key";
 
 class Singleton {
   private static _instance: Singleton;
@@ -116,7 +116,7 @@ describe("Full workflow test without restart", () => {
 
     it("should get jobs for the pipeline", async () => {
       const singleton = Singleton.instance;
-      const jobsForPipeline: PaginatedResponse<JobSchema> =
+      const jobsForPipeline: PaginatedResponse<Job> =
         await lume.jobsService.getJobsForPipeline(singleton.pipeline_id!);
       expect(
         jobsForPipeline.items.some((job) => job.id === singleton.job_id)

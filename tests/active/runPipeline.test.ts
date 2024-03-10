@@ -1,8 +1,8 @@
 import * as assert from "assert";
-import { API_KEY } from "../api_key";
 import { Lume } from "../../src";
 import { runExistingPipelineAfterWorkshopEdit } from "../methods/workflows/runPipelineTests";
 import { newPipelineEditWithMapper, newPipelineEditWithSample, newPipelineEditWithTargetSchema } from "../methods/workflows/fullWorkflowBasicTests";
+import { API_KEY } from "../api_key";
 
 
 describe("Run Pipeline Tests", () => {

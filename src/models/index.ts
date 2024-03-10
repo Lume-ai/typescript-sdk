@@ -19,5 +19,6 @@ export * from './Mapping';
 export * from './Pipeline';
 export * from './PipelineUpdatePayload';
 export * from './Result';
+export * from './SuccessSchema'
 export * from './User';
 export * from './UserPayload';

@@ -20,6 +20,7 @@ import {
   Pipeline,
   PipelineUpdatePayload,
   Result,
+  SuccessSchema,
   User,
   UserPayload
 } from './models/index';
@@ -67,6 +68,7 @@ export {
   Pipeline,
   PipelineUpdatePayload,
   Result,
+  SuccessSchema,
   User,
   UserPayload
 }

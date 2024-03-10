@@ -1,8 +1,7 @@
 import * as assert from "assert";
-import { API_KEY } from "../api_key";
 import { Lume } from "../../src";
 import { editWithMapperDefault, editWithMapperMissingExtract, editWithMapperOriginal, editWithMapperWrapper, editWithMapperWrongSourceKey, editWithMapperWrongTargetKey } from "../methods/workflows/editWithMapperTests";
-
+import { API_KEY } from "../api_key";
 
 describe("Edit with Mapper Tests", () => {
     let lume: Lume;

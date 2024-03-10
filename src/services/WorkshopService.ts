@@ -1,5 +1,5 @@
-import { ResultSchema, SuccessSchema, WorkshopWithMapperPayload, WorkshopWithSamplePayload, WorkshopWithSchemaPayload } from '../models';
-import { WorkshopSchema } from '../models/workshop/Workshop';
+import { Result, SuccessSchema, WorkshopWithMapperPayload, WorkshopWithSamplePayload, WorkshopWithSchemaPayload } from '../models';
+import { Workshop } from '../models/workshop/Workshop';
 import { PaginatedResponse } from '../types/pagination';
 import { BaseService } from './BaseService';
 
@@ -22,8 +22,8 @@ export class WorkshopService extends BaseService {
      * @param workshopId The ID of the workshop to fetch details for.
      * @returns A promise that resolves to the workshop details.
      */
-    public async getWorkshop(workshopId: string): Promise<WorkshopSchema> {
-        return this.get<WorkshopSchema>(`/workshops/${workshopId}`);
+    public async getWorkshop(workshopId: string): Promise<Workshop> {
+        return this.get<Workshop>(`/workshops/${workshopId}`);
     }
 
     /**
@@ -31,8 +31,8 @@ export class WorkshopService extends BaseService {
      * @param jobId The ID of the job to create the workshop for.
      * @returns A promise that resolves to the created workshop.
      */
-    public async createWorkshopForJob(jobId: string): Promise<WorkshopSchema> { // Replace any with a more specific type if available
-        return this.post<WorkshopSchema>(`/jobs/${jobId}/workshops`);
+    public async createWorkshopForJob(jobId: string): Promise<Workshop> { // Replace any with a more specific type if available
+        return this.post<Workshop>(`/jobs/${jobId}/workshops`);
     }
 
     /**
@@ -50,8 +50,8 @@ export class WorkshopService extends BaseService {
      * @param workshopWithMapperPayload Details required for running the mapper (WorkshopWithMapperPayload object).
      * @returns A promise that resolves to the result of running the mapper.
      */
-    public async runWorkshopMapper(workshopId: string, workshopWithMapperPayload: WorkshopWithMapperPayload): Promise<ResultSchema> {
-        return this.post<ResultSchema>(`/workshops/${workshopId}/mapper/run`, workshopWithMapperPayload);
+    public async runWorkshopMapper(workshopId: string, workshopWithMapperPayload: WorkshopWithMapperPayload): Promise<Result> {
+        return this.post<Result>(`/workshops/${workshopId}/mapper/run`, workshopWithMapperPayload);
     }
 
     /**
@@ -60,8 +60,8 @@ export class WorkshopService extends BaseService {
      * @param workshopWithSamplePayload Details required for running the sample (WorkshopWithSamplePayload).
      * @returns A promise that resolves to the result of running the sample.
      */
-    public async runWorkshopSample(workshopId: string, workshopWithSamplePayload: WorkshopWithSamplePayload): Promise<ResultSchema> {
-        return this.post<ResultSchema>(`/workshops/${workshopId}/sample/run`, workshopWithSamplePayload);
+    public async runWorkshopSample(workshopId: string, workshopWithSamplePayload: WorkshopWithSamplePayload): Promise<Result> {
+        return this.post<Result>(`/workshops/${workshopId}/sample/run`, workshopWithSamplePayload);
     }
 
     /**
@@ -70,8 +70,8 @@ export class WorkshopService extends BaseService {
      * @param workshopWithSchemaPayload Details required for running the target schema (WorkshopWithSchemaPayload).
      * @returns A promise that resolves to the result of running the target schema.
      */
-    public async runWorkshopTargetSchema(workshopId: string, workshopWithSchemaPayload: WorkshopWithSchemaPayload): Promise<ResultSchema> { 
-        return this.post<ResultSchema>(`/workshops/${workshopId}/target_schema/run`, workshopWithSchemaPayload);
+    public async runWorkshopTargetSchema(workshopId: string, workshopWithSchemaPayload: WorkshopWithSchemaPayload): Promise<Result> { 
+        return this.post<Result>(`/workshops/${workshopId}/target_schema/run`, workshopWithSchemaPayload);
     }
 
     /**
@@ -79,8 +79,8 @@ export class WorkshopService extends BaseService {
      * @param workshopId The ID of the workshop to deploy.
      * @returns A promise that resolves to the deployed workshop details.
      */
-    public async deployWorkshop(workshopId: string): Promise<WorkshopSchema> {
-        return this.post<WorkshopSchema>(`/workshops/${workshopId}/deploy`);
+    public async deployWorkshop(workshopId: string): Promise<Workshop> {
+        return this.post<Workshop>(`/workshops/${workshopId}/deploy`);
     }
 
     /**
@@ -90,7 +90,7 @@ export class WorkshopService extends BaseService {
      * @param size The number of items per page (optional, defaults to 50).
      * @returns A promise that resolves to a paginated response of results.
      */
-    public async getResultsForWorkshop(workshopId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<ResultSchema>> {
-        return this.fetchPaginatedData<ResultSchema>(`/workshops/${workshopId}/results`, page, size);
+    public async getResultsForWorkshop(workshopId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<Result>> {
+        return this.fetchPaginatedData<Result>(`/workshops/${workshopId}/results`, page, size);
     }
 }
