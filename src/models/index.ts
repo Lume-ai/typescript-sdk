@@ -1,16 +1,24 @@
-export * from './workshop/WorkshopSchema';
-export * from './workshop/WorkshopWithMapperPayload';
-export * from './workshop/WorkshopWithSamplePayload';
-export * from './workshop/WorkshopWithSchemaPayload'; 
+// WorkshopWithMapper types
+export * from './workshop/workshopWithMapper/WorkshopWithMapperPayload';
+export * from './workshop/workshopWithMapper/MapperEditSchema';
+export * from './workshop/workshopWithMapper/ManualTransformation';
 
-export * from './JobSchema';
+// WorkshopWithSample types
+export * from './workshop/workshopWithSample/SampleEdit';
+export * from './workshop/workshopWithSample/WorkshopWithSamplePayload';
+
+// Workshop types
+export * from './workshop/Workshop';
+export * from './workshop/WorkshopWithSchemaPayload';
+
+// All types
 export * from './CreateJobPayload';
-export * from './MapperSchema';
-export * from './MappingRequestSchema';
-export * from './MappingSchema';
-export * from './PipelineSchema';
 export * from './CreatePipelinePayload';
-export * from './ResultSchema';
-export * from './SuccessSchema';
-export * from './UserRequest';
-export * from './UserSchema';
+export * from './Job';
+export * from './Mapping';
+export * from './Pipeline';
+export * from './PipelineUpdatePayload';
+export * from './Result';
+export * from './SuccessSchema'
+export * from './User';
+export * from './UserPayload';

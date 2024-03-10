@@ -1,7 +1,7 @@
 /**
  * An object that displays the mapped record of the data from the job
  */
-export type MappingSchema = {
+export type Mapping = {
     /**
      * The index of the record in the data
      */

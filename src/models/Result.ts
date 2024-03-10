@@ -1,7 +1,7 @@
 /**
  * An object that displays the result of a mapping task.
  */
-export type ResultSchema = {
+export type Result = {
   /**
    * The unique identifier of this object
    */
@@ -25,13 +25,13 @@ export type ResultSchema = {
   /**
    * The status of the mapping task
    */
-  readonly status: ResultSchema.status;
+  readonly status: Result.status;
   /**
    * The date and time this object was last updated
    */
   readonly updated_at: string | null;
 };
-export namespace ResultSchema {
+export namespace Result {
   /**
    * The status of the mapping task
    */

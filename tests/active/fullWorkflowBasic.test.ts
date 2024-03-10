@@ -1,5 +1,4 @@
 import * as assert from "assert";
-import { API_KEY } from "../api_key";
 import { Lume } from "../../src";
 import { createPipeline } from "../methods/base/createPipeline";
 import { EDITED_TARGET_SCHEMA, MAPPER_EDITS, SAMPLE_EDITS, SOURCE_DATA, TARGET_SCHEMA } from "../methods/consts/consts";
@@ -9,6 +8,7 @@ import { getMappings } from "../methods/base/getMappings";
 import { editWithMapper } from "../methods/base/editWithMapper";
 import { editWithTargetSchema } from "../methods/base/editWithTargetSchema";
 import { editWithSample } from "../methods/base/editWithSample";
+import { API_KEY } from "../api_key";
 
 describe("API Tests", () => {
     let lume: Lume;

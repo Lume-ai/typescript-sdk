@@ -1,7 +1,7 @@
 /**
  * An object that displays the mapped record of the data from the job
  */
-export type MappingRequestSchema = {
+export type SampleEdit = {
     /**
      * The index of the record in the data
      */
@@ -12,4 +12,3 @@ export type MappingRequestSchema = {
      */
     mapped_record: Record<string, any>;
 };
-

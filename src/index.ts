@@ -1,6 +1,4 @@
 // src/index.ts
-
-// Import necessary services
 import { BaseService } from './services/BaseService';
 import { UserService } from './services/UsersService';
 import { JobsService } from './services/JobsService';
@@ -8,19 +6,23 @@ import { ResultsService } from './services/ResultsService';
 import { WorkshopService } from './services/WorkshopService';
 import { PipelineService } from './services/PipelineService';
 import {
-  WorkshopSchema,
   WorkshopWithMapperPayload,
+  MapperEditSchema,
+  ManualTransformation,
+  SampleEdit,
   WorkshopWithSamplePayload,
+  Workshop,
   WorkshopWithSchemaPayload,
-  JobSchema,
   CreateJobPayload,
-  MapperSchema,
-  MappingRequestSchema,
-  MappingSchema,
-  PipelineSchema,
   CreatePipelinePayload,
-  ResultSchema,
-  SuccessSchema
+  Job,
+  Mapping,
+  Pipeline,
+  PipelineUpdatePayload,
+  Result,
+  SuccessSchema,
+  User,
+  UserPayload
 } from './models/index';
 
 /**
@@ -52,17 +54,21 @@ class Lume {
 
 export {
   Lume,
-  WorkshopSchema,
   WorkshopWithMapperPayload,
+  MapperEditSchema,
+  ManualTransformation,
+  SampleEdit,
   WorkshopWithSamplePayload,
+  Workshop,
   WorkshopWithSchemaPayload,
-  JobSchema,
   CreateJobPayload,
-  MapperSchema,
-  MappingRequestSchema,
-  MappingSchema,
-  PipelineSchema,
   CreatePipelinePayload,
-  ResultSchema,
-  SuccessSchema
+  Job,
+  Mapping,
+  Pipeline,
+  PipelineUpdatePayload,
+  Result,
+  SuccessSchema,
+  User,
+  UserPayload
 }

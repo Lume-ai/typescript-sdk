@@ -1,7 +1,6 @@
 import { PaginatedResponse } from '../types/pagination';
 import { BaseService } from './BaseService';
-import { MappingRequestSchema } from '../models/MappingRequestSchema';
-import { ResultSchema, MappingSchema } from '../models';
+import { Result, Mapping } from '../models';
 
 /**
  * Service class for interacting with result-related operations.
@@ -22,8 +21,8 @@ export class ResultsService extends BaseService {
      * @param resultId The ID of the result to fetch details for.
      * @returns A promise that resolves to the result details.
      */
-    public async getResult(resultId: string): Promise<ResultSchema> {
-        return this.get<ResultSchema>(`/results/${resultId}`);
+    public async getResult(resultId: string): Promise<Result> {
+        return this.get<Result>(`/results/${resultId}`);
     }
 
     /**
@@ -33,8 +32,8 @@ export class ResultsService extends BaseService {
      * @param size The number of items per page (optional, defaults to 50).
      * @returns A promise that resolves to a paginated response of job results.
      */
-    public async getJobResults(jobId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<ResultSchema>> {
-        return this.fetchPaginatedData<ResultSchema>(`/jobs/${jobId}/results`, page, size);
+    public async getJobResults(jobId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<Result>> {
+        return this.fetchPaginatedData<Result>(`/jobs/${jobId}/results`, page, size);
     }
 
      /**
@@ -44,7 +43,7 @@ export class ResultsService extends BaseService {
      * @param size The number of items per page (optional, defaults to 50).
      * @returns A promise that resolves to a paginated response of mappings.
      */
-    public async getMappingsForResult(resultId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<MappingSchema>> {
-        return this.fetchPaginatedData<MappingSchema>(`/results/${resultId}/mappings`, page, size);
+    public async getMappingsForResult(resultId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<Mapping>> {
+        return this.fetchPaginatedData<Mapping>(`/results/${resultId}/mappings`, page, size);
     }
 }
