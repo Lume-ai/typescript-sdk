@@ -43,12 +43,12 @@ pnpm add @lume-ai/typescript-sdk
 Create a new pipeline and map data.
 
 ```ts
-import { Lume } from '@lume-ai/typescript-sdk';
+import { Lume, PipelineCreatePayload, JobCreatePayload, Job, Pipeline, Result, Mapping } from '@lume-ai/typescript-sdk';
 
-const lume: Lume = new Lume('api-key')
+const lume: Lume = new Lume('api_key')
 
 const createPipeline = async () => {
-    const pipelineDetails = {
+    const pipelineCreatePayload: PipelineCreatePayload = {
         name: 'pipeline_name3',
         description: "description",
         target_schema: {
@@ -66,6 +66,7 @@ const createPipeline = async () => {
           required: ["f_name", "l_name"],
         },
       };
+
       const createdPipeline = await lume.pipelineService.createPipeline(
         pipelineDetails
       );
@@ -73,7 +74,7 @@ const createPipeline = async () => {
 }
 
 const createJob = async (pipelineId: string) => {
-    const params = {
+    const jobCreatePayload: JobCreatePayload = {
         data: [
           {
             first_name: "John",
@@ -86,7 +87,6 @@ const createJob = async (pipelineId: string) => {
         ],
       };
 
-      console.log("pipelineId", pipelineId, "params", params)
       const createdJob = await lume.jobsService.createJobForPipeline(
         pipelineId,
         params
@@ -99,15 +99,15 @@ const createJob = async (pipelineId: string) => {
 const run = async () => {
     
     // create pipeline and job
-    const pipeline = await createPipeline();
-    const job = await createJob(pipeline.id);
+    const pipeline: Pipeline = await createPipeline();
+    const job: Job = await createJob(pipeline.id);
 
     // trigger the mapping generation
-    const result = await lume.jobsService.runJob(job.id);
+    const result: Result = await lume.jobsService.runJob(job.id);
 
     // parse the results and iterate through all mapped records
     const mappingsPage = await lume.resultsService.getMappingsForResult(result.id); 
-    const mappings = mappingsPage.items;
+    const mappings: Mapping[] = mappingsPage.items;
 
     for (const mapping of mappings) {
         console.log("mapped record", mapping.mapped_record)
