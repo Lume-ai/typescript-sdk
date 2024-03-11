@@ -70,7 +70,7 @@ export class WorkshopService extends BaseService {
      * @param workshopWithSchemaPayload Details required for running the target schema (WorkshopWithSchemaPayload).
      * @returns A promise that resolves to the result of running the target schema.
      */
-    public async runWorkshopTargetSchema(workshopId: string, workshopWithSchemaPayload: WorkshopWithSchemaPayload): Promise<Result> { 
+    public async runWorkshopTargetSchema(workshopId: string, workshopWithSchemaPayload: WorkshopWithSchemaPayload): Promise<Result> {
         return this.post<Result>(`/workshops/${workshopId}/target_schema/run`, workshopWithSchemaPayload);
     }
 
@@ -93,4 +93,67 @@ export class WorkshopService extends BaseService {
     public async getResultsForWorkshop(workshopId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<Result>> {
         return this.fetchPaginatedData<Result>(`/workshops/${workshopId}/results`, page, size);
     }
+
+
+    /**
+   * Section 2: Workflow abstractions 
+   * 
+   * The following methods are abstractions for common workflows that involve multiple API calls.
+   * These methods are provided for convenience and to simplify common use cases.
+   *  
+   * These methods are not part of the Lume API, but are provided as a convenience to users of the Lume SDK.
+   * 
+   **/
+
+    /**
+     * Creates a workshop for job and runs the workshop with mapper edits.
+     * @param jobId The ID of the job to create the workshop for.
+     * @param workshopWithMapperPayload Details required for running the mapper (WorkshopWithMapperPayload object).
+     * @returns A promise that resolves to the result of running the mapper.
+     */
+    public async runEditCycleWithMapper(jobId: string, workshopWithMapperPayload: WorkshopWithMapperPayload): Promise<Result> {
+        const workshop = await this.createWorkshopForJob(jobId);
+
+        let result: Result = await this.runWorkshopMapper(
+            workshop.id,
+            workshopWithMapperPayload
+        );
+
+        return result;
+    }
+
+    /**
+     * Creates a workshop for job and runs the workshop with sample edits.
+     * @param jobId The ID of the job to create the workshop for.
+     * @param workshopWithSamplePayload The sample to apply to the workshop (WorkshopWithSamplePayload).
+     * @returns A promise that resolves to the result of running the sample.
+     */
+    public async runEditCycleWithSample(jobId: string, workshopWithSamplePayload: WorkshopWithSamplePayload): Promise<Result> {
+        const workshop = await this.createWorkshopForJob(jobId);
+
+        let result: Result = await this.runWorkshopSample(
+            workshop.id,
+            workshopWithSamplePayload
+        );
+
+        return result;
+    }
+
+    /**
+     * Creates a workshop for job and runs the workshop with schema edits.
+     * @param jobId The ID of the job to create the workshop for.
+     * @param workshopWithSchemaPayload The schema to apply to the workshop (WorkshopWithSchemaPayload).
+     * @returns A promise that resolves to the result of running the schema.
+     */
+    public async runEditCycleWithSchema(jobId: string, workshopWithSchemaPayload: WorkshopWithSchemaPayload): Promise<Result> {
+        const workshop = await this.createWorkshopForJob(jobId);
+
+        let result: Result = await this.runWorkshopTargetSchema(
+            workshop.id,
+            workshopWithSchemaPayload
+        );
+
+        return result;
+    }
+
 }

@@ -11,6 +11,9 @@ export * from './workshop/workshopWithSample/WorkshopWithSamplePayload';
 export * from './workshop/Workshop';
 export * from './workshop/WorkshopWithSchemaPayload';
 
+// Workflow types
+export * from './workflows/JobExecutionResponse';
+
 // All types
 export * from './JobCreatePayload';
 export * from './PipelineCreatePayload';

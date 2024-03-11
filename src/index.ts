@@ -24,17 +24,21 @@ import {
   User,
   UserPayload
 } from './models/index';
+import { WorkflowService } from './services/WorkflowService';
+import { PaginatedResponse } from './types/pagination';
+import { JobExecutionResponse } from './models/workflows/JobExecutionResponse';
 
 /**
  * Main entry point for interacting with Lume services.
  * Provides access to various services such as UserService, JobsService, PipelineService, etc.
  */
 class Lume {
-  userService: UserService;
+  private userService: UserService;
   jobsService: JobsService;
   pipelineService: PipelineService;
   resultsService: ResultsService;
   workshopService: WorkshopService;
+  workflowService: WorkflowService;
 
   /**
    * Constructs a new instance of Lume.
@@ -49,6 +53,7 @@ class Lume {
     this.pipelineService = new PipelineService(apiKey);
     this.resultsService = new ResultsService(apiKey);
     this.workshopService = new WorkshopService(apiKey);
+    this.workflowService = new WorkflowService(apiKey, this.jobsService, this.pipelineService, this.resultsService, this.workshopService);
   }
 }
 
@@ -70,5 +75,7 @@ export {
   Result,
   SuccessSchema,
   User,
-  UserPayload
+  UserPayload,
+  JobExecutionResponse,
+  PaginatedResponse
 }
