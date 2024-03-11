@@ -1,5 +1,5 @@
 /**
- * An object that displays the result of a mapping task.
+ * An object that displays the result of a mapping task. This stores all relevant object ids and the status of the mapping task.
  */
 export type Result = {
   /**

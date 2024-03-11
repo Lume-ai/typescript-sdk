@@ -4,7 +4,7 @@ import { PaginatedResponse } from "../types/pagination";
 import { BaseService } from "./BaseService";
 import { Job } from '../models/Job';
 import { Workshop } from '../models/workshop/Workshop';
-import { JobCreatePayload } from "../models";
+import { JobCreatePayload, Result } from "../models";
 
 /**
  * Service class for interacting with job-related operations.
@@ -25,7 +25,7 @@ export class JobsService extends BaseService {
     }
 
     /**
-     * Fetches job data for a specific page.
+     * Fetches all job data.
      * @param jobId The ID of the job to fetch data for.
      * @param page The page number to fetch.
      * @param size The number of items per page.
@@ -36,7 +36,7 @@ export class JobsService extends BaseService {
     }
 
       /**
-     * Fetches job data for a specific page.
+     * Fetches job data for a specific pipeline.
      * @param jobId The ID of the job to fetch data for.
      * @param page The page number to fetch (optional, defaults to 1).
      * @param size The number of items per page (optional, defaults to 50).
@@ -59,10 +59,10 @@ export class JobsService extends BaseService {
     /**
      * Runs the specified job.
      * @param jobId The ID of the job to run.
-     * @returns A promise that resolves to the updated job details.
+     * @returns A promise that resolves to the job result.
      */
-    public async runJob(jobId: string): Promise<Job> {
-        return this.post<Job>(`/jobs/${jobId}/run`);
+    public async runJob(jobId: string): Promise<Result> {
+        return this.post<Result>(`/jobs/${jobId}/run`);
     }
 
     /**
@@ -74,5 +74,27 @@ export class JobsService extends BaseService {
      */
     public async getWorkshopsForJob(jobId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<Workshop>> {
         return this.fetchPaginatedData<Workshop>(`/jobs/${jobId}/workshops`, page, size);
+    }
+
+     /**
+   * Section 2: Workflow abstractions 
+   * 
+   * The following methods are abstractions for common workflows that involve multiple API calls.
+   * These methods are provided for convenience and to simplify common use cases.
+   *  
+   * These methods are not part of the Lume API, but are provided as a convenience to users of the Lume SDK.
+   * 
+   **/
+
+    /**
+     * Creates a job for the specified pipeline and runs the job.
+     * @param pipelineId The ID of the pipeline.
+     * @param jobCreatePayload Details of the job to create (JobCreatePayload).
+     * @returns A promise that resolves to the result of running the job.
+     */
+    public async createAndRunJob(pipelineId: string, jobCreatePayload: JobCreatePayload): Promise<Result> {
+        const job = await this.createJobForPipeline(pipelineId, jobCreatePayload);
+        const result: Result = await this.runJob(job.id);
+        return result;
     }
 }
