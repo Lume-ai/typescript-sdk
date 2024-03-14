@@ -1,4 +1,4 @@
-// services/JobsService.ts
+// services/WorkflowService.ts
 
 import { BaseService } from "./BaseService";
 import { Job, JobCreatePayload, Mapping, PipelineCreatePayload, Result } from "../models";
