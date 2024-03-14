@@ -29,7 +29,8 @@ export type Workshop = {
 };
 export namespace Workshop {
     /**
-     * The status of the Workshop
+     * The status of the Workshop.  
+     * If workshop edits were deployed, status will be deployed. If not, it will have the status from the most recent result"
      */
     export enum status {
         CREATED = 'created',

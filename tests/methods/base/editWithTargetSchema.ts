@@ -6,6 +6,7 @@ export async function editWithTargetSchema(lume: Lume, jobId: string, autoDeploy
     if(verbose) console.log("\n---editWithTargetSchema()");
     const workshop = await lume.workshopService.createWorkshopForJob(jobId);
   
+    console.log("autoDeploy", autoDeploy);
     const payload = {
       target_schema: edited_target_schema,
       auto_deploy: autoDeploy, // auto deploy the workshop after the edits are applied
@@ -20,11 +21,15 @@ export async function editWithTargetSchema(lume: Lume, jobId: string, autoDeploy
   
     const mappings = await getMappings(lume, schemaEditResult.id);
 
+    console.log("schemaEditResult", JSON.stringify(schemaEditResult, null, 2));
     if(!autoDeploy) {
         if(verbose) console.log("manual deploy - workshop id", workshop.id);
         const deployResult = await lume.workshopService.deployWorkshop(workshop.id);
-        if(verbose) console.log("manual deploy - workshop deploy result", JSON.stringify(deployResult, null, 2));
+        console.log("manual deploy - workshop deploy result", JSON.stringify(deployResult, null, 2));
     }
+
+    const workshop1 = await lume.workshopService.getWorkshop(workshop.id);
+    console.log("workshop1", JSON.stringify(workshop1, null, 2));
 
     return workshop
   }
