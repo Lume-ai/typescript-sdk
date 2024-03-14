@@ -39,7 +39,6 @@ export namespace Result {
     CREATED = "created",
     RUNNING = "running",
     FINISHED = "finished",
-    DEPLOYED = "deployed",
     FAILED = "failed",
     NEEDS_REVIEW = "needs_review",
   }

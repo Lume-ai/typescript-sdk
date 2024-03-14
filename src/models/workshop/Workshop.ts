@@ -35,7 +35,9 @@ export namespace Workshop {
         CREATED = 'created',
         RUNNING = 'running',
         FINISHED = 'finished',
+        DEPLOYED = 'deployed',
         FAILED = 'failed',
+        NEEDS_REVIEW = 'needs review',
     }
 }
 
