@@ -50,7 +50,7 @@ export class WorkshopService extends BaseService {
      * @param workshopWithMapperPayload Details required for running the mapper (WorkshopWithMapperPayload object).
      * @returns A promise that resolves to the result of running the mapper.
      */
-    public async runWorkshopMapper(workshopId: string, workshopWithMapperPayload: WorkshopWithMapperPayload): Promise<Result> {
+    private async _runWorkshopMapper(workshopId: string, workshopWithMapperPayload: WorkshopWithMapperPayload): Promise<Result> {
         return this.post<Result>(`/workshops/${workshopId}/mapper/run`, workshopWithMapperPayload);
     }
 
@@ -60,7 +60,7 @@ export class WorkshopService extends BaseService {
      * @param workshopWithSamplePayload Details required for running the sample (WorkshopWithSamplePayload).
      * @returns A promise that resolves to the result of running the sample.
      */
-    public async runWorkshopSample(workshopId: string, workshopWithSamplePayload: WorkshopWithSamplePayload): Promise<Result> {
+    private async _runWorkshopSample(workshopId: string, workshopWithSamplePayload: WorkshopWithSamplePayload): Promise<Result> {
         return this.post<Result>(`/workshops/${workshopId}/sample/run`, workshopWithSamplePayload);
     }
 
@@ -70,7 +70,7 @@ export class WorkshopService extends BaseService {
      * @param workshopWithSchemaPayload Details required for running the target schema (WorkshopWithSchemaPayload).
      * @returns A promise that resolves to the result of running the target schema.
      */
-    public async runWorkshopTargetSchema(workshopId: string, workshopWithSchemaPayload: WorkshopWithSchemaPayload): Promise<Result> {
+    private async _runWorkshopTargetSchema(workshopId: string, workshopWithSchemaPayload: WorkshopWithSchemaPayload): Promise<Result> {
         return this.post<Result>(`/workshops/${workshopId}/target_schema/run`, workshopWithSchemaPayload);
     }
 
@@ -94,9 +94,59 @@ export class WorkshopService extends BaseService {
         return this.fetchPaginatedData<Result>(`/workshops/${workshopId}/results`, page, size);
     }
 
+      /**
+   * Section 2: Simple Abstraction
+   * 
+   * The following methods are one-level abstractions for common workflows that involve a single API call. 
+   * The methods are provided for convenience and to simplify the Lume API call payload
+   * 
+   **/
+
+
+      /**
+     * Runs the mapper of a workshop with the specified ID.
+     * @param workshopId The ID of the workshop to run the mapper for.
+     * @param workshopWithMapperPayload Details required for running the mapper (WorkshopWithMapperPayload object).
+     * @returns A promise that resolves to the result of running the mapper.
+     */
+    public async runWorkshopMapper(workshopId: string, workshopWithMapperPayload: WorkshopWithMapperPayload): Promise<Result> {
+        const result: Result = await this._runWorkshopMapper(workshopId, workshopWithMapperPayload);
+        if(workshopWithMapperPayload.auto_deploy) {
+            await this.deployWorkshop(workshopId);
+        }
+        return result;
+    }
 
     /**
-   * Section 2: Workflow abstractions 
+     * Runs a sample for the workshop with the specified ID.
+     * @param workshopId The ID of the workshop to run the sample for.
+     * @param workshopWithSamplePayload Details required for running the sample (WorkshopWithSamplePayload).
+     * @returns A promise that resolves to the result of running the sample.
+     */
+    public async runWorkshopSample(workshopId: string, workshopWithSamplePayload: WorkshopWithSamplePayload): Promise<Result> {
+        const result: Result = await this._runWorkshopSample(workshopId, workshopWithSamplePayload);
+        if(workshopWithSamplePayload.auto_deploy) {
+            await this.deployWorkshop(workshopId);
+        }
+        return result;}
+
+    /**
+     * Runs the target schema for the workshop with the specified ID.
+     * @param workshopId The ID of the workshop to run the target schema for.
+     * @param workshopWithSchemaPayload Details required for running the target schema (WorkshopWithSchemaPayload).
+     * @returns A promise that resolves to the result of running the target schema.
+     */
+    public async runWorkshopTargetSchema(workshopId: string, workshopWithSchemaPayload: WorkshopWithSchemaPayload): Promise<Result> {
+        const result: Result = await this._runWorkshopTargetSchema(workshopId, workshopWithSchemaPayload);
+        if(workshopWithSchemaPayload.auto_deploy) {
+            await this.deployWorkshop(workshopId);
+        }
+        return result;
+    }
+
+
+    /**
+   * Section 3: Workflow abstractions 
    * 
    * The following methods are abstractions for common workflows that involve multiple API calls.
    * These methods are provided for convenience and to simplify common use cases.
