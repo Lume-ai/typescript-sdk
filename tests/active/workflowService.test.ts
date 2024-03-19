@@ -1,15 +1,7 @@
-import * as assert from "assert";
-import { JobCreatePayload, JobExecutionResponse, Lume, Mapping, Result, WorkshopWithMapperPayload } from "../../src";
+import { JobCreatePayload, JobExecutionResponse, Lume, Result, WorkshopWithMapperPayload } from "../../src";
 import { createPipeline } from "../methods/base/createPipeline";
-import { EDITED_TARGET_SCHEMA, MAPPER_EDITS, SAMPLE_EDITS, SOURCE_DATA, TARGET_SCHEMA } from "../methods/consts/consts";
-import { createJob } from "../methods/base/createJob";
-import { runJob } from "../methods/base/runJob";
-import { getMappings } from "../methods/base/getMappings";
-import { editWithMapper } from "../methods/base/editWithMapper";
-import { editWithTargetSchema } from "../methods/base/editWithTargetSchema";
-import { editWithSample } from "../methods/base/editWithSample";
+import { MAPPER_EDITS, SOURCE_DATA, TARGET_SCHEMA } from "../methods/consts/consts";
 import { API_KEY } from "../api_key";
-import { PaginatedResponse } from "../../src/types/pagination";
 import { generateRandomId } from "../methods/utils/utils";
 
 describe("Workflow Service Tests", () => {
@@ -84,5 +76,21 @@ describe("Workflow Service Tests", () => {
         expect(mappings).toBeDefined();
     }, 300000);
 
+    it("should run workflowService.executeJobCycleWithNewPipeline() with mapper parameter", async () => {
+        const pipelineCreatePayload = {
+            name: "sdk-test-" + generateRandomId(),
+            description: "description",
+            target_schema: TARGET_SCHEMA,
+        }
+        const jobCreatePayload: JobCreatePayload = {
+            data: SOURCE_DATA,
+        }
+
+        const resp: JobExecutionResponse = await lume.workflowService.executeJobCycleWithNewPipeline(pipelineCreatePayload, jobCreatePayload, MAPPER_EDITS);
+        const result = resp.result;
+        const mappings = resp.mappingsPage.items;
+        expect(result).toBeDefined();
+        expect(mappings).toBeDefined();
+    }, 300000);
 
 });

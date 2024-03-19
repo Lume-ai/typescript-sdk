@@ -1,12 +1,11 @@
 // services/WorkflowService.ts
 
 import { BaseService } from "./BaseService";
-import { Job, JobCreatePayload, Mapping, PipelineCreatePayload, Result } from "../models";
+import { JobCreatePayload, MapperEditSchema, PipelineCreatePayload, Result } from "../models";
 import { JobsService } from "./JobsService";
 import { WorkshopService } from "./WorkshopService";
 import { PipelineService } from "./PipelineService";
 import { ResultsService } from "./ResultsService";
-import { PaginatedResponse } from "../types/pagination";
 import { JobExecutionResponse } from "../models/workflows/JobExecutionResponse";
 
 /**
@@ -44,15 +43,38 @@ export class WorkflowService extends BaseService {
      * Creates a job for the specified pipeline, runs the job, and returns the mappings for the result, via a PaginatedResponse.
      * @param pipelineCreatePayload Details of the pipeline to create (PipelineCreatePayload).
      * @param jobCreatePayload Details of the job to create (JobCreatePayload).
+     * @param mapper Optional; Manual mappings to apply to the spec after generation. This will override the generated mapping for the specified fields.
      * @returns A promise that resolves to the result of running the job.
      */
-    public async executeJobCycleWithNewPipeline(pipelineCreatePayload: PipelineCreatePayload, jobCreatePayload: JobCreatePayload): Promise<JobExecutionResponse> {
+    public async executeJobCycleWithNewPipeline(pipelineCreatePayload: PipelineCreatePayload, jobCreatePayload: JobCreatePayload, mapper?: Array<MapperEditSchema>): Promise<JobExecutionResponse> {
         const pipeline = await this.pipelineService.createPipeline(
             pipelineCreatePayload
         );
         const mappingsPage: JobExecutionResponse = await this.executeJobCycle(pipeline.id, jobCreatePayload);
-        return mappingsPage;
+
+        if (mapper === undefined) {
+            return mappingsPage;
+        }
+
+        // Optional step to apply manual mappings to the spec after generation, if mapper is provided
+        // This will override the generated mapping for the specified fields, effectively applying the manual mappings upon pipeline creation
+
+        if (mappingsPage.result.job_id === null) {
+            console.error("job id is null"); // safeguard against null job id error
+            return mappingsPage;
+        }
+
+        const workshop = await this.workshopService.createWorkshopForJob(mappingsPage.result.job_id);
+        const mapper_edits = {
+            mapper: mapper,
+            auto_deploy: true, // auto deploy the workshop after the edits are applied
+        };
+        const mappedEditResult: Result = await this.workshopService.runWorkshopMapper(
+            workshop.id,
+            mapper_edits
+        );
+
+        const editedMappingsPage = await this.resultsService.getMappingsForResult(mappedEditResult.id);
+        return { result: mappedEditResult, mappingsPage: editedMappingsPage };
     }
-
-
 }
