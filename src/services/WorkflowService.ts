@@ -43,7 +43,7 @@ export class WorkflowService extends BaseService {
      * Creates a job for the specified pipeline, runs the job, and returns the mappings for the result, via a PaginatedResponse.
      * @param pipelineCreatePayload Details of the pipeline to create (PipelineCreatePayload).
      * @param jobCreatePayload Details of the job to create (JobCreatePayload).
-     * @param @param [mapper] Optional. An array of manual mappings to apply to the spec after generation. 
+     * @param [mapper] Optional. An array of manual mappings to apply to the spec after generation. 
      *  If provided, this will override the generated mapping for the specified fields. If omitted, the function proceeds with the generated mappings.
      * @returns A promise that resolves to the result of running the job.
      */
