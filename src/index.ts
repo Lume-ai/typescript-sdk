@@ -27,6 +27,7 @@ import {
 import { WorkflowService } from './services/WorkflowService';
 import { PaginatedResponse } from './types/pagination';
 import { JobExecutionResponse } from './models/workflows/JobExecutionResponse';
+import { ModelTypeMap } from './types/ModelTypeMap';
 
 /**
  * Main entry point for interacting with Lume services.
@@ -77,5 +78,6 @@ export {
   User,
   UserPayload,
   JobExecutionResponse,
-  PaginatedResponse
+  PaginatedResponse,
+  ModelTypeMap
 }
