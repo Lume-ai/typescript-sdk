@@ -8,6 +8,7 @@ import { PipelineService } from "./PipelineService";
 import { ResultsService } from "./ResultsService";
 import { JobExecutionResponse } from "../models/workflows/JobExecutionResponse";
 import { ModelTypeMap } from "../types/ModelTypeMap";
+import { PaginatedResponse } from '../types/pagination';
 
 /**
  * Service class for orchestrating workflows involving method calls across services
@@ -34,12 +35,12 @@ export class WorkflowService extends BaseService {
    * @param jobCreatePayload Details of the job to create (JobCreatePayload).
    * @returns A promise that resolves to the result of running the job.
    */
-    public async getObjectWithFilter<T extends keyof ModelTypeMap>(model: T, params: Record<string, any>): Promise<ModelTypeMap[T]> {
+    public async getObjectWithFilter<T extends keyof ModelTypeMap>(model: T, params: Record<string, any>): Promise<PaginatedResponse<ModelTypeMap[T]>> {
         const payload = {
             model,
             params,
         };
-        return this.post<ModelTypeMap[T]>(`/search`, payload);
+        return this.post<PaginatedResponse<ModelTypeMap[T]>>(`/search`, payload);
     }
 
     /**
