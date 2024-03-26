@@ -7,6 +7,7 @@ import { WorkshopService } from "./WorkshopService";
 import { PipelineService } from "./PipelineService";
 import { ResultsService } from "./ResultsService";
 import { JobExecutionResponse } from "../models/workflows/JobExecutionResponse";
+import { ModelTypeMap } from "../types/ModelTypeMap";
 
 /**
  * Service class for orchestrating workflows involving method calls across services
@@ -25,6 +26,20 @@ export class WorkflowService extends BaseService {
         this.pipelineService = pipelineService;
         this.resultsService = resultsService;
         this.workshopService = workshopService;
+    }
+
+    /**
+   * Queries any Lume object with a filter and returns a pag
+   * @param pipelineId The ID of the pipeline.
+   * @param jobCreatePayload Details of the job to create (JobCreatePayload).
+   * @returns A promise that resolves to the result of running the job.
+   */
+    public async getObjectWithFilter<T extends keyof ModelTypeMap>(model: T, params: Record<string, any>): Promise<ModelTypeMap[T]> {
+        const payload = {
+            model,
+            params,
+        };
+        return this.post<ModelTypeMap[T]>(`/search`, payload);
     }
 
     /**

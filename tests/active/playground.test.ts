@@ -157,20 +157,8 @@ describe("Playground Tests", () => {
     }, 300000);
 
     it("test2", async () => {
-        const pipeline = await createPipeline(lume, TARGET_SCHEMA);
-        const job = await createJob(lume, pipeline.id, SOURCE_DATA);
-        const result = await runJob(lume, job.id);
-        // const mappings = await getMappings(lume, result.id);
-        const workshop = await editWithTargetSchema(
-            lume,
-            job.id,
-            false,
-            EDITED_TARGET_SCHEMA
-        );
-
-
-
-        expect(workshop).toBeDefined();
+        const pipelines = await lume.workflowService.getObjectWithFilter("pipeline", { name: "demo-vTCWO" });
+        console.log("ASDASD", pipelines);
     }, 300000);
 
 });
