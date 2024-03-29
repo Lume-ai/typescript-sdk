@@ -50,7 +50,7 @@ export class WorkflowService extends BaseService {
      * @param [immediate_return] Optional. Whether to return immediately after starting the job (optional, defaults to false). This allows for asynchronous job execution and ping the job status later.
      * @returns A promise that resolves to the result of running the job.
      */
-    public async executeJobCycle(pipelineId: string, jobCreatePayload: JobCreatePayload, immediate_return?: boolean): Promise<JobExecutionResponse> {
+    public async executeJobCycle(pipelineId: string, jobCreatePayload: JobCreatePayload): Promise<JobExecutionResponse> {
         const result: Result = await this.jobsService.createAndRunJob(pipelineId, jobCreatePayload);
         const mappingsPage = await this.resultsService.getMappingsForResult(result.id);
         return { result, mappingsPage };
@@ -62,10 +62,9 @@ export class WorkflowService extends BaseService {
      * @param jobCreatePayload Details of the job to create (JobCreatePayload).
      * @param [mapper] Optional. An array of manual mappings to apply to the spec after generation. 
      *  If provided, this will override the generated mapping for the specified fields. If omitted, the function proceeds with the generated mappings.
-     * @param [immediate_return] Optional. Whether to return immediately after starting the job (optional, defaults to false). This allows for asynchronous job execution and ping the job status later.
      * @returns A promise that resolves to the result of running the job.
      */
-    public async executeJobCycleWithNewPipeline(pipelineCreatePayload: PipelineCreatePayload, jobCreatePayload: JobCreatePayload, mapper?: Array<MapperEditSchema>, immediate_return?: boolean): Promise<JobExecutionResponse> {
+    public async executeJobCycleWithNewPipeline(pipelineCreatePayload: PipelineCreatePayload, jobCreatePayload: JobCreatePayload, mapper?: Array<MapperEditSchema>): Promise<JobExecutionResponse> {
         const pipeline = await this.pipelineService.createPipeline(
             pipelineCreatePayload
         );

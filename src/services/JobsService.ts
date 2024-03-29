@@ -96,7 +96,7 @@ export class JobsService extends BaseService {
      */
     public async createAndRunJob(pipelineId: string, jobCreatePayload: JobCreatePayload, immediate_return?: boolean): Promise<Result> {
         const job = await this.createJobForPipeline(pipelineId, jobCreatePayload);
-        const result: Result = await this.runJob(job.id);
+        const result: Result = await this.runJob(job.id, immediate_return);
         return result;
     }
 }
