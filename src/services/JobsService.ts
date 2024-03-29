@@ -15,11 +15,11 @@ export class JobsService extends BaseService {
         super(apiKey);
     }
 
-     /**
-     * Retrieves details of a specific job.
-     * @param jobId The ID of the job to fetch details for.
-     * @returns A promise that resolves to the job details.
-     */
+    /**
+    * Retrieves details of a specific job.
+    * @param jobId The ID of the job to fetch details for.
+    * @returns A promise that resolves to the job details.
+    */
     public async getJob(jobId: string): Promise<Job> {
         return this.get<Job>(`/jobs/${jobId}`);
     }
@@ -28,8 +28,8 @@ export class JobsService extends BaseService {
      * Fetches all job data.
      * @returns A promise that resolves to a list of all jobs.
      */
-    public async getJobs(): Promise<Job> {
-        return this.get<Job>(`/jobs`);
+    public async getJobs(page: number = 1, size: number = 50): Promise<PaginatedResponse<Job>> {
+        return this.fetchPaginatedData<Job>(`/jobs`, page, size);
     }
 
     /**
@@ -43,13 +43,13 @@ export class JobsService extends BaseService {
         return this.fetchPaginatedData<Job>(`/jobs/${jobId}/data`, page, size);
     }
 
-      /**
-     * Fetches job data for a specific pipeline.
-     * @param jobId The ID of the job to fetch data for.
-     * @param page The page number to fetch (optional, defaults to 1).
-     * @param size The number of items per page (optional, defaults to 50).
-     * @returns A promise that resolves to a paginated response of job data.
-     */
+    /**
+   * Fetches job data for a specific pipeline.
+   * @param jobId The ID of the job to fetch data for.
+   * @param page The page number to fetch (optional, defaults to 1).
+   * @param size The number of items per page (optional, defaults to 50).
+   * @returns A promise that resolves to a paginated response of job data.
+   */
     public async getJobsForPipeline(pipelineId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<Job>> {
         return this.fetchPaginatedData<Job>(`/pipelines/${pipelineId}/jobs`, page, size);
     }
@@ -85,15 +85,15 @@ export class JobsService extends BaseService {
         return this.fetchPaginatedData<Workshop>(`/jobs/${jobId}/workshops`, page, size);
     }
 
-     /**
-   * Section 2: Workflow abstractions 
-   * 
-   * The following methods are abstractions for common workflows that involve multiple API calls.
-   * These methods are provided for convenience and to simplify common use cases.
-   *  
-   * These methods are not part of the Lume API, but are provided as a convenience to users of the Lume SDK.
-   * 
-   **/
+    /**
+  * Section 2: Workflow abstractions 
+  * 
+  * The following methods are abstractions for common workflows that involve multiple API calls.
+  * These methods are provided for convenience and to simplify common use cases.
+  *  
+  * These methods are not part of the Lume API, but are provided as a convenience to users of the Lume SDK.
+  * 
+  **/
 
     /**
      * Creates a job for the specified pipeline and runs the job.

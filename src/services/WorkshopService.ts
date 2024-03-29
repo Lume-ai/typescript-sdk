@@ -30,8 +30,8 @@ export class WorkshopService extends BaseService {
      * Fetches all workshop data.
      * @returns A promise that resolves to a list of all workshops.
      */
-    public async getWorkshops(): Promise<Workshop> {
-        return this.get<Workshop>(`/workshops`);
+    public async getWorkshops(page: number = 1, size: number = 50): Promise<PaginatedResponse<Workshop>> {
+        return this.fetchPaginatedData<Workshop>(`/workshops`);
     }
 
     /**
