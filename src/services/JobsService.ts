@@ -26,6 +26,14 @@ export class JobsService extends BaseService {
 
     /**
      * Fetches all job data.
+     * @returns A promise that resolves to a list of all jobs.
+     */
+    public async getJobs(): Promise<Job> {
+        return this.get<Job>(`/jobs`);
+    }
+
+    /**
+     * Fetches all job data.
      * @param jobId The ID of the job to fetch data for.
      * @param page The page number to fetch.
      * @param size The number of items per page.

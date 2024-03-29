@@ -27,6 +27,14 @@ export class WorkshopService extends BaseService {
     }
 
     /**
+     * Fetches all workshop data.
+     * @returns A promise that resolves to a list of all workshops.
+     */
+    public async getWorkshops(): Promise<Workshop> {
+        return this.get<Workshop>(`/workshops`);
+    }
+
+    /**
      * Creates a new workshop for the specified job.
      * @param jobId The ID of the job to create the workshop for.
      * @returns A promise that resolves to the created workshop.
