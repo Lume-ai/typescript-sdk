@@ -14,7 +14,7 @@ describe("Playground Tests", () => {
         lume = new Lume(API_KEY);
     });
 
-    it("test1", async () => {
+    // it("test1", async () => {
         // const pipeline = await createPipeline(lume, TARGET_SCHEMA);
         // const workshop = await lume.pipelineService.createWorkshopForPipeline(pipeline.id)
 
@@ -151,14 +151,15 @@ describe("Playground Tests", () => {
         //     "required": ["travel_costs_by_year", "depreciation_by_year", "payroll_benefits_expenses_by_year", "compliance_costs_by_year", "office_costs_by_year", "education_costs_by_year", "dues_and_subscriptions_by_year"]
         // }
         // const pipeline = await createPipeline(lume, target_schema);
-        const payload = {
-            data: []
-        }
-    }, 300000);
+    //     const payload = {
+    //         data: []
+    //     }
+    // }, 300000);
 
     it("test2", async () => {
-        const pipelines = await lume.workflowService.getObjectWithFilter("pipeline", { name: "demo-vTCWO" });
-        console.log("ASDASD", pipelines);
+        const jobId = '70b4e40b-9191-40c7-b73d-f483e1b4d153'
+        const result = await lume.jobsService.runJob(jobId, true);
+        console.log("ASDASD", result);
     }, 300000);
 
 });

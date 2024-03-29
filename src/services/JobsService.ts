@@ -59,10 +59,11 @@ export class JobsService extends BaseService {
     /**
      * Runs the specified job.
      * @param jobId The ID of the job to run.
+     * @param [immediate_return] Optional. Whether to return immediately after starting the job (optional, defaults to false). This allows for asynchronous job execution and ping the job status later.
      * @returns A promise that resolves to the job result.
      */
-    public async runJob(jobId: string): Promise<Result> {
-        return this.post<Result>(`/jobs/${jobId}/run`);
+    public async runJob(jobId: string, immediate_return?: boolean): Promise<Result> {
+        return this.post<Result>(`/jobs/${jobId}/run`, { immediate_return });
     }
 
     /**
@@ -90,9 +91,10 @@ export class JobsService extends BaseService {
      * Creates a job for the specified pipeline and runs the job.
      * @param pipelineId The ID of the pipeline.
      * @param jobCreatePayload Details of the job to create (JobCreatePayload).
+     * @param [immediate_return] Optional. Whether to return immediately after starting the job (optional, defaults to false). This allows for asynchronous job execution and ping the job status later.
      * @returns A promise that resolves to the result of running the job.
      */
-    public async createAndRunJob(pipelineId: string, jobCreatePayload: JobCreatePayload): Promise<Result> {
+    public async createAndRunJob(pipelineId: string, jobCreatePayload: JobCreatePayload, immediate_return?: boolean): Promise<Result> {
         const job = await this.createJobForPipeline(pipelineId, jobCreatePayload);
         const result: Result = await this.runJob(job.id);
         return result;
