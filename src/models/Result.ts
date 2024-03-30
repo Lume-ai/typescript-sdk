@@ -40,6 +40,6 @@ export namespace Result {
     RUNNING = "running",
     FINISHED = "finished",
     FAILED = "failed",
-    NEEDS_REVIEW = "needs_review",
+    NEEDS_REVIEW = "needs review",
   }
 }
