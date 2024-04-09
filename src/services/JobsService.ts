@@ -39,8 +39,8 @@ export class JobsService extends BaseService {
      * @param size The number of items per page.
      * @returns A promise that resolves to a paginated response of job data.
      */
-    public async getJobDataPage(jobId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<Job>> {
-        return this.fetchPaginatedData<Job>(`/jobs/${jobId}/data`, page, size);
+    public async getJobDataPage(jobId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<Record<string, any>[]>> {
+        return this.fetchPaginatedData<any>(`/jobs/${jobId}/data`, page, size);
     }
 
     /**

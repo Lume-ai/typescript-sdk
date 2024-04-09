@@ -158,8 +158,16 @@ describe("Playground Tests", () => {
 
     it("test2", async () => {
         const jobId = '70b4e40b-9191-40c7-b73d-f483e1b4d153'
-        const result = await lume.jobsService.runJob(jobId, true);
-        console.log("ASDASD", result);
+        try {
+        const pipeline = await lume.pipelineService.getPipeline(jobId);
+        console.log("CORRECT", pipeline);
+
+        }
+        catch (e) {
+            console.log("ERROR", e);
+
+        }
+        // const result = await lume.jobsService.runJob(jobId, true);
     }, 300000);
 
 });
