@@ -18,6 +18,6 @@ export type Spec = {
      * The confidence score of the lookups.
      */
     readonly confidence_score ?: {
-        lookup_confidence: Record<string, any>;
+        lookup_confidence: Record<string, string>;
     };
 }
