@@ -29,7 +29,6 @@ import { PaginatedResponse } from './types/pagination';
 import { JobExecutionResponse } from './models/workflows/JobExecutionResponse';
 import { ModelTypeMap } from './types/ModelTypeMap';
 import { Spec } from './models/Spec';
-import { Type } from './models/Type';
 
 /**
  * Main entry point for interacting with Lume services.
@@ -82,6 +81,5 @@ export {
   JobExecutionResponse,
   PaginatedResponse,
   ModelTypeMap,
-  Spec,
-  Type
+  Spec
 }
