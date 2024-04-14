@@ -95,4 +95,26 @@ export class WorkflowService extends BaseService {
         const editedMappingsPage = await this.resultsService.getMappingsForResult(mappedEditResult.id);
         return { result: mappedEditResult, mappingsPage: editedMappingsPage };
     }
+
+    public async generateConfidenceScoreForPipeline(pipelineId: string): Promise<Result> {       
+        // get most recent job for pipeline
+        const jobsPage = await this.jobsService.getJobsForPipeline(pipelineId, 1, 1);
+        if(jobsPage.items.length === 0) {
+            throw new Error('No jobs found for pipeline');
+        }
+        const job = jobsPage.items[0];
+
+        const resultPage = await this.resultsService.getJobResults(job.id, 1, 1);
+        if(resultPage.items.length === 0) {
+            throw new Error('No results found for job');
+        }
+
+        const result = resultPage.items[0];
+        if(result.status !== 'finished') {
+            throw new Error('Job has not finished');
+        }
+
+        // generate confidence score
+        return await this.resultsService.generateConfidenceScores(result.id);
+    }
 }

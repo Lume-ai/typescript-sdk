@@ -36,19 +36,32 @@ export class ResultsService extends BaseService {
         return this.fetchPaginatedData<Result>(`/jobs/${jobId}/results`, page, size);
     }
 
-     /**
-     * Retrieves mappings associated with a specific result.
-     * @param resultId The ID of the result.
-     * @param page The page number to fetch (optional, defaults to 1).
-     * @param size The number of items per page (optional, defaults to 50).
-     * @param include_spec Whether to include the spec of the mapping task (optional, defaults to true).
-     * @returns A promise that resolves to a paginated response of mappings.
-     */
+    /**
+    * Retrieves mappings associated with a specific result.
+    * @param resultId The ID of the result.
+    * @param page The page number to fetch (optional, defaults to 1).
+    * @param size The number of items per page (optional, defaults to 50).
+    * @param include_spec Whether to include the spec of the mapping task (optional, defaults to true).
+    * @returns A promise that resolves to a paginated response of mappings.
+    */
     public async getMappingsForResult(resultId: string, page: number = 1, size: number = 50, include_spec: boolean = true): Promise<PaginatedResponse<Mapping>> {
-        return this.fetchPaginatedDataWithParams<Mapping>(`/results/${resultId}/mappings`, {page, size, include_spec});
+        return this.fetchPaginatedDataWithParams<Mapping>(`/results/${resultId}/mappings`, { page, size, include_spec });
     }
 
     public async generateConfidenceScores(resultId: string): Promise<Result> {
-        return this.post<Result>(`/results/${resultId}/confidence`); 
+        return this.post<Result>(`/results/${resultId}/confidence`);
     }
+
+    /**
+* Section 2: Workflow abstractions 
+* 
+* The following methods are abstractions for common workflows that involve multiple API calls.
+* These methods are provided for convenience and to simplify common use cases.
+*  
+* These methods are not part of the Lume API, but are provided as a convenience to users of the Lume SDK.
+* 
+**/
+  
+// TODO: Add workflow abstractions here
+
 }

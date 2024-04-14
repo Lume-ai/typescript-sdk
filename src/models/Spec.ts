@@ -12,12 +12,12 @@ export type Spec = {
     /**
      * The lookup of the spec.
      */
-    readonly "@lookup" ?: Record<string, any>;
+    readonly "@lookup"?: Record<string, any>;
 
     /**
      * The confidence score of the lookups.
      */
-    readonly confidence_score ?: {
+    readonly confidence_score?: {
         lookup_confidence: Record<string, string>;
     };
 }
