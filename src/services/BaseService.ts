@@ -9,11 +9,11 @@ import { PaginatedResponse } from '../types/pagination';
 export class BaseService {
     private httpClient: AxiosInstance;
 
-     /**
-     * Constructs a new instance of BaseService.
-     * @param apiKey The API key used for authentication.
-     * @param baseURL The base URL of the API (optional, defaults to 'https://api.lume-terminus.com').
-     */
+    /**
+    * Constructs a new instance of BaseService.
+    * @param apiKey The API key used for authentication.
+    * @param baseURL The base URL of the API (optional, defaults to 'https://api.lume-terminus.com').
+    */
     constructor(apiKey: string, baseURL: string = 'https://api.lume-terminus.com') {
         this.httpClient = axios.create({
             baseURL,
@@ -34,11 +34,11 @@ export class BaseService {
         this.httpClient.interceptors.response.use(this.handleResponse, this.handleError);
     }
 
-     /**
-     * Handles request before it is sent.
-     * @param config Axios request configuration.
-     * @returns Modified Axios request configuration.
-     */
+    /**
+    * Handles request before it is sent.
+    * @param config Axios request configuration.
+    * @returns Modified Axios request configuration.
+    */
     private handleRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
         config.headers = config.headers || {}; // Ensures headers object exists, should be redundant
         // config.headers['lume-api-key'] = this.apiKey;
@@ -54,19 +54,24 @@ export class BaseService {
         return response;
     };
 
-     /**
-     * Fetches paginated data from the specified endpoint.
-     * @param endpoint The endpoint to fetch data from.
-     * @param page The page number (optional, defaults to 1).
-     * @param size The number of items per page (optional, defaults to 50).
-     * @returns A promise that resolves to a paginated response.
-     */
+    /**
+    * Fetches paginated data from the specified endpoint.
+    * @param endpoint The endpoint to fetch data from.
+    * @param page The page number (optional, defaults to 1).
+    * @param size The number of items per page (optional, defaults to 50).
+    * @returns A promise that resolves to a paginated response.
+    */
     protected async fetchPaginatedData<T>(endpoint: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<T>> {
         const response = await this.httpClient.get<PaginatedResponse<T>>(endpoint, { params: { page, size } });
         return response.data;
     }
 
-      protected async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    protected async fetchPaginatedDataWithParams<T>(endpoint: string, params: Record<string, any>): Promise<PaginatedResponse<T>> {
+        const response = await this.httpClient.get<PaginatedResponse<T>>(endpoint, { params });
+        return response.data;
+    }
+
+    protected async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
         return this.httpClient.get<T>(url, config).then(res => res.data);
     }
 

@@ -41,9 +41,14 @@ export class ResultsService extends BaseService {
      * @param resultId The ID of the result.
      * @param page The page number to fetch (optional, defaults to 1).
      * @param size The number of items per page (optional, defaults to 50).
+     * @param include_spec Whether to include the spec of the mapping task (optional, defaults to true).
      * @returns A promise that resolves to a paginated response of mappings.
      */
-    public async getMappingsForResult(resultId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<Mapping>> {
-        return this.fetchPaginatedData<Mapping>(`/results/${resultId}/mappings`, page, size);
+    public async getMappingsForResult(resultId: string, page: number = 1, size: number = 50, include_spec: boolean = true): Promise<PaginatedResponse<Mapping>> {
+        return this.fetchPaginatedDataWithParams<Mapping>(`/results/${resultId}/mappings`, {page, size, include_spec});
+    }
+
+    public async generateConfidenceScores(resultId: string): Promise<Result> {
+        return this.post<Result>(`/results/${resultId}/confidence`); 
     }
 }
