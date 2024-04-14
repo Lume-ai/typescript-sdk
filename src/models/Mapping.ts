@@ -1,3 +1,5 @@
+import { Type } from "./Type";
+
 /**
  * An object that displays the mapped record of the data from the job
  */
@@ -25,6 +27,6 @@ export type Mapping = {
     /**
      * The specification of the mapping task
      */
-    readonly spec: Record<string, any>;
+    readonly spec: Type | null;
 };
 
