@@ -1,4 +1,4 @@
-import { Type } from "./Type";
+import { Spec } from "./Spec";
 
 /**
  * An object that displays the result of a mapping task. This stores all relevant object ids and the status of the mapping task.
@@ -37,7 +37,7 @@ export type Result = {
    * The spec of the mapping task. 
    * Will populate only if status is not running or failed
    */
-  readonly spec: Type | null;
+  readonly spec: Record<string, Spec> | null;
 };
 
 export namespace Result {
