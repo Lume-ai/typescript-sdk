@@ -61,7 +61,7 @@ export class BaseService {
     * @param size The number of items per page (optional, defaults to 50).
     * @returns A promise that resolves to a paginated response.
     */
-    protected async fetchPaginatedData<T>(endpoint: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<T>> {
+    protected async fetchPaginatedData<T>(endpoint: string, page: number = 1, size: number = 50, payload): Promise<PaginatedResponse<T>> {
         const response = await this.httpClient.get<PaginatedResponse<T>>(endpoint, { params: { page, size } });
         return response.data;
     }
