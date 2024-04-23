@@ -35,15 +35,15 @@ export class WorkflowService extends BaseService {
    * @param jobCreatePayload Details of the job to create (JobCreatePayload).
    * @returns A promise that resolves to the result of running the job.
    */
-    public async getObjectWithFilterPage<T extends keyof ModelTypeMap>(model: T, params: Record<string, any>, page: number, size: number): Promise<PaginatedResponse<ModelTypeMap[T]>> {
+ public async getObjectWithFilterPage<T extends keyof ModelTypeMap>(model: T, params: Record<string, any>, page: number, size: number): Promise<PaginatedResponse<ModelTypeMap[T]>> {
         const payload = {
             model,
             params,
+            page,
+            size
         };
-        return this.fetchPaginatedData<ModelTypeMap[T]>(`/search`, page, size);
 
-    }
-
+        return this.fetchPaginatedDataWithParams<ModelTypeMap[T]>(`/search`, payload);
     }
 
     /**
