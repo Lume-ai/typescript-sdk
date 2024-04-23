@@ -71,6 +71,14 @@ export class BaseService {
         return response.data;
     }
 
+    protected async postPaginatedDataWithParams<T>(endpoint: string, body: Record<string, any>, page: number = 1, size: number = 50 ): Promise<PaginatedResponse<T>> {
+        const config = {
+            params: { page, size }
+        };
+        const response = await this.httpClient.post<PaginatedResponse<T>>(endpoint, body, config);
+        return response.data;
+    }
+
     protected async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
         return this.httpClient.get<T>(url, config).then(res => res.data);
     }

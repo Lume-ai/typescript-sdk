@@ -31,19 +31,19 @@ export class WorkflowService extends BaseService {
 
     /**
    * Queries any Lume object with a filter and returns a pag
-   * @param pipelineId The ID of the pipeline.
-   * @param jobCreatePayload Details of the job to create (JobCreatePayload).
-   * @returns A promise that resolves to the result of running the job.
-   */
+   * @param model The model to query.
+   * @param params The filter parameters to apply.
+   * @param page The page number to fetch (optional, defaults to 1).
+   * @param size The number of items per page (optional, defaults to 50).
+   * @returns A promise that resolves to a paginated response of the specified model.
+   **/
  public async getObjectWithFilterPage<T extends keyof ModelTypeMap>(model: T, params: Record<string, any>, page: number, size: number): Promise<PaginatedResponse<ModelTypeMap[T]>> {
         const payload = {
             model,
-            params,
-            page,
-            size
+            params
         };
 
-        return this.fetchPaginatedDataWithParams<ModelTypeMap[T]>(`/search`, payload);
+        return this.postPaginatedDataWithParams<ModelTypeMap[T]>(`/search`, payload, page, size);
     }
 
     /**
