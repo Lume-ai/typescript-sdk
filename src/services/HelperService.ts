@@ -20,7 +20,7 @@ export class HelperService extends BaseService {
      * Converts an Excel file to JSON using the specified pipeline and job details.
      * NOTE: this method uses web environment packages to convert the file. Thus, it is not available in Node.js environment.
      * 
-     * @param file The Excel file to convert.
+     * @param file The Excel file to convert, File if called from the browser, string if called from Node.js.
      * @param name The name of the file.
      * @param sheets The names of the sheets to convert (optional).
      * @returns A promise that resolves to the JSON data.
@@ -35,11 +35,10 @@ export class HelperService extends BaseService {
      * ```
      */
 
-    public async convertExcelToJson(file: File, name: string, sheets?: string[]): Promise<any> {
+    public async convertExcelToJson(file: File | string, name: string, sheets?: string[]): Promise<any> {
         const reader = getFileReader();
         try {
             const binaryString = await reader.readAsBinaryString(file);
-            console.log('Binary string:', binaryString);
             const payload = {
                 file: binaryString,
                 name,
@@ -49,6 +48,5 @@ export class HelperService extends BaseService {
         } catch (error) {
             console.error('Error handling the file:', error);
         }
-
     }
 }
