@@ -29,6 +29,7 @@ import { PaginatedResponse } from './types/pagination';
 import { JobExecutionResponse } from './models/workflows/JobExecutionResponse';
 import { ModelTypeMap } from './types/ModelTypeMap';
 import { Spec } from './models/Spec';
+import { HelperService } from './services/HelperService';
 
 /**
  * Main entry point for interacting with Lume services.
@@ -40,6 +41,7 @@ class Lume {
   pipelineService: PipelineService;
   resultsService: ResultsService;
   workshopService: WorkshopService;
+  helperService: HelperService;
   workflowService: WorkflowService;
 
   /**
@@ -55,6 +57,7 @@ class Lume {
     this.pipelineService = new PipelineService(apiKey);
     this.resultsService = new ResultsService(apiKey);
     this.workshopService = new WorkshopService(apiKey);
+    this.helperService = new HelperService(apiKey);
     this.workflowService = new WorkflowService(apiKey, this.jobsService, this.pipelineService, this.resultsService, this.workshopService);
   }
 }
