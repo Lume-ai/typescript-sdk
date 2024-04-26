@@ -87,4 +87,14 @@ export class PipelineService extends BaseService {
     public async createWorkshopForPipeline(pipelineId: string): Promise<Workshop> {
         return this.post<Workshop>(`/pipelines/${pipelineId}/workshops`);
     }
+
+    /**
+     * Trains the AI using the pipeline's lookup tables .
+     * @param pipelineId The ID of the pipeline to train.
+     * @param targetPropertyNames  (optional) The target properties to train the AI on.
+     * @returns 
+     */
+    public async learn(pipelineId: string, targetPropertyNames?: string[]): Promise<void> {
+        return this.post<void>(`/pipelines/${pipelineId}/learn`, { target_field_names: targetPropertyNames});
+    }
 }

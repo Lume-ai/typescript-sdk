@@ -5,6 +5,7 @@ instructions.txt
 # Ignore test-related files
 /tests/api_key.ts
 /tests/methods/consts
+/tests/**
 
 # Build files
 /dist

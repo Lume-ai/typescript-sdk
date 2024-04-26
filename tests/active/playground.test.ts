@@ -15,18 +15,23 @@ describe("Playground Tests", () => {
   });
 
   it("test3", async () => {
-    const body = {
-      pipeline_id: "3c2f54ee-c16c-4f20-9539-3d02028e21d6"
-  }
-  // const response = await lume.workflowService.getObjectWithFilterPage(model, params, page, size);
-  try {
-      const resultPage = await lume.workflowService.getObjectWithFilterPage('result', body, 1, 1);
-      console.log("resultPage: ", resultPage);
-      return resultPage;
-  }
-  catch (e) {
-      console.log("error: ", e);
-  }
+    console.log("lume", lume);
+    // console.log("lume.helperService", lume.helperService);
+    const pipelineId = 'e4ea6200-5f03-4900-a5b1-7f2bb88c26c5'
+    const ret = await lume.pipelineService.learn(pipelineId, ['output_value']);
+    console.log("ret", ret);
+  //   const body = {
+  //     pipeline_id: "3c2f54ee-c16c-4f20-9539-3d02028e21d6"
+  // }
+  // // const response = await lume.workflowService.getObjectWithFilterPage(model, params, page, size);
+  // try {
+  //     const resultPage = await lume.workflowService.getObjectWithFilterPage('result', body, 1, 1);
+  //     console.log("resultPage: ", resultPage);
+  //     return resultPage;
+  // }
+  // catch (e) {
+  //     console.log("error: ", e);
+  // }
     // const result = await lume.jobsService.runJob(jobId, true);
   }, 300000);
 
