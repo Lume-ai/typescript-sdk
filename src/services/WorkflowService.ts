@@ -109,12 +109,12 @@ export class WorkflowService extends BaseService {
 
         const resultPage = await this.resultsService.getJobResults(job.id, 1, 1);
         if(resultPage.items.length === 0) {
-            throw new Error('No results found for job');
+            throw new Error('No results found for job in the given pipeline. Cannot generate confidence score.');
         }
 
         const result = resultPage.items[0];
         if(result.status !== 'finished') {
-            throw new Error('Job has not finished');
+            throw new Error('Job has not finished yet. Cannot initiate confidence score generation.');
         }
 
         // generate confidence score

@@ -3,6 +3,10 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { PaginatedResponse } from '../types/pagination';
 
+const PROD_ENDPOINT = 'https://api.lume-terminus.com'
+// const PROD_ENDPOINT = 'http://staging.lume-terminus.com'
+
+
 /**
  * Base service class providing common functionality for other services.
  */
@@ -14,7 +18,7 @@ export class BaseService {
     * @param apiKey The API key used for authentication.
     * @param baseURL The base URL of the API (optional, defaults to 'https://api.lume-terminus.com').
     */
-    constructor(apiKey: string, baseURL: string = 'https://api.lume-terminus.com') {
+    constructor(apiKey: string, baseURL: string = PROD_ENDPOINT) {
         this.httpClient = axios.create({
             baseURL,
             headers: {
