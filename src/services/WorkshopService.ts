@@ -1,5 +1,6 @@
 import { Result, SuccessSchema, WorkshopWithMapperPayload, WorkshopWithSamplePayload, WorkshopWithSchemaPayload } from '../models';
 import { Workshop } from '../models/workshop/Workshop';
+import { WorkshopWithPromptPayload } from '../models/workshop/workshopWithPrompt/WorkshopWithPromptPayload';
 import { PaginatedResponse } from '../types/pagination';
 import { BaseService } from './BaseService';
 
@@ -80,6 +81,16 @@ export class WorkshopService extends BaseService {
      */
     public async runWorkshopTargetSchema(workshopId: string, workshopWithSchemaPayload: WorkshopWithSchemaPayload): Promise<Result> {
         return this.post<Result>(`/workshops/${workshopId}/target_schema/run`, workshopWithSchemaPayload);
+    }
+
+    /**
+     * Runs the prompts for the workshop with the specified ID.
+     * @param workshopId The ID of the workshop to run the target schema for.
+     * @param workshopWithPromptPayload Details required for running the prompt (WorkshopWithSchemaPayload).
+     * @returns A promise that resolves to the result of running the prompt.
+     */
+    public async runWorkshopPrompt(workshopId: string, workshopWithPromptPayload: WorkshopWithPromptPayload): Promise<Result> {
+        return this.post<Result>(`/workshops/${workshopId}/prompt/run`, workshopWithPromptPayload);
     }
 
     /**
