@@ -30,6 +30,8 @@ import { JobExecutionResponse } from './models/workflows/JobExecutionResponse';
 import { ModelTypeMap } from './types/ModelTypeMap';
 import { Spec } from './models/Spec';
 import { HelperService } from './services/HelperService';
+import { WorkshopWithPromptPayload } from './models/workshop/workshopWithPrompt/WorkshopWithPromptPayload';
+import { TargetFieldsToPrompt } from './models/workshop/workshopWithPrompt/TargetFieldsToPrompt';
 
 /**
  * Main entry point for interacting with Lume services.
@@ -71,6 +73,8 @@ export {
   WorkshopWithSamplePayload,
   Workshop,
   WorkshopWithSchemaPayload,
+  WorkshopWithPromptPayload,
+  TargetFieldsToPrompt,
   JobCreatePayload,
   PipelineCreatePayload,
   Job,
