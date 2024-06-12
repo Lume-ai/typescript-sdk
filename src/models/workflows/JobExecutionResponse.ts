@@ -17,4 +17,9 @@ export type JobExecutionResponse = {
      * The mappings for the result of the job
      */
     mappingsPage: PaginatedResponse<Mapping>;
+
+    /**
+     * The id of the job that was executed
+     */
+    jobId: string;
 }

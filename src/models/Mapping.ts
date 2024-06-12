@@ -1,5 +1,3 @@
-import { Spec } from "./Spec";
-
 /**
  * An object that displays the mapped record of the data from the job
  */
@@ -23,10 +21,5 @@ export type Mapping = {
      * The message of the mapping
      */
     message?: string;
-    
-    /**
-     * The specification of the mapping task
-     */
-    readonly spec: Record<string, Spec> | null;
 };
 

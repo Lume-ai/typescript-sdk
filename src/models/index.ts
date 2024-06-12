@@ -14,6 +14,9 @@ export * from './workshop/WorkshopWithSchemaPayload';
 // Workflow types
 export * from './workflows/JobExecutionResponse';
 
+// misc types
+export * from './misc/CreateAndRunJobResponse';
+
 // All types
 export * from './PipelineCreatePayload';
 export * from './Job';

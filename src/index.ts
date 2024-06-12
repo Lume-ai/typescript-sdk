@@ -31,6 +31,7 @@ import { Spec } from './models/Spec';
 import { HelperService } from './services/HelperService';
 import { WorkshopWithPromptPayload } from './models/workshop/workshopWithPrompt/WorkshopWithPromptPayload';
 import { TargetFieldsToPrompt } from './models/workshop/workshopWithPrompt/TargetFieldsToPrompt';
+import { CreateAndRunJobResponse } from './models/misc/CreateAndRunJobResponse';
 
 /**
  * Main entry point for interacting with Lume services.
@@ -85,6 +86,7 @@ export {
   User,
   UserPayload,
   JobExecutionResponse,
+  CreateAndRunJobResponse,
   PaginatedResponse,
   ModelTypeMap,
   Spec

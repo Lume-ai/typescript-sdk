@@ -5,6 +5,7 @@ import { BaseService } from "./BaseService";
 import { Job } from '../models/Job';
 import { Workshop } from '../models/workshop/Workshop';
 import { Result } from "../models";
+import { CreateAndRunJobResponse } from "../models/misc/CreateAndRunJobResponse";
 
 /**
  * Service class for interacting with job-related operations.
@@ -117,9 +118,9 @@ export class JobsService extends BaseService {
      * @param [immediate_return] Optional. Whether to return immediately after starting the job (optional, defaults to false). This allows for asynchronous job execution and ping the job status later.
      * @returns A promise that resolves to the result of running the job.
      */
-    public async createAndRunJob(pipelineId: string, sourceData: Array<Record<string, any>>, immediate_return?: boolean): Promise<Result> {
+    public async createAndRunJob(pipelineId: string, sourceData: Array<Record<string, any>>, immediate_return?: boolean): Promise<CreateAndRunJobResponse> {
         const job = await this.createJobForPipeline(pipelineId, sourceData);
         const result: Result = await this.runJob(job.id, immediate_return);
-        return result;
+        return { result: result, jobId: job.id };
     }
 }

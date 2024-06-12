@@ -9,6 +9,7 @@ import { ResultsService } from "./ResultsService";
 import { JobExecutionResponse } from "../models/workflows/JobExecutionResponse";
 import { ModelTypeMap } from "../types/ModelTypeMap";
 import { PaginatedResponse } from '../types/pagination';
+import { CreateAndRunJobResponse } from "../models/misc/CreateAndRunJobResponse";
 
 /**
  * Service class for orchestrating workflows involving method calls across services
@@ -63,9 +64,9 @@ export class WorkflowService extends BaseService {
      * @returns A promise that resolves to the result of running the job.
      */
     public async executeJobCycle(pipelineId: string, sourceData: Array<Record<string, any>>): Promise<JobExecutionResponse> {
-        const result: Result = await this.jobsService.createAndRunJob(pipelineId, sourceData);
+        const { result, jobId }: CreateAndRunJobResponse = await this.jobsService.createAndRunJob(pipelineId, sourceData);
         const mappingsPage = await this.resultsService.getMappingsForResult(result.id);
-        return { result, mappingsPage };
+        return { result, mappingsPage, jobId };
     }
 
     /**
@@ -80,21 +81,16 @@ export class WorkflowService extends BaseService {
         const pipeline = await this.pipelineService.createPipeline(
             pipelineCreatePayload
         );
-        const mappingsPage: JobExecutionResponse = await this.executeJobCycle(pipeline.id, sourceData);
+        const {result, mappingsPage, jobId}: JobExecutionResponse = await this.executeJobCycle(pipeline.id, sourceData);
 
         if (mapper === undefined) {
-            return mappingsPage;
+            return {result, mappingsPage, jobId};
         }
 
         // Optional step to apply manual mappings to the spec after generation, if mapper is provided
         // This will override the generated mapping for the specified fields, effectively applying the manual mappings upon pipeline creation
 
-        if (mappingsPage.result.job_id === null) {
-            console.error("job id is null"); // safeguard against null job id error
-            return mappingsPage;
-        }
-
-        const workshop = await this.workshopService.createWorkshopForJob(mappingsPage.result.job_id);
+        const workshop = await this.workshopService.createWorkshopForJob(jobId);
         const mapper_edits = {
             mapper: mapper,
             auto_deploy: true, // auto deploy the workshop after the edits are applied
@@ -105,7 +101,7 @@ export class WorkflowService extends BaseService {
         );
 
         const editedMappingsPage = await this.resultsService.getMappingsForResult(mappedEditResult.id);
-        return { result: mappedEditResult, mappingsPage: editedMappingsPage };
+        return { result: mappedEditResult, mappingsPage: editedMappingsPage, jobId };
     }
 
     public async generateConfidenceScoreForPipeline(pipelineId: string): Promise<Result> {       
