@@ -11,8 +11,14 @@ import { Result } from "../models";
  * Provides methods for fetching job details, creating jobs, running jobs, etc.
  */
 export class JobsService extends BaseService {
-    constructor(apiKey: string) {
-        super(apiKey);
+
+    /**
+     * Constructs a new instance of JobsService.
+     * @param apiKey The API key used for authentication.
+     * @param baseUrl The base URL for the API (optional).
+     */
+    constructor(apiKey: string, baseUrl?: string) {
+        super(apiKey, baseUrl);
     }
 
     /**

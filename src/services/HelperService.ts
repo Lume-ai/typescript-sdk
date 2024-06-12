@@ -11,9 +11,10 @@ export class HelperService extends BaseService {
     /**
      * Constructs a new instance of PipelineService.
      * @param apiKey The API key used for authentication.
+     * @param baseUrl The base URL for the API (optional).
      */
-    constructor(apiKey: string) {
-        super(apiKey);
+    constructor(apiKey: string, baseUrl?: string) {
+        super(apiKey, baseUrl);
     }
 
     /**

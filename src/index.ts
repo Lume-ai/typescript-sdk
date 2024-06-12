@@ -48,18 +48,19 @@ class Lume {
   /**
    * Constructs a new instance of Lume.
    * @param apiKey The API key used for authentication.
+   * @param baseUrl The base URL for the API (optional).
    */
-  constructor(apiKey: string) {
-    const base = new BaseService(apiKey);
+  constructor(apiKey: string, baseUrl?: string) {
+    const base = new BaseService(apiKey, baseUrl);
 
     // Initialize services
-    this.userService = new UserService(apiKey);
-    this.jobsService = new JobsService(apiKey);
-    this.pipelineService = new PipelineService(apiKey);
-    this.resultsService = new ResultsService(apiKey);
-    this.workshopService = new WorkshopService(apiKey);
-    this.helperService = new HelperService(apiKey);
-    this.workflowService = new WorkflowService(apiKey, this.jobsService, this.pipelineService, this.resultsService, this.workshopService);
+    this.userService = new UserService(apiKey, baseUrl);
+    this.jobsService = new JobsService(apiKey, baseUrl);
+    this.pipelineService = new PipelineService(apiKey, baseUrl);
+    this.resultsService = new ResultsService(apiKey, baseUrl);
+    this.workshopService = new WorkshopService(apiKey, baseUrl);
+    this.helperService = new HelperService(apiKey, baseUrl);
+    this.workflowService = new WorkflowService(apiKey, this.jobsService, this.pipelineService, this.resultsService, this.workshopService, baseUrl);
   }
 }
 

@@ -21,8 +21,17 @@ export class WorkflowService extends BaseService {
     private resultsService: ResultsService;
     private workshopService: WorkshopService;
 
-    constructor(apiKey: string, jobsService: JobsService, pipelineService: PipelineService, resultsService: ResultsService, workshopService: WorkshopService) {
-        super(apiKey);
+    /**
+     * Constructs a new instance of WorkflowService.
+     * @param apiKey The API key used for authentication.
+     * @param jobsService The JobsService instance to use.
+     * @param pipelineService The PipelineService instance to use.
+     * @param resultsService The ResultsService instance to use.
+     * @param workshopService The WorkshopService instance to use.
+     * @param baseUrl The base URL for the API (optional).
+     */
+    constructor(apiKey: string, jobsService: JobsService, pipelineService: PipelineService, resultsService: ResultsService, workshopService: WorkshopService, baseUrl?: string) {
+        super(apiKey, baseUrl);
         this.jobsService = jobsService;
         this.pipelineService = pipelineService;
         this.resultsService = resultsService;
