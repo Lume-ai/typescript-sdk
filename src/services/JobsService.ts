@@ -4,7 +4,7 @@ import { PaginatedResponse } from "../types/pagination";
 import { BaseService } from "./BaseService";
 import { Job } from '../models/Job';
 import { Workshop } from '../models/workshop/Workshop';
-import { JobCreatePayload, Result } from "../models";
+import { Result } from "../models";
 
 /**
  * Service class for interacting with job-related operations.
@@ -57,7 +57,7 @@ export class JobsService extends BaseService {
     /**
      * Creates a new job for the specified pipeline.
      * @param pipelineId The ID of the pipeline.
-     * @param jobCreatePayload Details of the job to create (JobCreatePayload).
+     * @param sourceData The source data to run the job on.
      * @returns A promise that resolves to the created job.
      */
     public async createJobForPipeline(pipelineId: string, sourceData: Array<Record<string, any>>): Promise<Job> { // Replace any with a specific type for job creation
@@ -107,7 +107,7 @@ export class JobsService extends BaseService {
     /**
      * Creates a job for the specified pipeline and runs the job.
      * @param pipelineId The ID of the pipeline.
-     * @param jobCreatePayload Details of the job to create (JobCreatePayload).
+     * @param sourceData The source data to run the job on.
      * @param [immediate_return] Optional. Whether to return immediately after starting the job (optional, defaults to false). This allows for asynchronous job execution and ping the job status later.
      * @returns A promise that resolves to the result of running the job.
      */
