@@ -89,6 +89,15 @@ export class PipelineService extends BaseService {
     }
 
     /**
+     * Retrieves the target schema for a specific pipeline.
+     * @param pipelineId 
+     * @returns 
+     */
+    public async getTargetSchemaForPipeline(pipelineId: string): Promise<Record<string, any>> {
+        return this.get<Record<string, any>>(`/pipelines/${pipelineId}/target_schema`);
+    }
+
+    /**
      * Trains the AI using the pipeline's lookup tables .
      * @param pipelineId The ID of the pipeline to train.
      * @param targetPropertyNames  (optional) The target properties to train the AI on.

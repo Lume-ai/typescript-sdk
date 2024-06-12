@@ -32,12 +32,6 @@ export type Result = {
    * The date and time this object was last updated
    */
   readonly updated_at: string | null;
-
-  /**
-   * The spec of the mapping task. 
-   * Will populate only if status is not running or failed
-   */
-  readonly spec: Record<string, Spec> | null;
 };
 
 export namespace Result {

@@ -21,7 +21,7 @@ export type Pipeline = {
     /**
      * The target schema of the pipeline. In json-schema format.
      */
-    target_schema: Record<string, any>;
+    target_schema_id: string;
     /**
      * The source schema of the pipeline, infered from the pipeline's jobs. In json-schema format
      */
