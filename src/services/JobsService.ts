@@ -60,8 +60,8 @@ export class JobsService extends BaseService {
      * @param jobCreatePayload Details of the job to create (JobCreatePayload).
      * @returns A promise that resolves to the created job.
      */
-    public async createJobForPipeline(pipelineId: string, jobCreatePayload: JobCreatePayload): Promise<Job> { // Replace any with a specific type for job creation
-        return this.post<Job>(`/pipelines/${pipelineId}/jobs`, jobCreatePayload);
+    public async createJobForPipeline(pipelineId: string, sourceData: Array<Record<string, any>>): Promise<Job> { // Replace any with a specific type for job creation
+        return this.post<Job>(`/pipelines/${pipelineId}/jobs`, { data: sourceData });
     }
 
     /**
@@ -86,6 +86,15 @@ export class JobsService extends BaseService {
     }
 
     /**
+     * Retrieves the target schema for a specific job.
+     * @param jobId 
+     * @returns 
+     */
+    public async getTargetSchemaForJob(jobId: string): Promise<Record<string, any>> {
+        return this.get<Record<string, any>>(`/jobs/${jobId}/target_schema`); 
+    }
+
+    /**
   * Section 2: Workflow abstractions 
   * 
   * The following methods are abstractions for common workflows that involve multiple API calls.
@@ -102,8 +111,8 @@ export class JobsService extends BaseService {
      * @param [immediate_return] Optional. Whether to return immediately after starting the job (optional, defaults to false). This allows for asynchronous job execution and ping the job status later.
      * @returns A promise that resolves to the result of running the job.
      */
-    public async createAndRunJob(pipelineId: string, jobCreatePayload: JobCreatePayload, immediate_return?: boolean): Promise<Result> {
-        const job = await this.createJobForPipeline(pipelineId, jobCreatePayload);
+    public async createAndRunJob(pipelineId: string, sourceData: Array<Record<string, any>>, immediate_return?: boolean): Promise<Result> {
+        const job = await this.createJobForPipeline(pipelineId, sourceData);
         const result: Result = await this.runJob(job.id, immediate_return);
         return result;
     }
