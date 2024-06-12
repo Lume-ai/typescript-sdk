@@ -12,9 +12,10 @@ export class ResultsService extends BaseService {
     /**
      * Constructs a new instance of ResultsService.
      * @param apiKey The API key used for authentication.
+     * @param baseUrl The base URL for the API (optional).
      */
-    constructor(apiKey: string) {
-        super(apiKey);
+    constructor(apiKey: string, baseUrl?: string) {
+        super(apiKey, baseUrl);
     }
 
     /**
