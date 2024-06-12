@@ -1,7 +1,7 @@
 // services/WorkflowService.ts
 
 import { BaseService } from "./BaseService";
-import { JobCreatePayload, MapperEditSchema, PipelineCreatePayload, Result } from "../models";
+import { MapperEditSchema, PipelineCreatePayload, Result } from "../models";
 import { JobsService } from "./JobsService";
 import { WorkshopService } from "./WorkshopService";
 import { PipelineService } from "./PipelineService";
@@ -49,12 +49,12 @@ export class WorkflowService extends BaseService {
     /**
      * Creates a job for the specified pipeline, runs the job, and returns the mappings for the result, via a PaginatedResponse.
      * @param pipelineId The ID of the pipeline.
-     * @param jobCreatePayload Details of the job to create (JobCreatePayload).
+     * @param sourceData The source data to run the job on.
      * @param [immediate_return] Optional. Whether to return immediately after starting the job (optional, defaults to false). This allows for asynchronous job execution and ping the job status later.
      * @returns A promise that resolves to the result of running the job.
      */
-    public async executeJobCycle(pipelineId: string, jobCreatePayload: JobCreatePayload): Promise<JobExecutionResponse> {
-        const result: Result = await this.jobsService.createAndRunJob(pipelineId, jobCreatePayload);
+    public async executeJobCycle(pipelineId: string, sourceData: Array<Record<string, any>>): Promise<JobExecutionResponse> {
+        const result: Result = await this.jobsService.createAndRunJob(pipelineId, sourceData);
         const mappingsPage = await this.resultsService.getMappingsForResult(result.id);
         return { result, mappingsPage };
     }
@@ -62,16 +62,16 @@ export class WorkflowService extends BaseService {
     /**
      * Creates a job for the specified pipeline, runs the job, and returns the mappings for the result, via a PaginatedResponse.
      * @param pipelineCreatePayload Details of the pipeline to create (PipelineCreatePayload).
-     * @param jobCreatePayload Details of the job to create (JobCreatePayload).
+     * @param sourceData The source data to run the job on.
      * @param [mapper] Optional. An array of manual mappings to apply to the spec after generation. 
      *  If provided, this will override the generated mapping for the specified fields. If omitted, the function proceeds with the generated mappings.
      * @returns A promise that resolves to the result of running the job.
      */
-    public async executeJobCycleWithNewPipeline(pipelineCreatePayload: PipelineCreatePayload, jobCreatePayload: JobCreatePayload, mapper?: Array<MapperEditSchema>): Promise<JobExecutionResponse> {
+    public async executeJobCycleWithNewPipeline(pipelineCreatePayload: PipelineCreatePayload, sourceData: Array<Record<string, any>>, mapper?: Array<MapperEditSchema>): Promise<JobExecutionResponse> {
         const pipeline = await this.pipelineService.createPipeline(
             pipelineCreatePayload
         );
-        const mappingsPage: JobExecutionResponse = await this.executeJobCycle(pipeline.id, jobCreatePayload);
+        const mappingsPage: JobExecutionResponse = await this.executeJobCycle(pipeline.id, sourceData);
 
         if (mapper === undefined) {
             return mappingsPage;
