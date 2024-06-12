@@ -1,6 +1,7 @@
 import { PaginatedResponse } from '../types/pagination';
 import { BaseService } from './BaseService';
 import { Result, Mapping } from '../models';
+import { Spec } from '../models/Spec';
 
 /**
  * Service class for interacting with result-related operations.
@@ -35,6 +36,10 @@ export class ResultsService extends BaseService {
     public async getJobResults(jobId: string, page: number = 1, size: number = 50): Promise<PaginatedResponse<Result>> {
         return this.fetchPaginatedData<Result>(`/jobs/${jobId}/results`, page, size);
     }
+        
+    public getSpecForResult(resultId: string): Promise<Record<string, Spec>> {
+        return this.get<Record<string, Spec>>(`/results/${resultId}/spec`);
+    }
 
     /**
     * Retrieves mappings associated with a specific result.
@@ -48,6 +53,11 @@ export class ResultsService extends BaseService {
         return this.fetchPaginatedDataWithParams<Mapping>(`/results/${resultId}/mappings`, { page, size, include_spec });
     }
 
+    /**
+     * Generates confidence scores for a specific result.
+     * @param resultId 
+     * @returns 
+     */
     public async generateConfidenceScores(resultId: string): Promise<Result> {
         return this.post<Result>(`/results/${resultId}/confidence`);
     }

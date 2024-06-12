@@ -93,8 +93,8 @@ export class PipelineService extends BaseService {
      * @param pipelineId 
      * @returns 
      */
-    public async getTargetSchemaForPipeline(pipelineId: string): Promise<any> {
-        return this.get<any>(`/pipelines/${pipelineId}/target_schema`);
+    public async getTargetSchemaForPipeline(pipelineId: string): Promise<Record<string, any>> {
+        return this.get<Record<string, any>>(`/pipelines/${pipelineId}/target_schema`);
     }
 
     /**
