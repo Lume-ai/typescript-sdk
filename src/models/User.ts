@@ -1,7 +1,7 @@
 /**
  * Represents a user object.
  */
-export type User= {
+export type User = {
     /**
      * The unique identifier of the user.
      */

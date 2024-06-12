@@ -43,7 +43,7 @@ pnpm add @lume-ai/typescript-sdk
 Create a new pipeline and map data.
 
 ```ts
-import { Lume, PipelineCreatePayload, JobCreatePayload, Job, Pipeline, Result, Mapping } from '@lume-ai/typescript-sdk';
+import { Lume, PipelineCreatePayload, Job, Pipeline, Result, Mapping } from '@lume-ai/typescript-sdk';
 
 const lume: Lume = new Lume('api_key')
 
@@ -74,8 +74,7 @@ const createPipeline = async () => {
 }
 
 const createJob = async (pipelineId: string) => {
-    const jobCreatePayload: JobCreatePayload = {
-        data: [
+    const sourceData = [
           {
             first_name: "John",
             last_name: "Doe",
@@ -89,7 +88,7 @@ const createJob = async (pipelineId: string) => {
 
       const createdJob = await lume.jobsService.createJobForPipeline(
         pipelineId,
-        params
+        sourceData
       );
 
       return createdJob;
