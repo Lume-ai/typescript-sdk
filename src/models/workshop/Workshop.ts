@@ -39,6 +39,7 @@ export namespace Workshop {
         DEPLOYED = 'deployed',
         FAILED = 'failed',
         NEEDS_REVIEW = 'needs review',
+        QUEUED = 'queued',
     }
 }
 
