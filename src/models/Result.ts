@@ -26,5 +26,6 @@ export namespace Result {
     FINISHED = "finished",
     FAILED = "failed",
     NEEDS_REVIEW = "needs review",
+    QUEUED = "queued",
   }
 }
