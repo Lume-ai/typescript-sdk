@@ -114,6 +114,15 @@ export class WorkshopService extends BaseService {
         return this.fetchPaginatedData<Result>(`/workshops/${workshopId}/results`, page, size);
     }
 
+    /**
+     * Retrieves the target schema for a specific worshop.
+     * @param workshopId 
+     * @returns 
+     */
+    public async getTargetSchemaForWorkshop(workshopId: string): Promise<Record<string, any>> {
+        return this.get<Record<string, any>>(`/workshops/${workshopId}/target_schema`); 
+    }
+
 
     /**
    * Section 2: Workflow abstractions 
