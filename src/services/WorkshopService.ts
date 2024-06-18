@@ -116,7 +116,7 @@ export class WorkshopService extends BaseService {
 
     /**
      * Retrieves the target schema for a specific worshop.
-     * @param jobId 
+     * @param workshopId 
      * @returns 
      */
     public async getTargetSchemaForWorkshop(workshopId: string): Promise<Record<string, any>> {
