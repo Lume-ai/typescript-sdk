@@ -72,7 +72,7 @@ const lume: Lume = new Lume('api_key')
 import { Lume, Mapping, Pipeline } from '@lume-ai/typescript-sdk';
 
 
-const createPipeline = async (lume: Lume) => {
+const createPipeline = async () => {
     const createdPipeline = await lume.pipelineService.createPipeline(
         {
             name: 'sourceX_to_destinationY',
@@ -84,7 +84,7 @@ const createPipeline = async (lume: Lume) => {
 }
 
 
-export async function run(lume: Lume) {
+export async function run() {
 
     // create pipeline and execute job
     const pipeline: Pipeline = await createPipeline(lume);
