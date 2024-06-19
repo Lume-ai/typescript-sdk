@@ -67,10 +67,9 @@ const sourceData = [
 Create a new pipeline and map data.
 
 ```ts
-const lume: Lume = new Lume('api_key')
-
 import { Lume, Mapping, Pipeline } from '@lume-ai/typescript-sdk';
 
+const lume: Lume = new Lume('api_key')
 
 const createPipeline = async () => {
     const createdPipeline = await lume.pipelineService.createPipeline(
