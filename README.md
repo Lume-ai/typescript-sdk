@@ -40,80 +40,64 @@ pnpm add @lume-ai/typescript-sdk
 
 ## Quickstart
 
+Retrieve your input data and target schema.
+
+```ts
+const targetSchema = {
+    type: "object",
+    properties: {
+        f_name: {
+            type: "string",
+            description: "The first name of the user",
+        },
+        l_name: {
+            type: "string",
+            description: "The last name of the user",
+        },
+    },
+    required: ["f_name", "l_name"],
+}
+
+const sourceData = [
+    { first_name: "John", last_name: "Doe" },
+    { first_name: "Jane", last_name: "Smith" }
+]
+```
+
 Create a new pipeline and map data.
 
 ```ts
-import { Lume, PipelineCreatePayload, Job, Pipeline, Result, Mapping } from '@lume-ai/typescript-sdk';
-
 const lume: Lume = new Lume('api_key')
 
-const createPipeline = async () => {
-    const pipelineCreatePayload: PipelineCreatePayload = {
-        name: 'pipeline_name3',
-        description: "description",
-        target_schema: {
-          type: "object",
-          properties: {
-            f_name: {
-              type: "string",
-              description: "The first name of the user",
-            },
-            l_name: {
-              type: "string",
-              description: "The last name of the user",
-            },
-          },
-          required: ["f_name", "l_name"],
-        },
-      };
+import { Lume, Mapping, Pipeline } from '@lume-ai/typescript-sdk';
 
-      const createdPipeline = await lume.pipelineService.createPipeline(
-        pipelineDetails
-      );
-      return createdPipeline;
-}
 
-const createJob = async (pipelineId: string) => {
-    const sourceData = [
-          {
-            first_name: "John",
-            last_name: "Doe",
-          },
-          {
-            first_name: "Jane",
-            last_name: "Doe",
-          },
-        ],
-      };
-
-      const createdJob = await lume.jobsService.createJobForPipeline(
-        pipelineId,
-        sourceData
-      );
-
-      return createdJob;
+const createPipeline = async (lume: Lume) => {
+    const createdPipeline = await lume.pipelineService.createPipeline(
+        {
+            name: 'sourceX_to_destinationY',
+            description: "my_description",
+            target_schema: targetSchema
+        }
+    );
+    return createdPipeline;
 }
 
 
-const run = async () => {
-    
-    // create pipeline and job
-    const pipeline: Pipeline = await createPipeline();
-    const job: Job = await createJob(pipeline.id);
+export async function run(lume: Lume) {
 
-    // trigger the mapping generation
-    const result: Result = await lume.jobsService.runJob(job.id);
+    // create pipeline and execute job
+    const pipeline: Pipeline = await createPipeline(lume);
+    const { result, jobId } = await lume.jobsService.createAndRunJob(pipeline.id, sourceData)
 
-    // parse the results and iterate through all mapped records
-    const mappingsPage = await lume.resultsService.getMappingsForResult(result.id); 
+    // parse the results and iterate through all mapped records. Note this method is paginated.
+    const mappingsPage = await lume.resultsService.getMappingsForResult(result.id, 1, 50);
     const mappings: Mapping[] = mappingsPage.items;
 
-    for (const mapping of mappings) {
-        console.log("mapped record", mapping.mapped_record)
-    }
+    // use the mappings to access the mapped records
 }
 
-run();
+run()
 ```
 
 ## Documentation
