@@ -38,6 +38,11 @@ export class ResultsService extends BaseService {
         return this.fetchPaginatedData<Result>(`/jobs/${jobId}/results`, page, size);
     }
         
+    /**
+     * 
+     * @param resultId 
+     * @returns 
+     */
     public getSpecForResult(resultId: string): Promise<Record<string, Spec>> {
         return this.get<Record<string, Spec>>(`/results/${resultId}/spec`);
     }

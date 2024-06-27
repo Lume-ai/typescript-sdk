@@ -3,9 +3,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { PaginatedResponse } from '../types/pagination';
 
-const PROD_ENDPOINT = 'https://api.lume-terminus.com'
-// const PROD_ENDPOINT = 'http://staging.lume-terminus.com'
-
+const PROD_ENDPOINT = 'https://staging.lume-terminus.com/crud/'
 
 /**
  * Base service class providing common functionality for other services.
