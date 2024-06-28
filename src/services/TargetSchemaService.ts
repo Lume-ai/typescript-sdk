@@ -37,7 +37,7 @@ export class TargetSchemaService extends BaseService {
     return this.post<TargetSchema>(`/target_schemas`, {
       name: name,
       filename: filename,
-      target_schema: schema,
+      schema: schema,
     });
   }
 
