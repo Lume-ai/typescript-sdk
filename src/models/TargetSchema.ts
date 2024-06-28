@@ -12,5 +12,5 @@ export type TargetSchema = {
   /**
    * The file name of the target schema.
    */
-  readonly fileName: string;
+  readonly filename: string;
 };

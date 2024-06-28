@@ -31,12 +31,12 @@ export class TargetSchemaService extends BaseService {
 
   public async createTargetSchema(
     name: string,
-    fileName: string,
+    filename: string,
     schema: Schema
   ): Promise<TargetSchema> {
     return this.post<TargetSchema>(`/target_schemas`, {
       name: name,
-      fileName: fileName,
+      filename: filename,
       target_schema: schema,
     });
   }
