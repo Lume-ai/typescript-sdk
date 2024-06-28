@@ -22,8 +22,11 @@ export class TargetSchemaService extends BaseService {
     return this.get<Schema>(`/target_schemas/${id}`);
   }
 
-  public async getTargetSchemas(): Promise<PaginatedResponse<TargetSchema>> {
-    return this.fetchPaginatedData<TargetSchema>(`/target_schemas`);
+  public async getTargetSchemaDataPage(
+    page: number = 1,
+    size: number = 50
+  ): Promise<PaginatedResponse<TargetSchema>> {
+    return this.fetchPaginatedData<TargetSchema>(`/target_schemas`, page, size);
   }
 
   public async createTargetSchema(

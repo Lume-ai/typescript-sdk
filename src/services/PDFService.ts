@@ -25,7 +25,10 @@ export class PDFService extends BaseService {
     return this.get<FileResult>(`/pdf/adv/${id}`);
   }
 
-  public async getAdvForms(): Promise<PaginatedResponse<FileResult>> {
-    return this.fetchPaginatedData<FileResult>(`/pdf/adv`);
+  public async getAdvFormsPage(
+    page: number = 1,
+    size: number = 50
+  ): Promise<PaginatedResponse<FileResult>> {
+    return this.fetchPaginatedData<FileResult>(`/pdf/adv`, page, size);
   }
 }
