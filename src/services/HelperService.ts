@@ -25,14 +25,6 @@ export class HelperService extends BaseService {
    * @param sheets The names of the sheets to convert (optional).
    * @returns A promise that resolves to the JSON data.
    * @throws Error if the file cannot be converted.
-   * @example
-   * ```typescript
-   * const file = document.getElementById('file-input').files[0];
-   * const name = file.name;
-   * const sheets = ['Sheet1', 'Sheet2'];
-   * const json = await helperService.convertExcelToJson(file, name, sheets);
-   * console.log(json);
-   * ```
    */
 
   public async convertExcelToJson(
