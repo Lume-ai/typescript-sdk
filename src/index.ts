@@ -109,4 +109,5 @@ export {
   Spec,
   Schema,
   TargetSchema,
+  BaseService,
 };
