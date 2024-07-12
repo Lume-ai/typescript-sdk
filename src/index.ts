@@ -45,6 +45,7 @@ import { ModelTypeMap } from "./types/ModelTypeMap";
  */
 class Lume {
   private userService: UserService;
+  baseService: BaseService;
   jobsService: JobsService;
   pipelineService: PipelineService;
   resultsService: ResultsService;
@@ -63,6 +64,7 @@ class Lume {
     const base = new BaseService(apiKey, baseUrl);
 
     // Initialize services
+    this.baseService = base;
     this.userService = new UserService(apiKey, baseUrl);
     this.jobsService = new JobsService(apiKey, baseUrl);
     this.pipelineService = new PipelineService(apiKey, baseUrl);
