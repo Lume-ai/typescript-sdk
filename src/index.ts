@@ -38,6 +38,7 @@ import {
 
 import { PaginatedResponse } from "./types/pagination";
 import { ModelTypeMap } from "./types/ModelTypeMap";
+import { ValidationErrorSchema } from "./models/Mapping/ValidationErrorSchema";
 
 /**
  * Main entry point for interacting with Lume services.
@@ -112,4 +113,5 @@ export {
   Schema,
   TargetSchema,
   BaseService,
+  ValidationErrorSchema,
 };
