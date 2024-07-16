@@ -22,5 +22,5 @@ export type Mapping = {
   /**
    * The message of the mapping
    */
-  message?: ValidationErrorSchema;
+  message: "success" | ValidationErrorSchema;
 };
