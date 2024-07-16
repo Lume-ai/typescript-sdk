@@ -1,7 +1,7 @@
 //services/PDFService.ts
 import { FileResult } from "../models/FileResult";
-import { BaseService } from "./BaseService";
 import { PaginatedResponse } from "../types/pagination";
+import { BaseService } from "./BaseService";
 
 /**
  * Service class for PDF-related workflows.
@@ -17,8 +17,15 @@ export class PDFService extends BaseService {
     super(apiKey, baseUrl);
   }
 
-  public async processAdvForm(): Promise<FileResult> {
-    return this.get<FileResult>(`/pdf/adv`);
+  public async processAdvForm(file: File): Promise<FileResult> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return this.post<FileResult>(`/pdf/adv`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   }
 
   public async getAdvForm(id: string): Promise<FileResult> {
