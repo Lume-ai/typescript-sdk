@@ -1,10 +1,15 @@
 // src/index.ts
-import { BaseService } from './services/BaseService';
-import { UserService } from './services/UsersService';
-import { JobsService } from './services/JobsService';
-import { ResultsService } from './services/ResultsService';
-import { WorkshopService } from './services/WorkshopService';
-import { PipelineService } from './services/PipelineService';
+import { BaseService } from "./services/BaseService";
+import { UserService } from "./services/UsersService";
+import { JobsService } from "./services/JobsService";
+import { ResultsService } from "./services/ResultsService";
+import { WorkshopService } from "./services/WorkshopService";
+import { PipelineService } from "./services/PipelineService";
+import { HelperService } from "./services/HelperService";
+import { PDFService } from "./services/PDFService";
+import { WorkflowService } from "./services/WorkflowService";
+import { TargetSchemaService } from "./services/TargetSchemaService";
+
 import {
   WorkshopWithMapperPayload,
   MapperEditSchema,
@@ -21,17 +26,18 @@ import {
   Result,
   SuccessSchema,
   User,
-  UserPayload
-} from './models/index';
-import { WorkflowService } from './services/WorkflowService';
-import { PaginatedResponse } from './types/pagination';
-import { JobExecutionResponse } from './models/workflows/JobExecutionResponse';
-import { ModelTypeMap } from './types/ModelTypeMap';
-import { Spec } from './models/Spec';
-import { HelperService } from './services/HelperService';
-import { WorkshopWithPromptPayload } from './models/workshop/workshopWithPrompt/WorkshopWithPromptPayload';
-import { TargetFieldsToPrompt } from './models/workshop/workshopWithPrompt/TargetFieldsToPrompt';
-import { CreateAndRunJobResponse } from './models/misc/CreateAndRunJobResponse';
+  UserPayload,
+  Schema,
+  TargetSchema,
+  CreateAndRunJobResponse,
+  JobExecutionResponse,
+  Spec,
+  WorkshopWithPromptPayload,
+  TargetFieldsToPrompt,
+} from "./models/index";
+
+import { PaginatedResponse } from "./types/pagination";
+import { ModelTypeMap } from "./types/ModelTypeMap";
 
 /**
  * Main entry point for interacting with Lume services.
@@ -39,11 +45,14 @@ import { CreateAndRunJobResponse } from './models/misc/CreateAndRunJobResponse';
  */
 class Lume {
   private userService: UserService;
+  baseService: BaseService;
   jobsService: JobsService;
   pipelineService: PipelineService;
   resultsService: ResultsService;
   workshopService: WorkshopService;
   helperService: HelperService;
+  PDFService: PDFService;
+  TargetSchemaService: TargetSchemaService;
   workflowService: WorkflowService;
 
   /**
@@ -55,13 +64,23 @@ class Lume {
     const base = new BaseService(apiKey, baseUrl);
 
     // Initialize services
+    this.baseService = base;
     this.userService = new UserService(apiKey, baseUrl);
     this.jobsService = new JobsService(apiKey, baseUrl);
     this.pipelineService = new PipelineService(apiKey, baseUrl);
     this.resultsService = new ResultsService(apiKey, baseUrl);
     this.workshopService = new WorkshopService(apiKey, baseUrl);
     this.helperService = new HelperService(apiKey, baseUrl);
-    this.workflowService = new WorkflowService(apiKey, this.jobsService, this.pipelineService, this.resultsService, this.workshopService, baseUrl);
+    this.PDFService = new PDFService(apiKey, baseUrl);
+    this.TargetSchemaService = new TargetSchemaService(apiKey, baseUrl);
+    this.workflowService = new WorkflowService(
+      apiKey,
+      this.jobsService,
+      this.pipelineService,
+      this.resultsService,
+      this.workshopService,
+      baseUrl
+    );
   }
 }
 
@@ -89,5 +108,8 @@ export {
   CreateAndRunJobResponse,
   PaginatedResponse,
   ModelTypeMap,
-  Spec
-}
+  Spec,
+  Schema,
+  TargetSchema,
+  BaseService,
+};
