@@ -38,4 +38,9 @@ export class PDFService extends BaseService {
   ): Promise<PaginatedResponse<FileResult>> {
     return this.fetchPaginatedData<FileResult>(`/pdf/adv`, page, size);
   }
+
+  public async getAdvFormUrl(id: string): Promise<string> {
+    const result = await this.get<{url: string}>(`/pdf/adv/${id}/url`);
+    return result.url;
+  }
 }
