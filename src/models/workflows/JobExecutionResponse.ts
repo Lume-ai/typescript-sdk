@@ -1,6 +1,6 @@
 import { PaginatedResponse } from "../../types/pagination";
 import { Job } from "../Job";
-import { Mapping } from "../Mapping";
+import { Mapping } from "../Mapping/Mapping";
 import { Result } from "../Result";
 
 /**
@@ -8,18 +8,18 @@ import { Result } from "../Result";
  * This type is used in the workflow service to return multiple relevant objects in a single response.
  */
 export type JobExecutionResponse = {
-    /**
-     * The result of the job
-     */
-    result: Result;
+  /**
+   * The result of the job
+   */
+  result: Result;
 
-    /**
-     * The mappings for the result of the job
-     */
-    mappingsPage: PaginatedResponse<Mapping>;
+  /**
+   * The mappings for the result of the job
+   */
+  mappingsPage: PaginatedResponse<Mapping>;
 
-    /**
-     * The id of the job that was executed
-     */
-    jobId: string;
-}
+  /**
+   * The id of the job that was executed
+   */
+  jobId: string;
+};

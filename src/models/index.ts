@@ -26,10 +26,13 @@ export * from "./Spec";
 // misc types
 export * from "./misc/CreateAndRunJobResponse";
 
+// mapping types
+export * from "./Mapping/Mapping";
+export * from "./Mapping/ValidationErrorSchema";
+
 // All types
 export * from "./PipelineCreatePayload";
 export * from "./Job";
-export * from "./Mapping";
 export * from "./Pipeline";
 export * from "./PipelineUpdatePayload";
 export * from "./Result";
