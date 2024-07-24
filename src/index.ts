@@ -38,6 +38,7 @@ import {
 
 import { PaginatedResponse } from "./types/pagination";
 import { ModelTypeMap } from "./types/ModelTypeMap";
+import { ValidationErrorSchema } from "./models/Mapping/ValidationErrorSchema";
 import { FileResult } from "./models/FileResult";
 
 /**
@@ -113,5 +114,6 @@ export {
   Schema,
   TargetSchema,
   BaseService,
+  ValidationErrorSchema,
   FileResult,
 };
