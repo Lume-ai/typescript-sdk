@@ -7,9 +7,16 @@ interface RecordErrors {
   [field: string]: FieldError;
 }
 
-interface GlobalErrors {
+export interface GlobalErrorDetail {
   error_message: string;
-  error_type: string;
+  error_indices: number[];
+  error_fields: string[];
+}
+
+export interface GlobalErrors {
+  error_types: {
+    [key: string]: GlobalErrorDetail[];
+  };
 }
 
 export type ValidationErrorSchema = {

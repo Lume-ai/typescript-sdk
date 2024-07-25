@@ -38,7 +38,13 @@ import {
 
 import { PaginatedResponse } from "./types/pagination";
 import { ModelTypeMap } from "./types/ModelTypeMap";
-import { ValidationErrorSchema } from "./models/Mapping/ValidationErrorSchema";
+
+// TODO move this to /models/index
+import {
+  ValidationErrorSchema,
+  GlobalErrors,
+  GlobalErrorDetail,
+} from "./models/Mapping/ValidationErrorSchema";
 import { FileResult } from "./models/FileResult";
 
 /**
@@ -115,5 +121,7 @@ export {
   TargetSchema,
   BaseService,
   ValidationErrorSchema,
+  GlobalErrors,
+  GlobalErrorDetail,
   FileResult,
 };
