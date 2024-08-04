@@ -44,4 +44,12 @@ export class TargetSchemaService extends BaseService {
   public async deleteTargetSchema(id: string): Promise<void> {
     return this.delete<void>(`/target_schemas/${id}`);
   }
+
+  public async getTargetSchemaWithDetails(id: string): Promise<TargetSchema> {
+    return this.get<TargetSchema>(`/target_schemas/${id}/object`);
+  }
+
+  public async updateTargetSchema(id: string, schema: Schema): Promise<TargetSchema> {
+    return this.put<TargetSchema>(`/target_schemas/${id}/update`, {schema});
+  }
 }
