@@ -46,6 +46,9 @@ import {
   GlobalErrorDetail,
 } from "./models/Mapping/ValidationErrorSchema";
 import { FileResult } from "./models/FileResult";
+import { getFileReader } from "./utils/helperService/fileReader/getFileReader";
+import { WebFileReader } from "./utils/helperService/fileReader/WebFileReader";
+import { FileReaderInterface } from "./utils/helperService/fileReader/FileReaderInterface";
 
 /**
  * Main entry point for interacting with Lume services.
@@ -124,4 +127,7 @@ export {
   GlobalErrors,
   GlobalErrorDetail,
   FileResult,
+  getFileReader,
+  WebFileReader,
+  FileReaderInterface,
 };
