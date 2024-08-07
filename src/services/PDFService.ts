@@ -43,4 +43,31 @@ export class PDFService extends BaseService {
     const result = await this.get<{url: string}>(`/pdf/adv/${id}/url`);
     return result.url;
   }
+
+  public async processOrderForm(file: File): Promise<FileResult> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return this.post<FileResult>(`/pdf/orders`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  public async getOrderForm(id: string): Promise<FileResult> {
+    return this.get<FileResult>(`/pdf/orders/${id}`);
+  }
+
+  public async getOrderFormsPage(
+    page: number = 1,
+    size: number = 50
+  ): Promise<PaginatedResponse<FileResult>> {
+    return this.fetchPaginatedData<FileResult>(`/pdf/orders`, page, size);
+  }
+
+  public async getOrderFormUrl(id: string): Promise<string> {
+    const result = await this.get<{ url: string }>(`/pdf/orders/${id}/url`);
+    return result.url;
+  }
 }
