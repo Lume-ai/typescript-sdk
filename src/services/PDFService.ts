@@ -70,4 +70,31 @@ export class PDFService extends BaseService {
     const result = await this.get<{ url: string }>(`/pdf/orders/${id}/url`);
     return result.url;
   }
+
+  public async processBuyerOfferForm(file: File): Promise<FileResult> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return this.post<FileResult>(`/pdf/buyer_offers`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  public async getBuyerOfferForm(id: string): Promise<FileResult> {
+    return this.get<FileResult>(`/pdf/buyer_offers/${id}`);
+  }
+
+  public async getBuyerOfferFormsPage(
+    page: number = 1,
+    size: number = 50
+  ): Promise<PaginatedResponse<FileResult>> {
+    return this.fetchPaginatedData<FileResult>(`/pdf/buyer_offers`, page, size);
+  }
+
+  public async getBuyerOfferFormUrl(id: string): Promise<string> {
+    const result = await this.get<{ url: string }>(`/pdf/buyer_offers/${id}/url`);
+    return result.url;
+  }
 }
