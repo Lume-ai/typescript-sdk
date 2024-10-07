@@ -22,6 +22,7 @@ export * from "./TargetSchema";
 
 // Spec types
 export * from "./Spec";
+export * from "./ManifestItem";
 
 // misc types
 export * from "./misc/CreateAndRunJobResponse";

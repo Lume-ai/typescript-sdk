@@ -49,6 +49,7 @@ import { FileResult } from "./models/FileResult";
 import { getFileReader } from "./utils/helperService/fileReader/getFileReader";
 import { WebFileReader } from "./utils/helperService/fileReader/WebFileReader";
 import { FileReaderInterface } from "./utils/helperService/fileReader/FileReaderInterface";
+import { ManifestItem } from "./models/ManifestItem";
 
 /**
  * Main entry point for interacting with Lume services.
@@ -130,4 +131,5 @@ export {
   getFileReader,
   WebFileReader,
   FileReaderInterface,
+  ManifestItem,
 };
