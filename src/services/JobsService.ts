@@ -94,10 +94,18 @@ export class JobsService extends BaseService {
   /**
    * Runs the specified job.
    * @param jobId The ID of the job to run.
+   * @param immediate_return If true, returns the initial result without polling (default: false).
    * @returns A promise that resolves to the job result.
    */
-  public async runJob(jobId: string): Promise<Result> {
+  public async runJob(
+    jobId: string,
+    immediate_return: boolean = false
+  ): Promise<Result> {
     let result = await this.post<Result>(`/jobs/${jobId}/run`);
+
+    if (immediate_return) {
+      return result;
+    }
 
     // Polling logic
     while (
@@ -156,14 +164,16 @@ export class JobsService extends BaseService {
    * Creates a job for the specified pipeline and runs the job.
    * @param pipelineId The ID of the pipeline.
    * @param sourceData The source data to run the job on.
+   * @param [immediate_return] Optional. Whether to return immediately after starting the job (optional, defaults to false). This allows for asynchronous job execution and ping the job status later.
    * @returns A promise that resolves to the result of running the job.
    */
   public async createAndRunJob(
     pipelineId: string,
-    sourceData: Array<Record<string, any>>
+    sourceData: Array<Record<string, any>>,
+    immediate_return: boolean = false
   ): Promise<CreateAndRunJobResponse> {
     const job = await this.createJobForPipeline(pipelineId, sourceData);
-    const result: Result = await this.runJob(job.id);
+    const result: Result = await this.runJob(job.id, immediate_return);
     return { result: result, jobId: job.id };
   }
 }
