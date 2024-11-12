@@ -1,150 +1,84 @@
-// services/PipelineService.ts
+// services_v3/PipelineService.ts
 
-import { PipelineCreatePayload, PipelineUpdatePayload } from "../models";
-import { Pipeline } from "../models/Pipeline";
-import { Workshop } from "../models/workshop/Workshop";
-import { PaginatedResponse } from "../types/pagination";
-import { BaseService } from "./BaseService";
+import { ApiClient } from './ApiClient';
+import { Pipeline as PipelineData, PipelineCreate, PipelineEdit } from '../models/Pipeline';
+import { Pipeline } from './Pipelines';
+import { Page } from '../models/models';
+import { HTTPExceptionError } from '../models/Error';
+import { formatHTTPExceptionError } from '../utils/errorUtils';
 
-/**
- * Service class for interacting with pipeline-related operations.
- * Provides methods for fetching pipeline details, creating pipelines, updating pipelines, etc.
- */
-export class PipelineService extends BaseService {
-  /**
-   * Constructs a new instance of PipelineService.
-   * @param apiKey The API key used for authentication.
-   * @param baseUrl The base URL for the API (optional).
-   */
-  constructor(apiKey: string, baseUrl?: string) {
-    super(apiKey, baseUrl);
+export class PipelineService {
+  private apiClient: ApiClient;
+
+  constructor(apiClient: ApiClient) {
+    this.apiClient = apiClient;
   }
 
   /**
-   * Retrieves a page of pipeline data.
-   * @param page The page number to fetch (optional, defaults to 1).
-   * @param size The number of items per page (optional, defaults to 50).
-   * @returns A promise that resolves to a paginated response of pipeline data.
+   * Create and run a pipeline.
    */
-  public async getPipelineDataPage(
+  /**
+   * Retrieves all pipelines with pagination.
+   * @param page Page number for pagination.
+   * @param size Number of items per page.
+   * @returns A paginated list of Pipeline instances.
+   */
+  public async getAllPipelines(
     page: number = 1,
     size: number = 50
-  ): Promise<PaginatedResponse<Pipeline>> {
-    return this.fetchPaginatedData<Pipeline>(`/pipelines`, page, size);
-  }
+  ): Promise<Page<Pipeline>> {
+    const params = { page, size };
+    const pipelinesData = await this.apiClient.get<Page<PipelineData>>('/pipelines', { params });
 
-  /**
-   * Creates a new pipeline with the provided details.
-   * @param pipelineCreatePayload Details of the pipeline to create (PipelineCreatePayload).
-   * @returns A promise that resolves to the created pipeline.
-   */
-  public async createPipeline(
-    pipelineCreatePayload: PipelineCreatePayload
-  ): Promise<Pipeline> {
-    return this.post<Pipeline>("/pipelines", pipelineCreatePayload);
-  }
-
-  /**
-   * Retrieves details of a specific pipeline.
-   * @param pipelineId The ID of the pipeline to fetch details for.
-   * @returns A promise that resolves to the pipeline details.
-   */
-  public async getPipeline(pipelineId: string): Promise<Pipeline> {
-    return this.get<Pipeline>(`/pipelines/${pipelineId}`);
-  }
-
-  /**
-   * Updates an existing pipeline with the provided details.
-   * @param pipelineId The ID of the pipeline to update.
-   * @param pipelineUpdatePayload Details of the pipeline to update (PipelineUpdatePayload).
-   * @returns A promise that resolves to the updated pipeline details.
-   */
-  public async updatePipeline(
-    pipelineId: string,
-    pipelineUpdatePayload: PipelineUpdatePayload
-  ): Promise<Pipeline> {
-    return this.put<Pipeline>(
-      `/pipelines/${pipelineId}`,
-      pipelineUpdatePayload
+    // Map each PipelineData to a Pipeline instance
+    const pipelines = pipelinesData.items.map(
+      (pipelineData) => new Pipeline(this.apiClient, pipelineData)
     );
+
+    return {
+      ...pipelinesData,
+      items: pipelines,
+    };
   }
 
   /**
-   * Deletes a pipeline with the specified ID.
-   * @param pipelineId The ID of the pipeline to delete.
-   * @returns A promise that resolves when the pipeline is successfully deleted.
+   * Retrieves a single pipeline by ID.
+   * @param id The ID of the pipeline.
+   * @returns The Pipeline instance.
    */
-  public async deletePipeline(pipelineId: string): Promise<void> {
-    return this.delete<void>(`/pipelines/${pipelineId}`);
+  public async getPipelineById(id: string): Promise<Pipeline> {
+    const pipelineData = await this.apiClient.get<PipelineData>(`/pipelines/${id}`);
+    return new Pipeline(this.apiClient, pipelineData);
   }
 
   /**
-   * Retrieves workshops associated with a specific pipeline.
-   * @param pipelineId The ID of the pipeline.
-   * @param page The page number to fetch (optional, defaults to 1).
-   * @param size The number of items per page (optional, defaults to 50).
-   * @returns A promise that resolves to a paginated response of workshops.
+   * Creates a new pipeline.
+   * @param data The data for creating the pipeline.
+   * @returns The created Pipeline instance.
    */
-  public async getWorkshopsForPipeline(
-    pipelineId: string,
-    page: number = 1,
-    size: number = 50
-  ): Promise<PaginatedResponse<Workshop>> {
-    return this.fetchPaginatedData<Workshop>(
-      `/pipelines/${pipelineId}/workshops`,
-      page,
-      size
-    );
+  public async createPipeline(data: PipelineCreate): Promise<Pipeline> {
+    
+    const pipelineData = await this.apiClient.post<PipelineData>('/pipelines', data);
+    return new Pipeline(this.apiClient, pipelineData);
+    
   }
 
   /**
-   * Creates a new workshop for the specified pipeline.
-   * @param pipelineId The ID of the pipeline.
-   * @param workshopDetails Details of the workshop to create.
-   * @returns A promise that resolves to the created workshop.
+   * Updates a pipeline by ID.
+   * @param id The ID of the pipeline to update.
+   * @param data The data to update the pipeline with.
+   * @returns The updated Pipeline instance.
    */
-  public async createWorkshopForPipeline(
-    pipelineId: string
-  ): Promise<Workshop> {
-    return this.post<Workshop>(`/pipelines/${pipelineId}/workshops`);
+  public async updatePipeline(id: string, data: PipelineEdit): Promise<Pipeline> {
+    const updatedPipelineData = await this.apiClient.patch<PipelineData>(`/pipelines/${id}`, data);
+    return new Pipeline(this.apiClient, updatedPipelineData);
   }
 
   /**
-   * Retrieves the target schema for a specific pipeline.
-   * @param pipelineId
-   * @returns A promise that resolves to the target schema for the pipeline.
+   * Deletes a pipeline by ID.
+   * @param id The ID of the pipeline to delete.
    */
-  public async getTargetSchemaForPipeline(
-    pipelineId: string
-  ): Promise<Record<string, any>> {
-    return this.get<Record<string, any>>(
-      `/pipelines/${pipelineId}/target_schema`
-    );
-  }
-
-  /**
-   *
-   * @param pipelineId
-   * @returns A promise that resolves to the mapper for the pipeline.
-   */
-  public async getMapperForPipeline(
-    pipelineId: string
-  ): Promise<Record<string, any>> {
-    return this.get<Record<string, any>>(`/pipelines/${pipelineId}/mapper`);
-  }
-
-  /**
-   * Trains the AI using the pipeline's lookup tables .
-   * @param pipelineId The ID of the pipeline to train.
-   * @param targetPropertyNames  (optional) The target properties to train the AI on.
-   * @returns A promise that resolves when the AI is trained.
-   */
-  public async learn(
-    pipelineId: string,
-    targetPropertyNames?: string[]
-  ): Promise<void> {
-    return this.post<void>(`/pipelines/${pipelineId}/learn`, {
-      target_field_names: targetPropertyNames,
-    });
+  public async deletePipeline(id: string): Promise<void> {
+    await this.apiClient.delete(`/pipelines/${id}`);
   }
 }

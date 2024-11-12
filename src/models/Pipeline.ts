@@ -1,34 +1,26 @@
-/**
- * A pipeline is an object containing a target schema, and associated with a mapper that jobs can be executed on.
- */
-export type Pipeline = {
-    /**
-     * The unique identifier of this object
-     */
-    readonly id: string;
-    /**
-     * The date and time this object was created
-     */
-    readonly created_at: string;
-    /**
-     * The name of the pipeline. Must be unique within the organization.
-     */
-    name: string;
-    /**
-     * The description of the pipeline
-     */
-    description?: (string | null);
-    /**
-     * The target schema of the pipeline. In json-schema format.
-     */
-    target_schema_id: string;
-    /**
-     * The source schema of the pipeline, infered from the pipeline's jobs. In json-schema format
-     */
-    readonly source_schema?: (Record<string, any> | null);
-    /**
-     * The date and time this object was last updated
-     */
-    readonly updated_at: (string | null);
-};
+// Pipeline.ts
 
+import { Mapper } from "./Mapper";
+import { Status } from "./models";
+
+export interface Pipeline {
+    id: string;
+    user_id: string;
+    name: string;
+    description?: string | null;
+    last_run_status?: Status | null;
+    mapper: Mapper;
+  }
+  
+  export interface PipelineCreate {
+    name: string;
+    description?: string | null;
+    target_schema: object | string;
+    sample_data: object[] | string;
+  }
+  
+  export interface PipelineEdit {
+    name?: string | null;
+    description?: string | null;
+    mapper_version?: number | null;
+  }

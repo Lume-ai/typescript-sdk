@@ -1,0 +1,1 @@
+export type IncludeResource = 'target_schema' | 'transformations' | 'mappings' | 'manifest';

@@ -1,135 +1,29 @@
-// src/index.ts
-import { BaseService } from "./services/BaseService";
-import { UserService } from "./services/UsersService";
-import { JobsService } from "./services/JobsService";
-import { ResultsService } from "./services/ResultsService";
-import { WorkshopService } from "./services/WorkshopService";
-import { PipelineService } from "./services/PipelineService";
-import { HelperService } from "./services/HelperService";
-import { PDFService } from "./services/PDFService";
-import { WorkflowService } from "./services/WorkflowService";
-import { TargetSchemaService } from "./services/TargetSchemaService";
+// services_v3/Lume.ts
 
-import {
-  WorkshopWithMapperPayload,
-  MapperEditSchema,
-  ManualTransformation,
-  SampleEdit,
-  WorkshopWithSamplePayload,
-  Workshop,
-  WorkshopWithSchemaPayload,
-  PipelineCreatePayload,
-  Job,
-  Mapping,
-  Pipeline,
-  PipelineUpdatePayload,
-  Result,
-  SuccessSchema,
-  User,
-  UserPayload,
-  Schema,
-  TargetSchema,
-  CreateAndRunJobResponse,
-  JobExecutionResponse,
-  Spec,
-  WorkshopWithPromptPayload,
-  TargetFieldsToPrompt,
-} from "./models/index";
+import { ApiClient } from './services/ApiClient';
+import { PipelineService } from './services/PipelineService';
+import { TargetSchemaService } from './services/TargetSchemaService';
+// Import other services as they are created
+// import { AnotherService } from './AnotherService';
+const PROD_ENDPOINT = "https://logic.lume-terminus.com/v2";
 
-import { PaginatedResponse } from "./types/pagination";
-import { ModelTypeMap } from "./types/ModelTypeMap";
+export class Lume {
+  public pipelineService: PipelineService;
+  public targetSchemaService: TargetSchemaService;
+  // public anotherService: AnotherService;
 
-// TODO move this to /models/index
-import {
-  ValidationErrorSchema,
-  GlobalErrors,
-  GlobalErrorDetail,
-} from "./models/Mapping/ValidationErrorSchema";
-import { FileResult } from "./models/FileResult";
-import { getFileReader } from "./utils/helperService/fileReader/getFileReader";
-import { WebFileReader } from "./utils/helperService/fileReader/WebFileReader";
-import { FileReaderInterface } from "./utils/helperService/fileReader/FileReaderInterface";
-import { ManifestItem } from "./models/ManifestItem";
-
-/**
- * Main entry point for interacting with Lume services.
- * Provides access to various services such as UserService, JobsService, PipelineService, etc.
- */
-class Lume {
-  private userService: UserService;
-  baseService: BaseService;
-  jobsService: JobsService;
-  pipelineService: PipelineService;
-  resultsService: ResultsService;
-  workshopService: WorkshopService;
-  helperService: HelperService;
-  PDFService: PDFService;
-  TargetSchemaService: TargetSchemaService;
-  workflowService: WorkflowService;
+  private apiClient: ApiClient;
 
   /**
-   * Constructs a new instance of Lume.
-   * @param apiKey The API key used for authentication.
-   * @param baseUrl The base URL for the API (optional).
+   * Initializes the Lume SDK with the provided API key and base URL.
+   * @param apiKey Your Lume API key.
+   * @param baseURL The base URL for the Lume API.
    */
-  constructor(apiKey: string, baseUrl?: string) {
-    const base = new BaseService(apiKey, baseUrl);
-
-    // Initialize services
-    this.baseService = base;
-    this.userService = new UserService(apiKey, baseUrl);
-    this.jobsService = new JobsService(apiKey, baseUrl);
-    this.pipelineService = new PipelineService(apiKey, baseUrl);
-    this.resultsService = new ResultsService(apiKey, baseUrl);
-    this.workshopService = new WorkshopService(apiKey, baseUrl);
-    this.helperService = new HelperService(apiKey, baseUrl);
-    this.PDFService = new PDFService(apiKey, baseUrl);
-    this.TargetSchemaService = new TargetSchemaService(apiKey, baseUrl);
-    this.workflowService = new WorkflowService(
-      apiKey,
-      this.jobsService,
-      this.pipelineService,
-      this.resultsService,
-      this.workshopService,
-      baseUrl
-    );
+  constructor(apiKey: string, baseURL: string = PROD_ENDPOINT) {
+    this.apiClient = new ApiClient(apiKey, baseURL);
+    this.pipelineService = new PipelineService(this.apiClient);
+    this.targetSchemaService = new TargetSchemaService(this.apiClient);
+    // Initialize other services similarly
+    // this.anotherService = new AnotherService(this.apiClient);
   }
 }
-
-export {
-  Lume,
-  WorkshopWithMapperPayload,
-  MapperEditSchema,
-  ManualTransformation,
-  SampleEdit,
-  WorkshopWithSamplePayload,
-  Workshop,
-  WorkshopWithSchemaPayload,
-  WorkshopWithPromptPayload,
-  TargetFieldsToPrompt,
-  PipelineCreatePayload,
-  Job,
-  Mapping,
-  Pipeline,
-  PipelineUpdatePayload,
-  Result,
-  SuccessSchema,
-  User,
-  UserPayload,
-  JobExecutionResponse,
-  CreateAndRunJobResponse,
-  PaginatedResponse,
-  ModelTypeMap,
-  Spec,
-  Schema,
-  TargetSchema,
-  BaseService,
-  ValidationErrorSchema,
-  GlobalErrors,
-  GlobalErrorDetail,
-  FileResult,
-  getFileReader,
-  WebFileReader,
-  FileReaderInterface,
-  ManifestItem,
-};
