@@ -14,7 +14,7 @@ export class TargetSchemaService {
     this.apiClient = apiClient;
   }
     public async getTargetSchema(id: string): Promise<Schema> {
-      const targetSchema = await this.apiClient.get<Schema>(`/target_schemas/${id}`);
+      const targetSchema = await this.apiClient.get<Schema>(`/target_schemas/${id}`, undefined, 'https://api.lume.ai/crud');
       return targetSchema;
     }
   
@@ -22,7 +22,7 @@ export class TargetSchemaService {
       page: number = 1,
       size: number = 50
     ): Promise<Page<TargetSchema>> {
-      const targetSchemaPage = await this.apiClient.get<Page<TargetSchema>>(`/target_schemas`, { params: { page, size } });
+      const targetSchemaPage = await this.apiClient.get<Page<TargetSchema>>(`/target_schemas`, { params: { page, size } }, 'https://api.lume.ai/crud');
       return targetSchemaPage;
     }
   
@@ -31,22 +31,22 @@ export class TargetSchemaService {
       filename: string,
       schema: Schema
     ): Promise<TargetSchema> {
-        return this.apiClient.post<TargetSchema>(`/target_schemas`, {
-          name: name,
-          filename: filename,
-          schema: schema,
-        });
+      return this.apiClient.post<TargetSchema>(`/target_schemas`, {
+        name: name,
+        filename: filename,
+        schema: schema,
+        }, undefined, 'https://api.lume.ai/crud');
     }
   
     public async deleteTargetSchema(id: string): Promise<void> {
-      return this.apiClient.delete<void>(`/target_schemas/${id}`);
+      return this.apiClient.delete<void>(`/target_schemas/${id}`, undefined, 'https://api.lume.ai/crud');
     }
   
     public async getTargetSchemaWithDetails(id: string): Promise<TargetSchema> {
-      return this.apiClient.get<TargetSchema>(`/target_schemas/${id}/object`);
+      return this.apiClient.get<TargetSchema>(`/target_schemas/${id}/object`, undefined, 'https://api.lume.ai/crud');
     }
   
     public async updateTargetSchema(id: string, schema: Schema): Promise<TargetSchema> {
-      return this.apiClient.patch<TargetSchema>(`/target_schemas/${id}/update`, {schema});
+      return this.apiClient.patch<TargetSchema>(`/target_schemas/${id}/update`, {schema}, undefined, 'https://api.lume.ai/crud');
   }
 }
