@@ -87,10 +87,18 @@ export class Mapper {
     return mapperData.target_schema;         
   }
 
-  public async update(data: MapperCreate): Promise<Mapper> {
+  public async update(data: MapperCreate, wait: boolean = false): Promise<Mapper> {
     data.base_version = this.version;
     const updatedMapper = await this.apiClient.post<Mapper>(`/pipelines/${this.pipeline_id}/mappers/`, data);
-    return updatedMapper;
+    if (!wait) {
+      return new Mapper(this.apiClient, this.pipeline_id, updatedMapper.version, updatedMapper.user_id, updatedMapper.creation_status, updatedMapper.target_schema, updatedMapper.transformations, updatedMapper.manifest);
+    }
+    const mapper = new Mapper(this.apiClient, this.pipeline_id, updatedMapper.version, updatedMapper.user_id, updatedMapper.creation_status, updatedMapper.target_schema, updatedMapper.transformations, updatedMapper.manifest);
+    while (mapper.creation_status == Status.QUEUED || mapper.creation_status == Status.RUNNING) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await mapper.get();
+    }
+    return mapper;
   }
 
   public async apply(): Promise<void> {
