@@ -3,7 +3,7 @@
 import { ApiClient } from './ApiClient';
 import { Pipeline as PipelineData, PipelineCreate, PipelineEdit } from '../models/Pipeline';
 import { Pipeline } from './Pipelines';
-import { Page } from '../models/models';
+import { Page, Status } from '../models/models';
 import { HTTPExceptionError } from '../models/Error';
 import { formatHTTPExceptionError } from '../utils/errorUtils';
 import { IncludeResource } from '../models/IncludeResources';
@@ -47,7 +47,7 @@ export class PipelineService {
    * @param id The ID of the pipeline.
    * @returns The Pipeline instance.
    */
-  public async getPipelineById(id: string, include?: IncludeResource[]): Promise<Pipeline> {
+  public async getPipeline(id: string, include?: IncludeResource[]): Promise<Pipeline> {
     const pipelineData = await this.apiClient.get<PipelineData>(`/pipelines/${id}`, { params: { include } });
     return new Pipeline(this.apiClient, pipelineData);
   }
@@ -55,13 +55,22 @@ export class PipelineService {
   /**
    * Creates a new pipeline.
    * @param data The data for creating the pipeline.
+   * @param wait Whether to wait for the pipeline to be created and run.
    * @returns The created Pipeline instance.
    */
-  public async createPipeline(data: PipelineCreate): Promise<Pipeline> {
+  public async createPipeline(data: PipelineCreate, wait: boolean = false): Promise<Pipeline> {
     
     const pipelineData = await this.apiClient.post<PipelineData>('/pipelines', data);
-    return new Pipeline(this.apiClient, pipelineData);
-    
+    if (!wait) {
+      return new Pipeline(this.apiClient, pipelineData);
+    }
+    const pipeline = new Pipeline(this.apiClient, pipelineData);
+    const run = await pipeline.getRun(0)
+    while (run.status == Status.QUEUED || run.status == Status.RUNNING) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await run.get();
+    }
+    return pipeline;
   }
 
   /**
@@ -70,7 +79,7 @@ export class PipelineService {
    * @param data The data to update the pipeline with.
    * @returns The updated Pipeline instance.
    */
-  public async updatePipeline(id: string, data: PipelineEdit): Promise<Pipeline> {
+  public async updatePipeline(id: string, data: PipelineEdit, ): Promise<Pipeline> {
     const updatedPipelineData = await this.apiClient.patch<PipelineData>(`/pipelines/${id}`, data);
     return new Pipeline(this.apiClient, updatedPipelineData);
   }

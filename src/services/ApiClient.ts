@@ -66,10 +66,6 @@ import axios, {
         // Extract status and message for known errors
         const code = error.response.status;
         const detail = error.response.statusText || "An unknown error occurred";
-        console.log("ROBERT IS HERE 2")
-        console.log(error.response)
-        console.log(error.response.status)
-        console.log(error.response.statusText)
       // Throw as HTTPExceptionError
       const exceptionError: HTTPExceptionError = { code, detail };
       return Promise.reject(exceptionError);

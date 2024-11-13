@@ -2,7 +2,7 @@
 
 import { Mapping, PageMapping } from '../models/Mapping';
 import { Run as RunData } from '../models/Run';
-import { Mapper } from '../models/Mapper';
+import { Mapper } from './Mapper';
 import { ApiClient } from './ApiClient'; // Import the API client
 import { HTTPExceptionError } from '../models/Error';
 import { formatHTTPExceptionError } from '../utils/errorUtils';
@@ -38,11 +38,10 @@ export class Run {
       writable: true,      // Allows the property to be modified if needed
       configurable: true   // Allows the property to be reconfigured or deleted
     });
-
     this.number = runData.number;
     this.user_id = runData.user_id;
     this.status = runData.status;
-    this.mapper = runData.mapper;
+    this.mapper = new Mapper(this.apiClient, this.pipeline_id, runData.mapper.version, runData.mapper.user_id, runData.mapper.creation_status, runData.mapper.target_schema ?? null, runData.mapper.transformations ?? null, runData.mapper.manifest ?? null);
     this.mappings = runData.mappings;
   }
 
@@ -52,7 +51,7 @@ export class Run {
   public async get(include?: IncludeResource[]): Promise<void> {
     const updatedData = await this.apiClient.get<Run>(`/pipelines/${this.pipeline_id}/runs/${this.number}`, { params: { include } });
     this.status = updatedData.status;
-    this.mapper = updatedData.mapper;
+    this.mapper = new Mapper(this.apiClient, this.pipeline_id, updatedData.mapper.version, updatedData.mapper.user_id, updatedData.mapper.creation_status, updatedData.mapper.target_schema ?? null, updatedData.mapper.transformations ?? null, updatedData.mapper.manifest ?? null);
     this.mappings = updatedData.mappings;
   }
 
@@ -61,7 +60,7 @@ export class Run {
    */
   public async getMapper(): Promise<Mapper> {
     const mapper = await this.apiClient.get<Mapper>(`/pipelines/${this.pipeline_id}/mappers/${this.mapper.version}`);
-    return mapper;    
+    return new Mapper(this.apiClient, this.pipeline_id, mapper.version, mapper.user_id, mapper.creation_status, mapper.target_schema ?? null, mapper.transformations ?? null, mapper.manifest ?? null);    
   }
 
   public async getMappings(page: number = 1, size: number = 50): Promise<PageMapping> {

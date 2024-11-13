@@ -1,12 +1,13 @@
 // models/Mapper.ts
 
-import { Status } from '../models/models';
+import { Page, Status } from '../models/models';
 import { Transformation } from '../models/Transformation';
 import { PageManifestItem } from '../models/Manifest';
 import { ApiClient } from './ApiClient';
 import { MapperCreate, Mapper as MapperData } from '../models/Mapper';
 import { IncludeResource } from '../models/IncludeResources';
 import { PipelineEdit } from '../models/Pipeline';
+import { Run } from './Run';
 
 // Define public types that omit apiClient and pipeline_id
 //export type PublicMapper = Omit<Mapper, 'apiClient' | 'pipeline_id'>;
@@ -64,6 +65,11 @@ export class Mapper {
     this.target_schema = updatedData.target_schema;
     this.transformations = updatedData.transformations;
     this.manifest = updatedData.manifest; 
+  }
+
+  public async getRuns(page: number = 1, size: number = 50): Promise<Page<Run>> {
+    const runs = await this.apiClient.get<Page<Run>>(`/pipelines/${this.pipeline_id}/runs`, { params: { mapper_id: this.version, page, size } });
+    return runs;
   }
 
   public async getManifest(): Promise<PageManifestItem> {

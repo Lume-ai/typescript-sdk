@@ -6,6 +6,9 @@ import { Pipeline, TargetSchema, Status, Mapper, Run, Mapping, Schema, HTTPExcep
 import { ApiClient } from './services/ApiClient';
 import { PipelineService } from './services/PipelineService';
 import { TargetSchemaService } from './services/TargetSchemaService';
+import { Mapper as MapperClass } from './services/Mapper';
+import { Run as RunClass } from './services/Run';
+import { Pipeline as PipelineClass } from './services/Pipelines';
 // Import other services as they are created
 // import { AnotherService } from './AnotherService';
 const PROD_ENDPOINT = "https://api.lume.ai/v2";
@@ -31,4 +34,4 @@ export class Lume {
   }
 }
 
-export { Pipeline, TargetSchema, Mapper, Run, Mapping, Schema, HTTPExceptionError, IncludeResource, ManifestItem, Lookup, Transformation, Page, Status };
+export {PipelineClass, MapperClass, RunClass, Pipeline, TargetSchema, Mapper, Run, Mapping, Schema, HTTPExceptionError, IncludeResource, ManifestItem, Lookup, Transformation, Page, Status };

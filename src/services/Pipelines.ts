@@ -2,7 +2,7 @@
 
 import { ApiClient } from './ApiClient';
 import { Page, Status } from '../models/models';
-import { Pipeline as PipelineData, PipelineEdit} from '../models/Pipeline';
+import { Pipeline as PipelineData, PipelineEdit } from '../models/Pipeline';
 import { RunCreate } from '../models/Run';
 import { Mapper as MapperData, MapperCreate } from '../models/Mapper';
 import { IncludeResource } from '../models/IncludeResources';
@@ -20,7 +20,7 @@ export class Pipeline {
   public name: string;
   public description?: string | null;
   public last_run_status?: Status | null;
-  public mapper: MapperData;
+  public mapper: Mapper;
 
   // Private ApiClient instance
   private apiClient!: ApiClient;
@@ -45,7 +45,7 @@ export class Pipeline {
     this.name = data.name;
     this.description = data.description;
     this.last_run_status = data.last_run_status;
-    this.mapper = data.mapper
+    this.mapper = new Mapper(this.apiClient, this.id, data.mapper.version, data.mapper.user_id, data.mapper.creation_status, data.mapper.target_schema ?? null, data.mapper.transformations ?? null, data.mapper.manifest ?? null);
   }
 
 
@@ -53,12 +53,12 @@ export class Pipeline {
    * Refreshes the pipeline data from the server.
    */
   public async get(include?: IncludeResource[],): Promise<void> {
-    const params = {include}
-    const pipelineData = await this.apiClient.get<PipelineData>(`/pipelines/${this.id}`, {params});
+    const params = { include }
+    const pipelineData = await this.apiClient.get<PipelineData>(`/pipelines/${this.id}`, { params });
     this.name = pipelineData.name;
     this.description = pipelineData.description;
     this.last_run_status = pipelineData.last_run_status;
-    this.mapper = pipelineData.mapper;
+    this.mapper = new Mapper(this.apiClient, this.id, pipelineData.mapper.version, pipelineData.mapper.user_id, pipelineData.mapper.creation_status, pipelineData.mapper.target_schema ?? null, pipelineData.mapper.transformations ?? null, pipelineData.mapper.manifest ?? null);
   }
 
   /**
@@ -74,7 +74,7 @@ export class Pipeline {
     this.name = updatedPipeline.name;
     this.description = updatedPipeline.description;
     this.last_run_status = updatedPipeline.last_run_status;
-    this.mapper = updatedPipeline.mapper;
+    this.mapper = new Mapper(this.apiClient, this.id, updatedPipeline.mapper.version, updatedPipeline.mapper.user_id, updatedPipeline.mapper.creation_status, updatedPipeline.mapper.target_schema ?? null, updatedPipeline.mapper.transformations ?? null, updatedPipeline.mapper.manifest ?? null);
     return this;
   }
 
@@ -90,9 +90,17 @@ export class Pipeline {
    * @param data The data for the run.
    * @returns The created Run object.
    */
-  public async createRun(data: RunCreate): Promise<Run> {
+  public async createRun(data: RunCreate, wait: boolean = false): Promise<Run> {
     const newRun = await this.apiClient.post<Run>(`/pipelines/${this.id}/runs`, data);
-    return new Run(this.apiClient, newRun, this.id);  
+    if (!wait) {
+      return new Run(this.apiClient, newRun, this.id);
+    }
+    const run = new Run(this.apiClient, newRun, this.id);
+    while (run.status == Status.QUEUED || run.status == Status.RUNNING) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await run.get();
+    }
+    return run;
   }
 
   /**
@@ -110,12 +118,23 @@ export class Pipeline {
     const params = { mapper_id, page, size };
     const runs = await this.apiClient.get<Page<Run>>(`/pipelines/${this.id}/runs`, { params });
 
-    // Map each item to a Run instance and return with pagination metadata
-    return {
-        items: runs.items.map(runData => new Run(this.apiClient, runData, this.id)),
+    // make a get run call with params mapper to add to the runData
+    if (runs.items.length > 0 && runs.items[0].mapper === null) {
+      const runWithMapper = await this.apiClient.get<Run>(`/pipelines/${this.id}/runs/${runs.items[0].number}`);
+      const mapperData = runWithMapper.mapper;
+      // Map each item to a Run instance and return with pagination metadata
+      return {
+        items: runs.items.map(runData => new Run(this.apiClient, { ...runData, mapper: mapperData }, this.id)),
         total: runs.total,
         page: runs.page,
         size: runs.size,
+      };
+    }
+    return {
+      items: runs.items.map(runData => new Run(this.apiClient, runData, this.id)),
+      total: runs.total,
+      page: runs.page,
+      size: runs.size,
     };
   }
 
@@ -128,7 +147,7 @@ export class Pipeline {
    * @param size Number of items per page.
    * @returns The requested Run object.
    */
-  public async getRunById(
+  public async getRun(
     run_id: number,
     include?: IncludeResource[],
     mapper_id?: number | null,
@@ -145,9 +164,17 @@ export class Pipeline {
    * @param data The data for the mapper.
    * @returns The created Mapper object.
    */
-  public async createMapper(data: MapperCreate): Promise<Mapper> {
+  public async createMapper(data: MapperCreate, wait: boolean = true): Promise<Mapper> {
     const newMapper = await this.apiClient.post<Mapper>(`/pipelines/${this.id}/mappers`, data);
-    return new Mapper(this.apiClient, this.id, newMapper.version, newMapper.user_id, newMapper.creation_status, newMapper.target_schema, newMapper.transformations, newMapper.manifest);
+    if (!wait) {
+      return new Mapper(this.apiClient, this.id, newMapper.version, newMapper.user_id, newMapper.creation_status, newMapper.target_schema, newMapper.transformations, newMapper.manifest);
+    }
+    const mapper = new Mapper(this.apiClient, this.id, newMapper.version, newMapper.user_id, newMapper.creation_status, newMapper.target_schema, newMapper.transformations, newMapper.manifest);
+    while (mapper.creation_status == Status.QUEUED || mapper.creation_status == Status.RUNNING) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await mapper.get();
+    }
+    return mapper;
   }
 
   /**
@@ -163,10 +190,10 @@ export class Pipeline {
     const params = { page, size };
     const mappers = await this.apiClient.get<Page<Mapper>>(`/pipelines/${this.id}/mappers`, { params });
     return {
-        items: mappers.items.map(mapperData => new Mapper(this.apiClient, this.id, mapperData.version, mapperData.user_id, mapperData.creation_status, mapperData.target_schema ?? null, mapperData.transformations ?? null, mapperData.manifest ?? null)),
-        total: mappers.total,
-        page: mappers.page,
-        size: mappers.size,
+      items: mappers.items.map(mapperData => new Mapper(this.apiClient, this.id, mapperData.version, mapperData.user_id, mapperData.creation_status, mapperData.target_schema ?? null, mapperData.transformations ?? null, mapperData.manifest ?? null)),
+      total: mappers.total,
+      page: mappers.page,
+      size: mappers.size,
     };
   }
 
@@ -178,7 +205,7 @@ export class Pipeline {
    * @param size Number of items per page.
    * @returns The requested Mapper object.
    */
-  public async getMapperByVersion(
+  public async getMapper(
     version: number,
     include?: IncludeResource[],
     page: number = 1,
