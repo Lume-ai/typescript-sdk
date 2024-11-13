@@ -1,7 +1,7 @@
 // services_v3/Lume.ts
 
 // include interface models
-import { Pipeline, TargetSchema, Status, Mapper, Run, Mapping, Schema, HTTPExceptionError, IncludeResource, ManifestItem, Lookup, Transformation, Page } from './models/index';
+import { Pipeline, TargetSchema, TargetSchemaCreate, TargetSchemaUpdate, Status, Mapper, Run, Mapping, Schema, HTTPExceptionError, IncludeResource, ManifestItem, Lookup, Transformation, Page } from './models/index';
 
 import { ApiClient } from './services/ApiClient';
 import { PipelineService } from './services/PipelineService';
@@ -34,4 +34,4 @@ export class Lume {
   }
 }
 
-export {PipelineClass, MapperClass, RunClass, Pipeline, TargetSchema, Mapper, Run, Mapping, Schema, HTTPExceptionError, IncludeResource, ManifestItem, Lookup, Transformation, Page, Status };
+export {PipelineClass, MapperClass, RunClass, Pipeline, TargetSchema, TargetSchemaCreate, TargetSchemaUpdate, Mapper, Run, Mapping, Schema, HTTPExceptionError, IncludeResource, ManifestItem, Lookup, Transformation, Page, Status };

@@ -12,93 +12,95 @@ const lume = new Lume(apiKey);
 
 // Initialize the PipelineService with your API key
 const pipelineService = lume.pipelineService;
+const sampleTargetSchema = {
+    "type": "object",
+    "properties": {
+        "full_name": {
+            "type": "string",
+            "description": "Full name of the person"
+        },
+        "age": {
+            "type": "integer",
+            "description": "Age of the person"
+        },
+        "address": {
+            "type": "array",
+            "description": "List of addresses",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "street": {
+                        "type": "string",
+                        "description": "Street name"
+                    },
+                    "city": {
+                        "type": "string",
+                        "description": "City name"
+                    },
+                    "state": {
+                        "type": "string",
+                        "description": "State name"
+                    },
+                    "zip": {
+                        "type": "string",
+                        "description": "Zip code"
+                    }
+                },
+                "required": ["street", "city", "state", "zip"]
+            }
+        }
+    },
+    "required": ["full_name", "age", "address"]
+}
 
+const sampleSourceData = [
+    {
+        "first_name": "John",
+        "last_name": "Doe",
+        "year_of_birth": 1990,
+        "full_addresses": [
+            {
+                "street": "123 Main St",
+                "city": "San Francisco",
+                "state": "CA",
+                "zip": "94105"
+            }
+        ]
+    },
+    {
+        "first_name": "Jane",
+        "last_name": "Doe",
+        "year_of_birth": 1980,
+        "full_addresses": [
+            {
+                "street": "456 Elm St",
+                "city": "Los Angeles",
+                "state": "CA",
+                "zip": "90001"
+            }
+        ]
+    },
+    {
+        "first_name": "Alice",
+        "last_name": "Smith",
+        "year_of_birth": 2000,
+        "full_addresses": [
+            {
+                "street": "789 Oak St",
+                "city": "San Diego",
+                "state": "CA",
+                "zip": "92101"
+            }
+        ]
+    }
+]
 async function testSDK() {
     // 1. Create a new pipeline
     const pipelineCreateData: PipelineCreate = {
         name: 'V2-SDK-Tester-Updated',
         description: 'This pipeline is created for testing purposes.',
-        target_schema: {
-            "type": "object",
-            "properties": {
-                "full_name": {
-                    "type": "string",
-                    "description": "Full name of the person"
-                },
-                "age": {
-                    "type": "integer",
-                    "description": "Age of the person"
-                },
-                "address": {
-                    "type": "array",
-                    "description": "List of addresses",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "street": {
-                                "type": "string",
-                                "description": "Street name"
-                            },
-                            "city": {
-                                "type": "string",
-                                "description": "City name"
-                            },
-                            "state": {
-                                "type": "string",
-                                "description": "State name"
-                            },
-                            "zip": {
-                                "type": "string",
-                                "description": "Zip code"
-                            }
-                        },
-                        "required": ["street", "city", "state", "zip"]
-                    }
-                }
-            },
-            "required": ["full_name", "age", "address"]
-        },
-        sample_data: [
-            {
-                "first_name": "John",
-                "last_name": "Doe",
-                "year_of_birth": 1990,
-                "full_addresses": [
-                    {
-                        "street": "123 Main St",
-                        "city": "San Francisco",
-                        "state": "CA",
-                        "zip": "94105"
-                    }
-                ]
-            },
-            {
-                "first_name": "Jane",
-                "last_name": "Doe",
-                "year_of_birth": 1980,
-                "full_addresses": [
-                    {
-                        "street": "456 Elm St",
-                        "city": "Los Angeles",
-                        "state": "CA",
-                        "zip": "90001"
-                    }
-                ]
-            },
-            {
-                "first_name": "Alice",
-                "last_name": "Smith",
-                "year_of_birth": 2000,
-                "full_addresses": [
-                    {
-                        "street": "789 Oak St",
-                        "city": "San Diego",
-                        "state": "CA",
-                        "zip": "92101"
-                    }
-                ]
-            }
-        ],
+        target_schema: sampleTargetSchema,
+        sample_data: sampleSourceData,
     };
 
     console.log('Creating a new pipeline...');
@@ -127,47 +129,7 @@ async function testSDK() {
 
     // 4. Create a run for the pipeline
     const runCreateData = {
-        data: [
-            {
-                "first_name": "John",
-                "last_name": "Doe",
-                "year_of_birth": 1990,
-                "full_addresses": [
-                    {
-                        "street": "123 Main St",
-                        "city": "San Francisco",
-                        "state": "CA",
-                        "zip": "94105"
-                    }
-                ]
-            },
-            {
-                "first_name": "Jane",
-                "last_name": "Doe",
-                "year_of_birth": 1980,
-                "full_addresses": [
-                    {
-                        "street": "456 Elm St",
-                        "city": "Los Angeles",
-                        "state": "CA",
-                        "zip": "90001"
-                    }
-                ]
-            },
-            {
-                "first_name": "Alice",
-                "last_name": "Smith",
-                "year_of_birth": 2000,
-                "full_addresses": [
-                    {
-                        "street": "789 Oak St",
-                        "city": "San Diego",
-                        "state": "CA",
-                        "zip": "92101"
-                    }
-                ]
-            }
-        ],
+        data: sampleSourceData,
     };
 
     console.log('Creating a run for the pipeline...');
@@ -326,6 +288,23 @@ async function testSDK() {
     console.log('Pipeline updated:', JSON.stringify(newPipeline.mapper, null, 2));
     console.log('Delete the pipeline');
     await newPipeline.delete();
+
+    console.log('Create a target schema');
+    const targetSchema = await lume.targetSchemaService.createTargetSchema({
+        name: 'Test-Target-Schema',
+        schema: sampleTargetSchema
+    });
+    console.log('Target schema created:', targetSchema);
+    console.log('Get target schema by id with schema');
+    const targetSchemaById = await lume.targetSchemaService.getTargetSchema(targetSchema.id, ['target_schema']);
+    console.log('Target schema by id:', targetSchemaById);
+    console.log('Update the target schema');
+    const targetSchemaUpdate = await lume.targetSchemaService.updateTargetSchema(targetSchema.id, {
+        name: 'Test-Target-Schema-Updated',
+    });
+    console.log('Target schema updated:', targetSchemaUpdate);
+    console.log('Delete the target schema');
+    await lume.targetSchemaService.deleteTargetSchema(targetSchema.id);
     console.log('TEST COMPLETED SUCCESSFULLY');
     
 }
