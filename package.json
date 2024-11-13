@@ -1,6 +1,6 @@
 {
   "name": "@lume-ai/typescript-sdk",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Lume SDK for Typescript to automate data mappings with AI. Learn more at docs.lume.ai",
   "repository": {
     "type": "git",
@@ -46,6 +46,7 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "@lume-ai/typescript-sdk": "^4.0.0",
     "axios": "^1.7.7",
     "qs": "^6.13.0"
   },
