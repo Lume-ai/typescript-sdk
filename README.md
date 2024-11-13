@@ -55,7 +55,7 @@ const targetSchema = {
             description: "The last name of the user",
         },
     },
-    required: ["f_name", "l_name"],
+    required: ["first_name", "last_name"],
 }
 
 const sourceData = [
