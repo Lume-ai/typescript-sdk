@@ -25,13 +25,14 @@ import axios, {
         paramsSerializer: (params) => {
             const queryParams: any = { ...params };
             
-            // Serialize 'include' as a comma-separated string if it's an array
-            if (Array.isArray(queryParams.include)) {
-              queryParams.include = queryParams.include.join(',');
-            }
+            // Keep include as an array to get separate include parameters
+            // This will result in include=value1&include=value2 format
             
-            return qs.stringify(queryParams, { arrayFormat: 'brackets' });
-          },
+            return qs.stringify(queryParams, { 
+                arrayFormat: 'repeat',
+                encode: false
+            });
+        },
         });
     
   
@@ -65,7 +66,8 @@ import axios, {
         // Extract status and message for known errors
         const code = error.response.status;
         const detail = error.response.statusText || "An unknown error occurred";
-        console.log("ROBERT IS HERE 2") 
+        console.log("ROBERT IS HERE 2")
+        console.log(error.response)
         console.log(error.response.status)
         console.log(error.response.statusText)
       // Throw as HTTPExceptionError

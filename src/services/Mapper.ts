@@ -4,7 +4,7 @@ import { Status } from '../models/models';
 import { Transformation } from '../models/Transformation';
 import { PageManifestItem } from '../models/Manifest';
 import { ApiClient } from './ApiClient';
-import { MapperCreate } from '../models/Mapper';
+import { MapperCreate, Mapper as MapperData } from '../models/Mapper';
 import { IncludeResource } from '../models/IncludeResources';
 import { PipelineEdit } from '../models/Pipeline';
 
@@ -66,17 +66,17 @@ export class Mapper {
     this.manifest = updatedData.manifest; 
   }
 
-  public async get_manifest(): Promise<PageManifestItem> {
+  public async getManifest(): Promise<PageManifestItem> {
     const manifest = await this.apiClient.get<PageManifestItem>(`/pipelines/${this.pipeline_id}/mappers/${this.version}?include=manifest`);
     return manifest;    
   }
 
-  public async get_transformations(): Promise<Transformation[] | null> {
+  public async getTransformations(): Promise<Transformation[] | null> {
     const mapperData = await this.apiClient.get<Mapper>(`/pipelines/${this.pipeline_id}/mappers/${this.version}?include=transformations`);
     return mapperData.transformations; 
   }
 
-  public async get_target_schema(): Promise<object | null> {
+  public async getTargetSchema(): Promise<object | null> {
     const mapperData = await this.apiClient.get<Mapper>(`/pipelines/${this.pipeline_id}/mappers/${this.version}?include=target_schema`);
     return mapperData.target_schema;         
   }
@@ -94,5 +94,17 @@ export class Mapper {
       mapper_version: this.version,
     };
     await this.apiClient.patch<void>(`/pipelines/${this.pipeline_id}`, data);
+  }
+
+  // get just the mapper data
+  public async getValues(): Promise<MapperData> {
+    return {
+      version: this.version,
+      user_id: this.user_id,
+      creation_status: this.creation_status,
+      target_schema: this.target_schema,
+      transformations: this.transformations,
+      manifest: this.manifest,
+    }
   }
 }

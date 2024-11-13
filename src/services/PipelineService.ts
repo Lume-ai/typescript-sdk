@@ -6,6 +6,7 @@ import { Pipeline } from './Pipelines';
 import { Page } from '../models/models';
 import { HTTPExceptionError } from '../models/Error';
 import { formatHTTPExceptionError } from '../utils/errorUtils';
+import { IncludeResource } from '../models/IncludeResources';
 
 export class PipelineService {
   private apiClient: ApiClient;
@@ -46,8 +47,8 @@ export class PipelineService {
    * @param id The ID of the pipeline.
    * @returns The Pipeline instance.
    */
-  public async getPipelineById(id: string): Promise<Pipeline> {
-    const pipelineData = await this.apiClient.get<PipelineData>(`/pipelines/${id}`);
+  public async getPipelineById(id: string, include?: IncludeResource[]): Promise<Pipeline> {
+    const pipelineData = await this.apiClient.get<PipelineData>(`/pipelines/${id}`, { params: { include } });
     return new Pipeline(this.apiClient, pipelineData);
   }
 

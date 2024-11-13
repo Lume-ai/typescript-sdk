@@ -1,7 +1,7 @@
 // services_v3/Pipeline.ts
 
 import { ApiClient } from './ApiClient';
-import { Page } from '../models/models';
+import { Page, Status } from '../models/models';
 import { Pipeline as PipelineData, PipelineEdit} from '../models/Pipeline';
 import { RunCreate } from '../models/Run';
 import { Mapper as MapperData, MapperCreate } from '../models/Mapper';
@@ -19,7 +19,7 @@ export class Pipeline {
   public user_id: string;
   public name: string;
   public description?: string | null;
-  public last_run_status?: string | null;
+  public last_run_status?: Status | null;
   public mapper: MapperData;
 
   // Private ApiClient instance
@@ -65,7 +65,7 @@ export class Pipeline {
    * Updates the pipeline with the provided data.
    * @param data The data to update the pipeline with.
    */
-  public async update(data: PipelineEdit): Promise<void> {
+  public async update(data: PipelineEdit): Promise<Pipeline> {
     const updatedPipeline = await this.apiClient.patch<PipelineData>(
       `/pipelines/${this.id}`,
       data
@@ -75,6 +75,7 @@ export class Pipeline {
     this.description = updatedPipeline.description;
     this.last_run_status = updatedPipeline.last_run_status;
     this.mapper = updatedPipeline.mapper;
+    return this;
   }
 
   /**
@@ -188,5 +189,16 @@ export class Pipeline {
     console.log(params);
     const mapper = await this.apiClient.get<Mapper>(`/pipelines/${this.id}/mappers/${version}`, { params });
     return new Mapper(this.apiClient, this.id, mapper.version, mapper.user_id, mapper.creation_status, mapper.target_schema ?? null, mapper.transformations ?? null, mapper.manifest ?? null);
+  }
+
+  public async getValues(): Promise<PipelineData> {
+    return {
+      id: this.id,
+      user_id: this.user_id,
+      name: this.name,
+      description: this.description,
+      last_run_status: this.last_run_status,
+      mapper: this.mapper,
+    }
   }
 }

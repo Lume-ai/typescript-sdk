@@ -192,9 +192,9 @@ async function testSDK() {
     console.log('Run completed.');
     console.log(newRun);
     console.log('Get mapper:');
-    console.log(await newRun.get_mapper());
+    console.log(await newRun.getMapper());
     console.log('Get mappings:');
-    console.log(await newRun.get_mappings());
+    console.log(await newRun.getMappings());
     
 
     console.log('Create a workshop');
@@ -308,15 +308,15 @@ async function testSDK() {
         console.log('Mapper is still creating...');
         await new Promise(resolve => setTimeout(resolve, 1000));
         //newMapper = await newPipeline.getMapperByVersion(newMapper.id);
-        await newMapper.get();
+        await newMapper.get(['transformations', 'manifest', 'target_schema']);
     }
     //newMapper = await newPipeline.getMapperByVersion(newMapper.id, ['transformations']);
     console.log('Get transformations:');
-    console.log(await newMapper.get_transformations());
+    console.log(await newMapper.getTransformations());
     console.log('Get manifest:');
-    console.log(await newMapper.get_manifest());
+    console.log(await newMapper.getManifest());
     console.log('Get target schema:');
-    console.log(await newMapper.get_target_schema());
+    console.log(await newMapper.getTargetSchema());
     console.log('Mapper completed:', JSON.stringify(newMapper, null, 2));
 
     console.log('Apply the mapper to the pipeline');
@@ -324,6 +324,8 @@ async function testSDK() {
     //await newPipeline.update({ mapper_id: newMapper.id })
     await newPipeline.get(['transformations'])
     console.log('Pipeline updated:', JSON.stringify(newPipeline.mapper, null, 2));
+    console.log('Delete the pipeline');
+    await newPipeline.delete();
     console.log('TEST COMPLETED SUCCESSFULLY');
     
 }

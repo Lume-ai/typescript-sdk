@@ -1,11 +1,14 @@
 // services_v3/Lume.ts
 
+// include interface models
+import { Pipeline, TargetSchema, Status, Mapper, Run, Mapping, Schema, HTTPExceptionError, IncludeResource, ManifestItem, Lookup, Transformation, Page } from './models/index';
+
 import { ApiClient } from './services/ApiClient';
 import { PipelineService } from './services/PipelineService';
 import { TargetSchemaService } from './services/TargetSchemaService';
 // Import other services as they are created
 // import { AnotherService } from './AnotherService';
-const PROD_ENDPOINT = "https://logic.lume-terminus.com/v2";
+const PROD_ENDPOINT = "https://api.lume.ai/v2";
 
 export class Lume {
   public pipelineService: PipelineService;
@@ -27,3 +30,5 @@ export class Lume {
     // this.anotherService = new AnotherService(this.apiClient);
   }
 }
+
+export { Pipeline, TargetSchema, Mapper, Run, Mapping, Schema, HTTPExceptionError, IncludeResource, ManifestItem, Lookup, Transformation, Page, Status };
