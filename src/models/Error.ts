@@ -1,4 +1,5 @@
 // ValidationError.ts
+import { UUID } from "./models";
 
 /**
  * Represents an HTTP validation error response containing an array of validation errors
@@ -9,7 +10,8 @@ export interface HTTPValidationError {
 
 export interface HTTPExceptionError {
     code: number;
-    detail: string;
+    message: string;
+    error_id?: UUID | null;
   }
   
 /**

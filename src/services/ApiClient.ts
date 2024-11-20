@@ -61,55 +61,29 @@ import axios, {
       return response;
     };
   
-    /*private handleError = (error: any): Promise<never> => {
+    private handleError = (error: any): Promise<never> => {
       if (error.response) {
         // Extract status and message for known errors
         const code = error.response.status;
-        const detail = error.response.statusText || "An unknown error occurred";
+        const message = error.response.data.detail || "An unknown error occurred";
+        const error_id = error.response.data.error_id || null;
       // Throw as HTTPExceptionError
-      const exceptionError: HTTPExceptionError = { code, detail };
+      const exceptionError: HTTPExceptionError = { code, message, error_id};
       return Promise.reject(exceptionError);
       } else if (error.request) {
         // Handle no response from the server
         const exceptionError: HTTPExceptionError = {
           code: 0,
-          detail: "No response received from the server",
+          message: "No response received from the server",
         };
         return Promise.reject(exceptionError);
       } else {
         // Handle any other errors
         const exceptionError: HTTPExceptionError = {
           code: 0,
-          detail: "Request failed with an unknown error",
+          message: "Request failed with an unknown error",
         };
         return Promise.reject(exceptionError);
-      }
-    };*/
-
-    /**
-     * Handles errors that occur during HTTP requests.
-     * @param error Axios error object.
-     * @returns A rejected promise with the error object.
-     */
-    private handleError = (error: AxiosError) => {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.log("ROBERT IS HERE");
-        console.error(
-          "Response status:",
-          error.response.status,
-          "Response data:",
-          error.response.data
-        );
-        return Promise.reject(error.response);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received from the server");
-        return Promise.reject(new Error("No response received from the server"));
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error("Request failed with error:", error.message);
-        return Promise.reject(error);
       }
     };
   

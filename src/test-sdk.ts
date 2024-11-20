@@ -3,7 +3,7 @@
 import { PipelineService } from './services/PipelineService';
 import { PipelineEdit, PipelineCreate } from './models/Pipeline';
 import { Status } from './models/models';
-import { Lume } from './index';
+import { Lume, HTTPExceptionError } from './index';
 
 // Replace 'your-api-key' with your actual API key
 const apiKey = 'adc6667572414f5f7fad6d1a67b2ef3f';
@@ -108,7 +108,7 @@ async function testSDK() {
         const newPipeline = await pipelineService.createPipeline(pipelineCreateData);
         console.log('Pipeline created:', newPipeline);
     } catch (error) {
-        console.error('Error creating pipeline:', error instanceof Error ? error.message : error);
+        console.log('Error Message: ', (error as HTTPExceptionError).message);
     }
     const newPipeline = await pipelineService.createPipeline(pipelineCreateData);
     // 2. Fetch all pipelines
