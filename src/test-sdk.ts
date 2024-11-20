@@ -108,7 +108,6 @@ async function testSDK() {
         const newPipeline = await pipelineService.createPipeline(pipelineCreateData);
         console.log('Pipeline created:', newPipeline);
     } catch (error) {
-        console.log('Full Error creating pipeline: ', error);
         console.error('Error creating pipeline:', error instanceof Error ? error.message : error);
     }
     const newPipeline = await pipelineService.createPipeline(pipelineCreateData);

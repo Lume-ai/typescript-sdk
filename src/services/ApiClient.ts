@@ -61,7 +61,7 @@ import axios, {
       return response;
     };
   
-    private handleError = (error: any): Promise<never> => {
+    /*private handleError = (error: any): Promise<never> => {
       if (error.response) {
         // Extract status and message for known errors
         const code = error.response.status;
@@ -83,6 +83,33 @@ import axios, {
           detail: "Request failed with an unknown error",
         };
         return Promise.reject(exceptionError);
+      }
+    };*/
+
+    /**
+     * Handles errors that occur during HTTP requests.
+     * @param error Axios error object.
+     * @returns A rejected promise with the error object.
+     */
+    private handleError = (error: AxiosError) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.log("ROBERT IS HERE");
+        console.error(
+          "Response status:",
+          error.response.status,
+          "Response data:",
+          error.response.data
+        );
+        return Promise.reject(error.response);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received from the server");
+        return Promise.reject(new Error("No response received from the server"));
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Request failed with error:", error.message);
+        return Promise.reject(error);
       }
     };
   
