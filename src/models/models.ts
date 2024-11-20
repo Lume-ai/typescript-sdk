@@ -8,7 +8,7 @@ import { Conditional } from "./Transformation";
   
   
   
-  
+  export type UUID = string;
   
   export interface Page<T> {
     items: T[];

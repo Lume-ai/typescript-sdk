@@ -1,5 +1,7 @@
 // Schema.ts
 
+import { UUID } from "./models";
+
 /**
  * Schema alias for Record<string, any>
  */
@@ -13,12 +15,12 @@ export type TargetSchema = {
     /**
      * The id of the target schema.
      */
-    readonly id: string;
+    readonly id: UUID;
 
     /**
      * The user id of the target schema.
      */
-    readonly user_id: string;
+    readonly user_id: UUID;
   
     /**
      * The name of the target schema.

@@ -100,13 +100,18 @@ async function testSDK() {
         name: 'V2-SDK-Tester-Updated',
         description: 'This pipeline is created for testing purposes.',
         target_schema: sampleTargetSchema,
-        sample_data: sampleSourceData,
+        sample_data: [],
     };
-
     console.log('Creating a new pipeline...');
+    
+    try {
+        const newPipeline = await pipelineService.createPipeline(pipelineCreateData);
+        console.log('Pipeline created:', newPipeline);
+    } catch (error) {
+        console.log('Full Error creating pipeline: ', error);
+        console.error('Error creating pipeline:', error instanceof Error ? error.message : error);
+    }
     const newPipeline = await pipelineService.createPipeline(pipelineCreateData);
-    console.log('Pipeline created:', newPipeline);
-
     // 2. Fetch all pipelines
     console.log('Fetching all pipelines...');
     const pipelinesPage = await pipelineService.getAllPipelines();

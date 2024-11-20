@@ -1,12 +1,12 @@
 // Mapper.ts
 
-import { Status } from "./models";
+import { Status, UUID } from "./models";
 import { Transformation } from "./Transformation";
 import { PageManifestItem } from "./Manifest";
 
 export interface Mapper {
     version: number;
-    user_id: string;
+    user_id: UUID;
     creation_status: Status;
     target_schema?: object | null;
     transformations?: Transformation[] | null;

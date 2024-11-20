@@ -1,11 +1,11 @@
 // Pipeline.ts
 
 import { Mapper } from "./Mapper";
-import { Status } from "./models";
+import { Status, UUID } from "./models";
 
 export interface Pipeline {
-    id: string;
-    user_id: string;
+    id: UUID;
+    user_id: UUID;
     name: string;
     description?: string | null;
     last_run_status?: Status | null;
@@ -15,8 +15,8 @@ export interface Pipeline {
   export interface PipelineCreate {
     name: string;
     description?: string | null;
-    target_schema: object | string;
-    sample_data: object[] | string;
+    target_schema: object | UUID;
+    sample_data: object[] | UUID;
   }
   
   export interface PipelineEdit {
