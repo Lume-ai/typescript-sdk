@@ -90,7 +90,7 @@ export class Pipeline {
    * @param data The data for the run.
    * @returns The created Run object.
    */
-  public async createRun(data: RunCreate, wait: boolean = false): Promise<Run> {
+  public async createRun(data: RunCreate, wait: boolean = false, include?: IncludeResource[]): Promise<Run> {
     const newRun = await this.apiClient.post<Run>(`/pipelines/${this.id}/runs`, data);
     if (!wait) {
       return new Run(this.apiClient, newRun, this.id);
@@ -98,7 +98,11 @@ export class Pipeline {
     const run = new Run(this.apiClient, newRun, this.id);
     while (run.status == Status.QUEUED || run.status == Status.RUNNING) {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      await run.get();
+      if (include) {
+        await run.get(include);
+      } else {
+        await run.get();
+      }
     }
     return run;
   }
