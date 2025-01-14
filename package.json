@@ -1,6 +1,6 @@
 {
   "name": "@lume-ai/typescript-sdk",
-  "version": "4.0.8",
+  "version": "4.0.9",
   "description": "Lume SDK for Typescript to automate data mappings with AI. Learn more at docs.lume.ai",
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
     "data",
     "integration"
   ],
-  "author": "Nicolas Machado",
+  "author": "Robert Ross",
   "license": "MIT",
   "devDependencies": {
     "@types/axios": "^0.14.4",

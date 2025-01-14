@@ -1,7 +1,7 @@
 // services_v3/PipelineService.ts
 
 import { ApiClient } from './ApiClient';
-import { Pipeline as PipelineData, PipelineCreate, PipelineEdit } from '../models/Pipeline';
+import { Pipeline as PipelineData, PipelineCreate, PipelineEdit, PipelineClone, PipelineSimple } from '../models/Pipeline';
 import { Pipeline } from './Pipelines';
 import { Page, Status } from '../models/models';
 import { HTTPExceptionError } from '../models/Error';
@@ -71,6 +71,17 @@ export class PipelineService {
       await run.get();
     }
     return pipeline;
+  }
+
+  /**
+   * Clones a pipeline.
+   * @param id The ID of the pipeline to clone.
+   * @param data The data for cloning the pipeline.
+   * @returns The cloned Pipeline instance.
+   */
+  public async clonePipeline(id: string, data: PipelineClone | PipelineSimple): Promise<Pipeline> {
+    const pipelineData = await this.apiClient.post<PipelineData>(`/pipelines/${id}/clone`, data);
+    return new Pipeline(this.apiClient, pipelineData);
   }
 
   /**

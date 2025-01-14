@@ -24,3 +24,14 @@ export interface Pipeline {
     description?: string | null;
     mapper_version?: number | null;
   }
+
+  export interface PipelineSimple {
+    name: string;
+    description?: string | null;
+  } 
+
+  
+
+  export interface PipelineClone {
+    id: UUID;
+  }
