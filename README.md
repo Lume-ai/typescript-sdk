@@ -115,6 +115,88 @@ if (output) {
 }
 ```
 
+### Monitoring Flow Status
+
+You can monitor the status of flows and runs:
+
+```typescript
+// Create a flow and wait for completion
+const flow = await lume.flowService.createFlow({
+  name: "my_flow",
+  description: "Process customer data",
+  target_schema: schema,
+  tags: ["production"],
+});
+
+// Monitor run status
+const run = await flow.createRun({ source_data: data });
+while (run.status === "RUNNING" || run.status === "PENDING") {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await run.get();
+}
+
+if (run.status === "SUCCEEDED") {
+  const results = await run.getSchemaTransformerOutput();
+  console.log("Transformation complete:", results);
+} else {
+  console.log("Run failed:", run.status);
+}
+```
+
+### Validation Handling
+
+You can track which fields were flagged for validation errors:
+
+```typescript
+try {
+  const flow = await lume.flowService.createFlow({
+    // ... flow configuration ...
+  });
+
+  const run = await flow.createRun({ source_data: data });
+  const output = await run.getSchemaTransformerOutput();
+
+  if (output?.errors) {
+    // Handle different types of validation errors
+    if ("global_errors" in output.errors) {
+      // Handle global validation errors
+      const globalErrors = output.errors.global_errors;
+      console.log("Global validation errors:", globalErrors);
+    }
+
+    if ("record_errors" in output.errors) {
+      // Handle record-specific errors
+      const recordErrors = output.errors.record_errors;
+      for (const [recordIndex, errors] of Object.entries(recordErrors)) {
+        console.log(`Errors in record ${recordIndex}:`, errors);
+      }
+    }
+
+    // Handle field-specific validation errors
+    for (const [field, fieldErrors] of Object.entries(output.errors)) {
+      if (field !== "global_errors" && field !== "record_errors") {
+        console.log(`Validation errors for ${field}:`, fieldErrors);
+      }
+    }
+  }
+
+  // Handle records that couldn't be processed
+  if (output?.no_data_idxs?.length) {
+    console.log("Records that could not be processed:", output.no_data_idxs);
+  }
+} catch (error) {
+  if ((error as HTTPExceptionError).code === 401) {
+    console.log("Authentication failed - check your API key");
+  } else if ((error as HTTPExceptionError).code === 429) {
+    console.log("Rate limit exceeded - please try again later");
+  } else if ((error as HTTPExceptionError).code === 400) {
+    console.log("Invalid request:", (error as HTTPExceptionError).message);
+  } else {
+    console.log("Unexpected error:", error);
+  }
+}
+```
+
 ## Documentation
 
 See [the full documentation](https://docs.lume.ai/pages/libraries/typescript/introduction).
