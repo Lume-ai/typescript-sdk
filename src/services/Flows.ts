@@ -167,4 +167,30 @@ export class Flow {
     const output = await run.getSchemaTransformerOutput();
     return output?.mapped_data.items || [];
   }
+
+  /**
+   * Gets the results from the most recent successful run
+   * @returns The mapped data items or null if no successful runs exist
+   */
+  public async getLatestRunResults(): Promise<any[] | null> {
+    const runs = await this.getRuns();
+    if (!runs?.length) return null;
+
+    // Sort runs by creation date (newest first)
+    const sortedRuns = runs.sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    // Find the most recent successful run
+    const latestSuccessfulRun = sortedRuns.find(
+      (run) => run.status === Status.SUCCEEDED
+    );
+    if (!latestSuccessfulRun) return null;
+
+    const run = await this.getRun(latestSuccessfulRun.id);
+    if (!run) return null;
+
+    return this.getRunResults(run);
+  }
 }
