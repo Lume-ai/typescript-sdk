@@ -19,9 +19,20 @@
   <img src="assets/ts-logo-128.png" width="64px">
 </p>
 
+# Lume AI TypeScript SDK
+
+The official TypeScript SDK for Lume AI's data transformation platform.
+
+## Features
+
+- 🚀 Create and manage data transformation flows
+- 🔄 Transform data using AI-powered mapping
+- ✨ Real-time validation and error handling
+- 📊 Rich schema support
+
 ## Status
 
-The Lume Typescript SDK is currently in beta. 
+The Lume Typescript SDK is currently in beta.
 Please reach out to support if you have any questions, encounter any bugs, or have any feature requests.
 
 ## Installation
@@ -40,78 +51,68 @@ pnpm add @lume-ai/typescript-sdk
 
 ## Quickstart
 
-Retrieve your input data and target schema.
+### Initialize the SDK
 
-```ts
+```typescript
+import { Lume } from "@lume-ai/typescript-sdk";
+
+const lume = new Lume("your-api-key");
+```
+
+### Create a Flow and Run
+
+```typescript
+// Define your target schema
 const targetSchema = {
-    type: "object",
-    properties: {
-        first_name: {
-            type: "string",
-            description: "The first name of the user",
-        },
-        last_name: {
-            type: "string",
-            description: "The last name of the user",
-        },
-    },
-    required: ["first_name", "last_name"],
+  type: "object",
+  properties: {
+    full_name: { type: "string", description: "Full name of the person" },
+    age: { type: "integer", description: "Age of the person" },
+  },
+  required: ["full_name", "age"],
+};
+const lume = new Lume(apiKey);
+
+// Create and run a new flow. Return only when the flow is complete.
+const flow = await lume.flowService.createAndRunFlow(
+  {
+    name: "my_flow",
+    description: "Process customer data",
+    target_schema: schema,
+    tags: ["customers"],
+  },
+  {
+    source_data: myData,
+  },
+  true
+);
+
+// Process more data with existing flow
+const flowId = "existing-flow-id";
+const existingFlow = await lume.flowService.getFlow(flowId); // can also get by flow name
+const results = await existingFlow.process(newData);
+
+// use mapped data results, which includes the transformed data and any errors, paginated.
+```
+
+### Monitor Run Status
+
+The Run class provides methods to track transformation progress and access results:
+
+```typescript
+// Get latest run status
+await run.get();
+console.log(run.status); // 'SUCCEEDED', 'FAILED', etc.
+
+// Access run metadata
+console.log(run.metadata);
+
+// Get transformation output with pagination
+const output = await run.getSchemaTransformerOutput(1, 50);
+if (output) {
+  console.log("Transformed items:", output.mapped_data.items);
+  console.log("Validation errors:", output.errors);
 }
-
-const sourceData = [
-    { first_name: "John", last_name: "Doe", nickname: "JDoe" },
-    { first_name: "Jane", last_name: "Smith", nickname: "JSmith" }
-]
-```
-
-Create a new pipeline and map data.
-
-```ts
-import { Lume } from '@lume-ai/typescript-sdk';
-
-const lume: Lume = new Lume('api_key');
-
-// create a new pipeline
-const pipeline = await lume.PipelineService.createPipeline({
-    name: 'user_normalization',
-    description: 'Mapping from API user data to internal schema.',
-    target_schema: targetSchema,
-    sample_data: sourceData,
-});
-
-// get the first run
-const run = await pipeline.getRun(0, ['mappings']);
-
-// get the mappings
-const mappings: Mapping[] = run.mappings.items;
-
-```
-
-Edit a mapper
-
-```ts
-
-// create a new mapper version with edits
-const mapper = await pipeline.createMapper({
-    field_edits: [{
-        field_name: 'first_name',
-        transformation: {
-            extract: 'nickname',
-        },
-    }],
-    sample_data: sourceData,
-});
-
-// get the first run by a mapper version
-const run = await pipeline.getRun(0, ['mappings'], mapper.version);
-
-const mappings: Mapping[] = run.mappings.items;  // Mappings can be inspected to verify edits are correct.
-
-// apply the new edits
-await pipeline.update({
-    mapper_version: mapper.id,
-})
-
 ```
 
 ## Documentation

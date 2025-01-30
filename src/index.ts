@@ -1,37 +1,86 @@
 // services_v3/Lume.ts
 
 // include interface models
-import { Pipeline, PipelineSimple, PipelineClone, TargetSchema, TargetSchemaCreate, TargetSchemaUpdate, Status, Mapper, Run, Mapping, Schema, HTTPExceptionError, IncludeResource, ManifestItem, Lookup, Transformation, Page } from './models/index';
 
-import { ApiClient } from './services/ApiClient';
-import { PipelineService } from './services/PipelineService';
-import { TargetSchemaService } from './services/TargetSchemaService';
-import { Mapper as MapperClass } from './services/Mapper';
-import { Run as RunClass } from './services/Run';
-import { Pipeline as PipelineClass } from './services/Pipelines';
+import {
+  Flow,
+  CreateFlowDto,
+  Run,
+  CreateRunDto,
+  CreateDataJoinRunDto,
+} from "./models/flow";
+import { Page } from "./models/models";
+import { Schema, TargetSchema } from "./models/schema";
+import { Steps, BaseModel } from "./models/shared";
+import {
+  SchemaTransformer,
+  SchemaTransformerInput,
+  SchemaTransformerOutput,
+  SchemaTransformerTargetField,
+} from "./models/schemaTransform";
+import { Status } from "./models/status";
+
+import { ApiClient } from "./services/ApiClient";
+import { FlowService } from "./services/FlowService";
+
 // Import other services as they are created
 // import { AnotherService } from './AnotherService';
-const PROD_ENDPOINT = "https://api.lume.ai/v2";
+import { Flow as FlowClass } from "./services/Flows";
+import { Run as RunClass } from "./services/Run";
+const PROD_ENDPOINT = "https://schema.lume-terminus.com";
 
+/**
+ * Lume AI TypeScript SDK
+ * Main entry point for interacting with the Lume AI API.
+ *
+ * @example
+ * ```typescript
+ * import { Lume } from '@lume-ai/typescript-sdk';
+ *
+ * const lume = new Lume('your-api-key');
+ * const flow = await lume.flowService.createFlow({
+ *   name: 'My Flow',
+ *   description: 'Data transformation flow',
+ *   target_schema: mySchema,
+ *   tags: ['production']
+ * });
+ * ```
+ */
 export class Lume {
-  public pipelineService: PipelineService;
-  public targetSchemaService: TargetSchemaService;
+  public flowService: FlowService;
   // public anotherService: AnotherService;
 
   private apiClient: ApiClient;
 
   /**
-   * Initializes the Lume SDK with the provided API key and base URL.
-   * @param apiKey Your Lume API key.
-   * @param baseURL The base URL for the Lume API.
+   * Initializes the Lume SDK.
+   * @param apiKey - Your Lume API authentication key
+   * @param baseURL - Optional custom API endpoint (defaults to production)
    */
   constructor(apiKey: string, baseURL: string = PROD_ENDPOINT) {
     this.apiClient = new ApiClient(apiKey, baseURL);
-    this.pipelineService = new PipelineService(this.apiClient);
-    this.targetSchemaService = new TargetSchemaService(this.apiClient);
+    this.flowService = new FlowService(this.apiClient);
     // Initialize other services similarly
     // this.anotherService = new AnotherService(this.apiClient);
   }
 }
 
-export {PipelineClass, MapperClass, RunClass, Pipeline, PipelineSimple, PipelineClone, TargetSchema, TargetSchemaCreate, TargetSchemaUpdate, Mapper, Run, Mapping, Schema, HTTPExceptionError, IncludeResource, ManifestItem, Lookup, Transformation, Page, Status };
+export {
+  FlowClass,
+  RunClass,
+  Flow,
+  Run,
+  CreateFlowDto,
+  CreateRunDto,
+  CreateDataJoinRunDto,
+  Page,
+  Schema,
+  TargetSchema,
+  Steps,
+  BaseModel,
+  SchemaTransformer,
+  SchemaTransformerInput,
+  SchemaTransformerOutput,
+  SchemaTransformerTargetField,
+  Status,
+};
