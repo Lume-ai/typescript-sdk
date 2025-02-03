@@ -27,8 +27,7 @@ import { FlowService } from "./services/FlowService";
 // import { AnotherService } from './AnotherService';
 import { Flow as FlowClass } from "./services/Flows";
 import { Run as RunClass } from "./services/Run";
-const PROD_ENDPOINT = "https://schema.lume-terminus.com";
-
+const PROD_ENDPOINT = "https://api.lume-terminus.com";
 /**
  * Lume AI TypeScript SDK
  * Main entry point for interacting with the Lume AI API.
