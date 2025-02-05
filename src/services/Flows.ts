@@ -10,6 +10,7 @@ import {
   SchemaTransformerInput,
   SchemaTransformerOutput,
 } from "../models/schemaTransform";
+import { Page } from "../models/models";
 
 //export type PublicPipeline = Omit<Pipeline, 'apiClient'>;
 
@@ -134,7 +135,6 @@ export class Flow {
    */
   public async getRuns(): Promise<Run[] | undefined> {
     const response = await this.apiClient.get<Run[]>(`/flows/${this.id}/runs`);
-    console.log("GETRUNS", response);
     if (!Array.isArray(response)) {
       return undefined;
     }
@@ -154,25 +154,46 @@ export class Flow {
 
   /**
    * Processes new data through this flow
+   * @param sourceData The source data to process
+   * @param page The page number (1-based indexing)
+   * @param size The number of items per page
+   * @returns Paginated array of processed data items
    */
-  public async process(sourceData: any[]): Promise<any[]> {
+  public async process(
+    sourceData: any[],
+    page: number = 1,
+    size: number = 50
+  ): Promise<Page<any>> {
     const run = await this.createRun({ source_data: sourceData }, true);
-    return this.getRunResults(run);
+    return this.getRunResults(run, page, size);
   }
 
   /**
-   * Gets results from a specific run
+   * Gets results from a specific run with pagination support
+   * @param run The run to get results from
+   * @param page The page number (1-based indexing)
+   * @param size The number of items per page
+   * @returns Paginated array of mapped data items
    */
-  private async getRunResults(run: Run): Promise<any[]> {
-    const output = await run.getSchemaTransformerOutput();
-    return output?.mapped_data.items || [];
+  private async getRunResults(
+    run: Run,
+    page: number = 1,
+    size: number = 50
+  ): Promise<Page<any>> {
+    const output = await run.getSchemaTransformerOutput(page, size);
+    return output?.mapped_data || { items: [], total: 0 };
   }
 
   /**
    * Gets the results from the most recent successful run
-   * @returns The mapped data items or null if no successful runs exist
+   * @param page The page number (1-based indexing)
+   * @param size The number of items per page
+   * @returns The paginated results from the most recent successful run
    */
-  public async getLatestRunResults(): Promise<any[] | null> {
+  public async getLatestRunResults(
+    page: number = 1,
+    size: number = 50
+  ): Promise<Page<any> | null> {
     const runs = await this.getRuns();
     if (!runs?.length) return null;
 
@@ -191,6 +212,6 @@ export class Flow {
     const run = await this.getRun(latestSuccessfulRun.id);
     if (!run) return null;
 
-    return this.getRunResults(run);
+    return this.getRunResults(run, page, size);
   }
 }

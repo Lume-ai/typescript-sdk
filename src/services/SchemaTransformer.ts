@@ -108,8 +108,6 @@ export class SchemaTransformer {
       }
     );
 
-    console.log("UPDATED DATA", updatedData);
-
     // Update instance properties with new data
     this.type = updatedData.type;
     this.status = updatedData.status;
