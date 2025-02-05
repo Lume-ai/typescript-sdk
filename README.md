@@ -89,10 +89,50 @@ const flow = await lume.flowService.createAndRunFlow(
 
 // Process more data with existing flow
 const flowId = "existing-flow-id";
-const existingFlow = await lume.flowService.getFlow(flowId); // can also get by flow name
+const existingFlow = await lume.flowService.getFlow(flowId);
 const results = await existingFlow.process(newData);
 
-// use mapped data results, which includes the transformed data and any errors, paginated.
+// use mapped data results page
+```
+
+## Example of fetching results with pagination
+
+**Note:** While the SDK provides paginated access to results, we recommend processing data page by page for large datasets. The following example shows how you could fetch all results:
+
+```typescript
+// Helper function - not part of the SDK
+async function getAllResults(flow) {
+  const pageSize = 50;
+  let currentPage = 1;
+  let allResults = [];
+
+  while (true) {
+    const paginatedResults = await flow.getLatestRunResults(
+      currentPage,
+      pageSize
+    );
+
+    if (!paginatedResults?.items || paginatedResults.items.length === 0) {
+      break; // No more results to fetch
+    }
+
+    allResults = [...allResults, ...paginatedResults.items];
+
+    // If we have total pages info and we've reached the last page, stop
+    if (paginatedResults.pages && currentPage >= paginatedResults.pages) {
+      break;
+    }
+
+    currentPage++;
+  }
+
+  return allResults;
+}
+
+// Usage
+const flow = await lume.flowService.getFlow(flowId);
+const allResults = await getAllResults(flow);
+console.log(`Retrieved ${allResults.length} total items`);
 ```
 
 ### Monitor Run Status
@@ -111,6 +151,7 @@ console.log(run.metadata);
 const output = await run.getSchemaTransformerOutput(1, 50);
 if (output) {
   console.log("Transformed items:", output.mapped_data.items);
+  console.log("Total items:", output.mapped_data.total);
   console.log("Validation errors:", output.errors);
 }
 ```
