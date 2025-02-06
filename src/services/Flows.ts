@@ -175,7 +175,7 @@ export class Flow {
    * @param size The number of items per page
    * @returns Paginated array of mapped data items
    */
-  private async getRunResults(
+  public async getRunResults(
     run: Run,
     page: number = 1,
     size: number = 50
