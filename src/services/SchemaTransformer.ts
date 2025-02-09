@@ -1,24 +1,18 @@
 import { Status } from "../models/status";
 import {
+  SchemaTransformer as SchemaTransformerData,
   SchemaTransformerInput,
   SchemaTransformerOutput,
   SchemaTransformerTargetField,
-  SchemaTransformer as SchemaTransformerData,
 } from "../models/schemaTransform";
 import { ApiClient } from "./ApiClient";
 
+/**
+ * INTERNAL/PRIVATE to handle the "schema_transform" step.
+ * The user never calls SchemaTransformer directly.
+ */
 export class SchemaTransformer {
-  // edit?: {
-  //   id: string
-  //   status: TargetFieldStatus
-  // }
-  // input: Input
-  // output: SchemaTransformerOutput
-  // target_fields: TargetField[]
-  public edit?: {
-    id: string;
-    status: Status;
-  };
+  public edit?: { id: string; status: Status };
   public input: SchemaTransformerInput;
   public output: SchemaTransformerOutput;
   public target_fields: SchemaTransformerTargetField[];
@@ -33,6 +27,7 @@ export class SchemaTransformer {
   public name: string;
 
   private apiClient!: ApiClient;
+
   constructor(
     apiClient: ApiClient,
     id: string,
@@ -46,32 +41,26 @@ export class SchemaTransformer {
     target_fields: SchemaTransformerTargetField[],
     flow_id: string,
     name: string,
-    edit?: {
-      id: string;
-      status: Status;
-    }
+    edit?: { id: string; status: Status }
   ) {
-    // Define 'apiClient' as a non-enumerable property
     Object.defineProperty(this, "apiClient", {
       value: apiClient,
-      enumerable: false, // Makes the property non-enumerable
-      writable: true, // Allows the property to be modified if needed
-      configurable: true, // Allows the property to be reconfigured or deleted
+      enumerable: false,
+      writable: true,
+      configurable: true,
     });
-
-    // Define 'pipeline_id' as a non-enumerable property
     Object.defineProperty(this, "id", {
       value: id,
-      enumerable: false, // Makes the property non-enumerable
-      writable: true, // Allows the property to be modified if needed
-      configurable: true, // Allows the property to be reconfigured or deleted
+      enumerable: false,
+      writable: true,
+      configurable: true,
     });
 
-    this.user_id = user_id;
     this.type = type;
     this.status = status;
     this.created_at = created_at;
     this.updated_at = updated_at;
+    this.user_id = user_id;
     this.input = input;
     this.output = output;
     this.target_fields = target_fields;
@@ -81,14 +70,23 @@ export class SchemaTransformer {
   }
 
   /**
-   * Refreshes the SchemaTransformer instance with the latest data from the API.
+   * Refreshes the schema transformer details with the latest data from the API,
+   * including the output (mapped_data, errors, etc.).
    */
   public async get(
     options: { page?: number; size?: number } = {},
     revalidate?: boolean
   ): Promise<void> {
     const { page = 1, size = 50 } = options;
+    const headers = revalidate
+      ? {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
+        }
+      : {};
 
+    // GET /schema_transformers/{this.id}?page=X&size=Y&validation=true&target_fields=false
     const updatedData = await this.apiClient.get<SchemaTransformer>(
       `/schema_transformers/${this.id}`,
       {
@@ -98,17 +96,10 @@ export class SchemaTransformer {
           validation: true,
           target_fields: false,
         },
-        headers: revalidate
-          ? {
-              "Cache-Control": "no-cache, no-store, must-revalidate",
-              Pragma: "no-cache",
-              Expires: "0",
-            }
-          : {},
+        headers,
       }
     );
 
-    // Update instance properties with new data
     this.type = updatedData.type;
     this.status = updatedData.status;
     this.created_at = updatedData.created_at;
@@ -122,7 +113,9 @@ export class SchemaTransformer {
     this.name = updatedData.name;
   }
 
-  // get just the mapper data
+  /**
+   * Returns the raw data model, if needed internally for debugging.
+   */
   public async getValues(): Promise<SchemaTransformerData> {
     return {
       id: this.id,
@@ -131,12 +124,11 @@ export class SchemaTransformer {
       created_at: this.created_at,
       updated_at: this.updated_at,
       user_id: this.user_id,
+      flow_id: this.flow_id,
+      edit: this.edit,
       input: this.input,
       output: this.output,
       target_fields: this.target_fields,
-      edit: this.edit,
-      name: this.name,
-      flow_id: this.flow_id,
     };
   }
 }

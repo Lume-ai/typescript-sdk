@@ -25,7 +25,7 @@ import { FlowService } from "./services/FlowService";
 
 // Import other services as they are created
 // import { AnotherService } from './AnotherService';
-import { Flow as FlowClass } from "./services/Flows";
+import { Flow as FlowClass } from "./services/Flow";
 import { Run as RunClass } from "./services/Run";
 const PROD_ENDPOINT = "https://api.lume-terminus.com";
 /**

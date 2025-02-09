@@ -2,6 +2,7 @@ import { Schema } from "./schema";
 import { BaseModel, Steps } from "./shared";
 
 export interface Flow extends BaseModel {
+  name: string;
   version: number;
   tags: string[];
   description: string;
