@@ -147,7 +147,8 @@ export class Flow {
       items: response.items.map((runData) => new Run(this.apiClient, runData, this.id)),
       total: response.total,
       page,
-      size
+      size,
+      pages: response.pages
     };
   }
   

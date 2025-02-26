@@ -137,7 +137,8 @@ export class FlowService {
       items: response.items.map((flow) => new Flow(this.apiClient, flow)),
       total: response.total,
       page,
-      size
+      size,
+      pages: response.pages
     };
   }
 
@@ -159,7 +160,8 @@ export class FlowService {
       items: response.items.map((flow) => new Flow(this.apiClient, flow)),
       total: response.total,
       page,
-      size
+      size,
+      pages: response.pages
     };
   }
   
