@@ -1,4 +1,5 @@
-import { Schema } from "./schema";
+import { Schema } from "./Schema";
+import { BoolFilter, TagFilter } from "./Tags";
 import { BaseModel, Steps } from "./shared";
 
 export interface Flow extends BaseModel {
@@ -14,6 +15,17 @@ export interface CreateFlowDto {
   description: string;
   target_schema: Schema;
   tags: string[];
+}
+
+export interface SearchFlowsDto {
+  name?: string;
+  tags_filter?: BoolFilter<TagFilter>;
+}
+
+export interface SearchRunsDto {
+  name?: string;
+  tags_filter?: BoolFilter<TagFilter>;
+  version_id?: string;
 }
 
 export interface Run extends BaseModel {

@@ -1,6 +1,7 @@
 import { ApiClient } from "./ApiClient";
 import { Flow } from "./Flow";
-import { CreateFlowDto, CreateRunDto, Flow as FlowData } from "../models/flow";
+import { CreateFlowDto, CreateRunDto, SearchFlowsDto, Flow as FlowData } from "../models/flow";
+import { Page } from "../models/models";
 const throat = require("throat");
 import { FlowError } from "../models/LumeError";
 
@@ -121,4 +122,45 @@ export class FlowService {
       throw new FlowError("Failed to create flow.", err);
     }
   }
+
+  /**
+   * Retrieves all flows.
+   */
+  public async getFlows(page: number = 1, size: number = 50): Promise<Page<Flow>> {
+    const response = await this.apiClient.get<Page<FlowData>>("/flows", {
+      params: {
+        page,
+        size
+      }
+    });
+    return {
+      items: response.items.map((flow) => new Flow(this.apiClient, flow)),
+      total: response.total,
+      page,
+      size
+    };
+  }
+
+  /**
+   * Searches for flows by name or tags_filter.
+   */
+  public async searchFlows(
+    searchDto: SearchFlowsDto,
+    page: number = 1,
+    size: number = 50
+  ): Promise<Page<Flow>> {
+    const response = await this.apiClient.post<Page<FlowData>>("/flows/search", searchDto, {
+      params: {
+        page, 
+        size
+      }
+    });
+    return {
+      items: response.items.map((flow) => new Flow(this.apiClient, flow)),
+      total: response.total,
+      page,
+      size
+    };
+  }
+  
 }

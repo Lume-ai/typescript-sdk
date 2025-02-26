@@ -5,12 +5,14 @@
 import {
   Flow,
   CreateFlowDto,
+  SearchFlowsDto,
+  SearchRunsDto,
   Run,
   CreateRunDto,
   CreateDataJoinRunDto,
 } from "./models/flow";
 import { Page } from "./models/models";
-import { Schema, TargetSchema } from "./models/schema";
+import { Schema, TargetSchema } from "./models/Schema";
 import { Steps, BaseModel } from "./models/shared";
 import {
   SchemaTransformer,
@@ -70,6 +72,8 @@ export {
   Flow,
   Run,
   CreateFlowDto,
+  SearchFlowsDto,
+  SearchRunsDto,
   CreateRunDto,
   CreateDataJoinRunDto,
   Page,

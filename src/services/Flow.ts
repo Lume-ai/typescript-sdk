@@ -1,5 +1,5 @@
 import { ApiClient } from "./ApiClient";
-import { CreateRunDto, Flow as FlowData } from "../models/flow";
+import { CreateRunDto, SearchRunsDto, Flow as FlowData } from "../models/flow";
 import { Run } from "./Run";
 import { Status } from "../models/status";
 import { Steps } from "../models/shared";
@@ -128,6 +128,29 @@ export class Flow {
       return undefined;
     }
   }
+
+  /**
+   * Searches for runs by name, tags_filter, and version_id
+   */
+  public async searchRuns(
+    searchDto: SearchRunsDto,
+    page: number = 1,
+    size: number = 50
+  ): Promise<Page<Run>> {
+    const response = await this.apiClient.post<Page<Run>>(`/flows/${this.id}/runs/search`, searchDto, {
+      params: {
+        page,
+        size
+      }
+    });
+    return {
+      items: response.items.map((runData) => new Run(this.apiClient, runData, this.id)),
+      total: response.total,
+      page,
+      size
+    };
+  }
+  
 
   /**
    * High-level method: processes new data through this flow,
