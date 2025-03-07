@@ -97,7 +97,7 @@ export class Flow {
       const response = await this.apiClient.get<any>(`/flows/${this.id}`, {
         params: { run_id },
       });
-      return new Run(this.apiClient, response, this.id);
+      return new Run(this.apiClient, response, this.id, run_id);
     } catch (err: any) {
       // Could be 404 or something else
       return undefined;
