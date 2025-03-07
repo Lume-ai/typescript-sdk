@@ -29,7 +29,7 @@ export class Run {
   public runId?: string;
   public file_name?: string;
 
-  constructor(apiClient: ApiClient, runData: any, flow_id: string) {
+  constructor(apiClient: ApiClient, runData: any, flow_id: string, run_id?: string) {
     Object.defineProperty(this, "apiClient", {
       value: apiClient,
       enumerable: false,
@@ -43,7 +43,7 @@ export class Run {
       configurable: true,
     });
 
-    this.id = runData.id;
+    this.id = run_id ?? runData.id;
     this.user_id = runData.user_id;
     this.type = runData.type;
     this.flow_id = flow_id;
