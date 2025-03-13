@@ -59,7 +59,7 @@ export class Flow {
       this.created_at = flowData.created_at;
       this.updated_at = flowData.updated_at;
     } catch (err: any) {
-      throw new FlowError(err.response?.data?.detail ?? err.response?.data?.message ?? err.message ?? `Failed to refresh flow with ID ${this.id}`, err);
+      throw new FlowError(err, `Failed to refresh flow with ID ${this.id}`, this.id);
     }
   }
 
