@@ -67,12 +67,6 @@ export class Run {
       await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
       await this.get(); // refresh run status
     }
-    if (this.status === Status.FAILED || this.status === Status.CRASHED) {
-      throw new RunError(`Run ${this.id} ended in ${this.status}`, {
-        runId: this.id,
-        status: this.status,
-      });
-    }
   }
 
   /**
@@ -95,7 +89,7 @@ export class Run {
       this.metadata = response.metadata ?? {};
       this.steps = response.steps;
     } catch (err: any) {
-      throw new RunError(`Failed to refresh run ${this.id}`, err);
+      throw new RunError(err, `Failed to refresh run ${this.id}`, this.id, this.flow_id);
     }
   }
 
@@ -165,8 +159,10 @@ export class Run {
     } catch (err: any) {
       // If there's a transform-level error, throw a RunError with details:
       throw new RunError(
+        err,
         `Failed to retrieve transformation output from run ${this.id}`,
-        err
+        this.id,
+        this.flow_id
       );
     }
   }

@@ -9,6 +9,7 @@ import axios, {
 } from "axios";
 import qs from "qs";
 import { HTTPExceptionError } from "../models/Error";
+import { retryWithBackoff } from "../utils/retryUtils";
 /**
  * Base service class providing common functionality for other services.
  */
@@ -69,16 +70,6 @@ export class ApiClient {
             code: -1,
             message: "Network error - please check your internet connection",
           });
-        case "ERR_BAD_REQUEST":
-          return Promise.reject({
-            code: 400,
-            message: error.response?.data?.detail || "Invalid request",
-          });
-        case "ERR_BAD_RESPONSE":
-          return Promise.reject({
-            code: 500,
-            message: "Server returned an invalid response",
-          });
         case "ERR_INVALID_URL":
           return Promise.reject({
             code: -2,
@@ -94,7 +85,6 @@ export class ApiClient {
           });
       }
     }
-
     if (error.response) {
       // Extract status and message for known errors
       const code = error.response.status;
@@ -134,7 +124,7 @@ export class ApiClient {
     if (baseURLOverride) {
       finalConfig.baseURL = baseURLOverride;
     }
-    return this.httpClient.get<T>(url, finalConfig).then((res) => res.data);
+    return retryWithBackoff(() => this.httpClient.get<T>(url, finalConfig).then((res) => res.data));
   }
 
   public async post<T>(
@@ -147,9 +137,7 @@ export class ApiClient {
     if (baseURLOverride) {
       finalConfig.baseURL = baseURLOverride;
     }
-    return this.httpClient
-      .post<T>(url, data, finalConfig)
-      .then((res) => res.data);
+    return retryWithBackoff(() => this.httpClient.post<T>(url, data, finalConfig).then((res) => res.data));
   }
 
   public async patch<T>(
@@ -162,9 +150,7 @@ export class ApiClient {
     if (baseURLOverride) {
       finalConfig.baseURL = baseURLOverride;
     }
-    return this.httpClient
-      .patch<T>(url, data, finalConfig)
-      .then((res) => res.data);
+    return retryWithBackoff(() => this.httpClient.patch<T>(url, data, finalConfig).then((res) => res.data));
   }
 
   public async delete<T>(
@@ -176,6 +162,6 @@ export class ApiClient {
     if (baseURLOverride) {
       finalConfig.baseURL = baseURLOverride;
     }
-    return this.httpClient.delete<T>(url, finalConfig).then((res) => res.data);
+    return retryWithBackoff(() => this.httpClient.delete<T>(url, finalConfig).then((res) => res.data));
   }
 }

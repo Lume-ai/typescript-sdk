@@ -39,42 +39,7 @@ export class FlowService {
         flowObj = await this.apiClient.post<FlowData>("/flows", flowData);
       } catch (err: any) {
         // More specific error messages based on the type of error
-        if (!err.response) {
-          throw new FlowError(
-            "Network error while creating flow - please check your connection and API endpoint configuration.",
-            err
-          );
-        }
-
-        if (err.code === 401) {
-          throw new FlowError(
-            "Authentication failed - please check your API key.",
-            err
-          );
-        }
-
-        if (err.code === 404) {
-          throw new FlowError(
-            "API endpoint not found - please check your API configuration.",
-            err
-          );
-        }
-
-        // If we have a response but it's an error
-        if (err.response?.data) {
-          throw new FlowError(
-            `Failed to create flow: ${
-              err.response.data.message || err.message
-            }`,
-            err
-          );
-        }
-
-        // Fallback
-        throw new FlowError(
-          "Failed to create flow - please check your configuration and try again.",
-          err
-        );
+        throw new FlowError(err, "Failed to create flow.");
       }
 
       const flow = new Flow(this.apiClient, flowObj);
@@ -83,7 +48,7 @@ export class FlowService {
       try {
         await flow.createRun(runData, wait);
       } catch (err: any) {
-        throw new FlowError("Failed to create initial run for new flow.", err);
+        throw err;
       }
 
       return flow;
@@ -106,7 +71,7 @@ export class FlowService {
       const flowData = await this.apiClient.get<FlowData>(`/flows/${id}`);
       return new Flow(this.apiClient, flowData);
     } catch (err: any) {
-      throw new FlowError(`Failed to retrieve flow ID: ${id}`, err);
+      throw new FlowError(err, `Failed to retrieve flow ID: ${id}`, id);
     }
   }
 
@@ -119,7 +84,7 @@ export class FlowService {
       const flowData = await this.apiClient.post<FlowData>("/flows", data);
       return new Flow(this.apiClient, flowData);
     } catch (err: any) {
-      throw new FlowError("Failed to create flow.", err);
+      throw new FlowError(err, "Failed to create flow.");
     }
   }
 
