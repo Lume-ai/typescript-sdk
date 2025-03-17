@@ -8,7 +8,7 @@ export async function retryWithBackoff<T>(
       return await operation(); // Try executing the request
     } catch (error: any) {
       // List of error codes that should trigger a retry
-      const retryableErrorCodes = [408, 429, 500, 502, 503, 504]; // Timeout, rate limit, server errors
+      const retryableErrorCodes = [408, 429, 502, 503, 504]; // Timeout, rate limit, server errors
       const retryableNetworkErrors = ['ECONNRESET', 'ETIMEDOUT', 'ESOCKETTIMEDOUT', 'ECONNABORTED'];
       
       const shouldRetry = 
@@ -18,8 +18,7 @@ export async function retryWithBackoff<T>(
           // Axios error codes
           (error.code && retryableNetworkErrors.includes(error.code)) ||
           // Other timeout indicators
-          (error.code === 'ERR_NETWORK') ||
-          (error.message && error.message.includes('timeout'))
+          (error.code === 'ERR_NETWORK')
         );
       
       if (!shouldRetry) throw error; // Don't retry if conditions aren't met

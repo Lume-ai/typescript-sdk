@@ -45,12 +45,8 @@ export class FlowService {
       const flow = new Flow(this.apiClient, flowObj);
 
       // 2) Create initial run
-      try {
-        await flow.createRun(runData, wait);
-      } catch (err: any) {
-        throw err;
-      }
-
+      await flow.createRun(runData, wait);
+      
       return flow;
     };
 
@@ -67,12 +63,13 @@ export class FlowService {
    */
   public async getFlow(id: string): Promise<Flow> {
     if (!id) throw new Error("Flow ID is required");
+    let flowData: FlowData;
     try {
-      const flowData = await this.apiClient.get<FlowData>(`/flows/${id}`);
-      return new Flow(this.apiClient, flowData);
+      flowData = await this.apiClient.get<FlowData>(`/flows/${id}`);
     } catch (err: any) {
       throw new FlowError(err, `Failed to retrieve flow ID: ${id}`, id);
     }
+    return new Flow(this.apiClient, flowData);
   }
 
   /**
@@ -80,24 +77,30 @@ export class FlowService {
    * but you can still do `flow.createRun(...)` after.
    */
   public async createFlow(data: CreateFlowDto): Promise<Flow> {
+    let flowData: FlowData;
     try {
-      const flowData = await this.apiClient.post<FlowData>("/flows", data);
-      return new Flow(this.apiClient, flowData);
+      flowData = await this.apiClient.post<FlowData>("/flows", data);
     } catch (err: any) {
       throw new FlowError(err, "Failed to create flow.");
     }
+    return new Flow(this.apiClient, flowData);
   }
 
   /**
    * Retrieves all flows.
    */
   public async getFlows(page: number = 1, size: number = 50): Promise<Page<Flow>> {
-    const response = await this.apiClient.get<Page<FlowData>>("/flows", {
-      params: {
-        page,
-        size
+    let response: Page<FlowData>;
+    try {
+      response = await this.apiClient.get<Page<FlowData>>("/flows", {
+        params: {
+          page,
+          size
       }
     });
+    } catch (err: any) {
+      throw new FlowError(err, "Failed to retrieve flows.");
+    }
     return {
       items: response.items.map((flow) => new Flow(this.apiClient, flow)),
       total: response.total,
@@ -115,12 +118,17 @@ export class FlowService {
     page: number = 1,
     size: number = 50
   ): Promise<Page<Flow>> {
-    const response = await this.apiClient.post<Page<FlowData>>("/flows/search", searchDto, {
-      params: {
-        page, 
+    let response: Page<FlowData>;
+    try {
+      response = await this.apiClient.post<Page<FlowData>>("/flows/search", searchDto, {
+        params: {
+          page, 
         size
       }
     });
+    } catch (err: any) {
+      throw new FlowError(err, "Failed to search flows.");
+    }
     return {
       items: response.items.map((flow) => new Flow(this.apiClient, flow)),
       total: response.total,

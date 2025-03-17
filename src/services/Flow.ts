@@ -48,19 +48,20 @@ export class Flow {
    * Refreshes the flow's data from the API.
    */
   public async get(): Promise<void> {
+    let flowData: FlowData;
     try {
-      const flowData = await this.apiClient.get<FlowData>(`/flows/${this.id}`);
-      this.version = flowData.version;
-      this.tags = flowData.tags.map((tag) => `${tag.key}:${tag.value}`);
-      this.description = flowData.description;
-      this.steps = flowData.steps;
-      this.name = flowData.name;
-      this.status = flowData.status;
-      this.created_at = flowData.created_at;
-      this.updated_at = flowData.updated_at;
+      flowData = await this.apiClient.get<FlowData>(`/flows/${this.id}`);
     } catch (err: any) {
       throw new FlowError(err, `Failed to refresh flow with ID ${this.id}`, this.id);
     }
+    this.version = flowData.version;
+    this.tags = flowData.tags.map((tag) => `${tag.key}:${tag.value}`);
+    this.description = flowData.description;
+    this.steps = flowData.steps;
+    this.name = flowData.name;
+    this.status = flowData.status;
+    this.created_at = flowData.created_at;
+    this.updated_at = flowData.updated_at;
   }
 
   /**
@@ -92,23 +93,26 @@ export class Flow {
    * Fetches a specific run by run ID from this flow.
    */
   public async getRun(run_id: string): Promise<Run> {
+    let response: any;
     try {
       // The server expects run_id as a param for the same /flows/{id} endpoint.
-      const response = await this.apiClient.get<any>(`/flows/${this.id}`, {
+      response = await this.apiClient.get<any>(`/flows/${this.id}`, {
         params: { run_id },
       });
-      return new Run(this.apiClient, response, this.id, run_id);
     } catch (err: any) {
       throw new RunError(err, `Failed to get run ${run_id} for flow ${this.id}`, run_id, this.id);
     }
+    return new Run(this.apiClient, response, this.id, run_id);
+    
   }
 
   /**
    * Fetches all runs for this flow.
    */
-  public async getRuns(page: number = 1, size: number = 50): Promise<Page<any>> {
+  public async getRuns(page: number = 1, size: number = 50): Promise<Page<Run>> {
+    let response: Page<Run>;
     try {
-      const response = await this.apiClient.get<Page<any>>(
+      response = await this.apiClient.get<Page<Run>>(
         `/flows/${this.id}/runs`,
         {
           params: {
@@ -117,16 +121,17 @@ export class Flow {
           }
         }
       );
-      return {
-        items: response.items.map((runData) => new Run(this.apiClient, runData, this.id)),
-        total: response.total,
-        page,
-        size,
-        pages: response.pages
-      };
     } catch (err: any) {
       throw new FlowError(err, `Failed to get runs for flow ${this.id}`, this.id);
     }
+    return {
+      items: response.items.map((runData) => new Run(this.apiClient, runData, this.id)),
+      total: response.total,
+      page,
+      size,
+      pages: response.pages
+    };
+    
   }
 
   /**
@@ -137,12 +142,17 @@ export class Flow {
     page: number = 1,
     size: number = 50
   ): Promise<Page<Run>> {
-    const response = await this.apiClient.post<Page<Run>>(`/flows/${this.id}/runs/search`, searchDto, {
-      params: {
+    let response: Page<Run>;
+    try {
+      response = await this.apiClient.post<Page<Run>>(`/flows/${this.id}/runs/search`, searchDto, {
+        params: {
         page,
         size
       }
     });
+    } catch (err: any) {
+      throw new FlowError(err, `Failed to search runs for flow ${this.id}`, this.id);
+    }
     return {
       items: response.items.map((runData) => new Run(this.apiClient, runData, this.id)),
       total: response.total,
@@ -163,13 +173,9 @@ export class Flow {
     size: number = 50
   ): Promise<Page<any>> {
     // 1) Create and wait for run
-    try {
-      const run = await this.createRun({ source_data: sourceData }, true);
-      // 2) Use a private or internal method to retrieve the final data from the run
-      return this.getRunResults(run, page, size);
-    } catch (err: any) {
-      throw err;
-    }
+    const run = await this.createRun({ source_data: sourceData }, true);
+    // 2) Use a private or internal method to retrieve the final data from the run
+    return this.getRunResults(run, page, size);
   }
 
   /**
@@ -197,13 +203,8 @@ export class Flow {
     page: number = 1,
     size: number = 50
   ): Promise<Page<any>> {
-    try {
-      const run = await this.getRun(runId);
-      return this.getRunResults(run, page, size);
-    } catch (err: any) {
-      throw err;
-    }
-    
+    const run = await this.getRun(runId);
+    return this.getRunResults(run, page, size);
   }
 
   /**

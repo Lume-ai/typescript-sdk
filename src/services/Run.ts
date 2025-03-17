@@ -74,23 +74,25 @@ export class Run {
    * (Your existing code uses the same endpoint to fetch flow data with run_id param.)
    */
   public async get(): Promise<void> {
+    let response: any;
     try {
-      const response = await this.apiClient.get<any>(`/flows/${this.flow_id}`, {
+      response = await this.apiClient.get<any>(`/flows/${this.flow_id}`, {
         params: { run_id: this.id },
       });
-      // The response is a Flow, so we find the run portion.
-      // Depending on your backend, you might get the entire Flow object including steps.
-      // We'll assume the server returns just the run if run_id param is present.
-      this.user_id = response.user_id;
-      this.type = response.type;
-      this.status = response.status;
-      this.created_at = response.created_at;
-      this.updated_at = response.updated_at;
-      this.metadata = response.metadata ?? {};
-      this.steps = response.steps;
     } catch (err: any) {
+      console.log("ERROR", err);
       throw new RunError(err, `Failed to refresh run ${this.id}`, this.id, this.flow_id);
     }
+    // The response is a Flow, so we find the run portion.
+    // Depending on your backend, you might get the entire Flow object including steps.
+    // We'll assume the server returns just the run if run_id param is present.
+    this.user_id = response.user_id;
+    this.type = response.type;
+    this.status = response.status;
+    this.created_at = response.created_at;
+    this.updated_at = response.updated_at;
+    this.metadata = response.metadata ?? {};
+    this.steps = response.steps;
   }
 
   /**
@@ -151,19 +153,8 @@ export class Run {
       this.flow_id,
       this.metadata?.name ?? ""
     );
-
-    try {
       // This hits /schema_transformers/{transformer.id} with page & size.
       await transformer.get({ page, size });
       return transformer.output;
-    } catch (err: any) {
-      // If there's a transform-level error, throw a RunError with details:
-      throw new RunError(
-        err,
-        `Failed to retrieve transformation output from run ${this.id}`,
-        this.id,
-        this.flow_id
-      );
-    }
   }
 }
