@@ -6,7 +6,7 @@ import {
   SchemaTransformerTargetField,
 } from "../models/schemaTransform";
 import { ApiClient } from "./ApiClient";
-
+import { RunError } from "../models/LumeError";
 /**
  * INTERNAL/PRIVATE to handle the "schema_transform" step.
  * The user never calls SchemaTransformer directly.
@@ -87,9 +87,11 @@ export class SchemaTransformer {
       : {};
 
     // GET /schema_transformers/{this.id}?page=X&size=Y&validation=true&target_fields=false
-    const updatedData = await this.apiClient.get<SchemaTransformer>(
-      `/schema_transformers/${this.id}`,
-      {
+    let updatedData: SchemaTransformer;
+    try {
+      updatedData = await this.apiClient.get<SchemaTransformer>(
+        `/schema_transformers/${this.id}`,
+        {
         params: {
           page,
           size,
@@ -99,6 +101,9 @@ export class SchemaTransformer {
         headers,
       }
     );
+    } catch (err: any) {
+      throw new RunError(err, `Failed to refresh schema transformer run${this.id}`, this.id, this.flow_id);
+    }
 
     this.type = updatedData.type;
     this.status = updatedData.status;

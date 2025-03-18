@@ -5,16 +5,21 @@ import { BaseModel, Steps } from "./shared";
 export interface Flow extends BaseModel {
   name: string;
   version: number;
-  tags: string[];
+  tags: Tag[];
   description: string;
   steps: Steps[];
+} 
+
+export interface Tag {
+  key: string;
+  value: string;
 }
 
 export interface CreateFlowDto {
   name: string;
-  description: string;
+  description?: string;
   target_schema: Schema;
-  tags: string[];
+  tags?: Tag[];
 }
 
 export interface SearchFlowsDto {

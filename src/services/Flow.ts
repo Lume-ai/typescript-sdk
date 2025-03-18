@@ -4,7 +4,7 @@ import { Run } from "./Run";
 import { Status } from "../models/status";
 import { Steps } from "../models/shared";
 import { Page } from "../models/models";
-import { FlowError } from "../models/LumeError";
+import { FlowError, RunError } from "../models/LumeError";
 
 /**
  * Represents a data transformation Flow in Lume.
@@ -35,7 +35,7 @@ export class Flow {
     this.id = data.id;
     this.user_id = data.user_id;
     this.version = data.version;
-    this.tags = data.tags;
+    this.tags = data.tags.map((tag) => `${tag.key}:${tag.value}`);
     this.description = data.description;
     this.steps = data.steps;
     this.name = data.name;
@@ -48,19 +48,20 @@ export class Flow {
    * Refreshes the flow's data from the API.
    */
   public async get(): Promise<void> {
+    let flowData: FlowData;
     try {
-      const flowData = await this.apiClient.get<FlowData>(`/flows/${this.id}`);
-      this.version = flowData.version;
-      this.tags = flowData.tags;
-      this.description = flowData.description;
-      this.steps = flowData.steps;
-      this.name = flowData.name;
-      this.status = flowData.status;
-      this.created_at = flowData.created_at;
-      this.updated_at = flowData.updated_at;
+      flowData = await this.apiClient.get<FlowData>(`/flows/${this.id}`);
     } catch (err: any) {
-      throw new FlowError(`Failed to refresh flow with ID ${this.id}`, err);
+      throw new FlowError(err, `Failed to refresh flow with ID ${this.id}`, this.id);
     }
+    this.version = flowData.version;
+    this.tags = flowData.tags.map((tag) => `${tag.key}:${tag.value}`);
+    this.description = flowData.description;
+    this.steps = flowData.steps;
+    this.name = flowData.name;
+    this.status = flowData.status;
+    this.created_at = flowData.created_at;
+    this.updated_at = flowData.updated_at;
   }
 
   /**
@@ -78,7 +79,7 @@ export class Flow {
         data
       );
     } catch (err: any) {
-      throw new FlowError(`Failed to create run for flow ${this.id}`, err);
+      throw new FlowError(err, `Failed to create run for flow ${this.id}`, this.id);
     }
 
     const run = new Run(this.apiClient, newRunData, this.id);
@@ -91,42 +92,46 @@ export class Flow {
   /**
    * Fetches a specific run by run ID from this flow.
    */
-  public async getRun(run_id: string): Promise<Run | undefined> {
+  public async getRun(run_id: string): Promise<Run> {
+    let response: any;
     try {
       // The server expects run_id as a param for the same /flows/{id} endpoint.
-      const response = await this.apiClient.get<any>(`/flows/${this.id}`, {
+      response = await this.apiClient.get<any>(`/flows/${this.id}`, {
         params: { run_id },
       });
-      return new Run(this.apiClient, response, this.id, run_id);
     } catch (err: any) {
-      // Could be 404 or something else
-      return undefined;
+      throw new RunError(err, `Failed to get run ${run_id} for flow ${this.id}`, run_id, this.id);
     }
+    return new Run(this.apiClient, response, this.id, run_id);
+    
   }
 
   /**
    * Fetches all runs for this flow.
    */
-  public async getRuns(): Promise<Run[] | undefined> {
+  public async getRuns(page: number = 1, size: number = 50): Promise<Page<Run>> {
+    let response: Page<Run>;
     try {
-      const response = await this.apiClient.get<any[]>(
-        `/flows/${this.id}/runs`
+      response = await this.apiClient.get<Page<Run>>(
+        `/flows/${this.id}/runs`,
+        {
+          params: {
+            page,
+            size
+          }
+        }
       );
-      if (!Array.isArray(response)) {
-        return undefined;
-      }
-      return response.map((runData) => {
-        // Ensure steps are properly passed
-        const run = new Run(
-          this.apiClient,
-          { ...runData, steps: runData.steps || [] },
-          this.id
-        );
-        return run;
-      });
     } catch (err: any) {
-      return undefined;
+      throw new FlowError(err, `Failed to get runs for flow ${this.id}`, this.id);
     }
+    return {
+      items: response.items.map((runData) => new Run(this.apiClient, runData, this.id)),
+      total: response.total,
+      page,
+      size,
+      pages: response.pages
+    };
+    
   }
 
   /**
@@ -137,12 +142,17 @@ export class Flow {
     page: number = 1,
     size: number = 50
   ): Promise<Page<Run>> {
-    const response = await this.apiClient.post<Page<Run>>(`/flows/${this.id}/runs/search`, searchDto, {
-      params: {
+    let response: Page<Run>;
+    try {
+      response = await this.apiClient.post<Page<Run>>(`/flows/${this.id}/runs/search`, searchDto, {
+        params: {
         page,
         size
       }
     });
+    } catch (err: any) {
+      throw new FlowError(err, `Failed to search runs for flow ${this.id}`, this.id);
+    }
     return {
       items: response.items.map((runData) => new Run(this.apiClient, runData, this.id)),
       total: response.total,
@@ -194,9 +204,6 @@ export class Flow {
     size: number = 50
   ): Promise<Page<any>> {
     const run = await this.getRun(runId);
-    if (!run) {
-      throw new FlowError(`Run with ID ${runId} not found on flow ${this.id}`);
-    }
     return this.getRunResults(run, page, size);
   }
 
@@ -209,16 +216,10 @@ export class Flow {
     size: number = 50
   ): Promise<Page<any> | null> {
     const runs = await this.getRuns();
-    if (!runs?.length) return null;
-
-    // Sort runs by creation date (newest first)
-    const sortedRuns = runs.sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
+    if (runs?.total === 0) return null;
 
     // Find the most recent successful run
-    const latestSuccessfulRun = sortedRuns.find(
+    const latestSuccessfulRun = runs.items.find(
       (r) => r.status === Status.SUCCEEDED
     );
     if (!latestSuccessfulRun) return null;

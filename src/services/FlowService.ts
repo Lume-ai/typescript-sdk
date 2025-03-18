@@ -39,53 +39,14 @@ export class FlowService {
         flowObj = await this.apiClient.post<FlowData>("/flows", flowData);
       } catch (err: any) {
         // More specific error messages based on the type of error
-        if (!err.response) {
-          throw new FlowError(
-            "Network error while creating flow - please check your connection and API endpoint configuration.",
-            err
-          );
-        }
-
-        if (err.code === 401) {
-          throw new FlowError(
-            "Authentication failed - please check your API key.",
-            err
-          );
-        }
-
-        if (err.code === 404) {
-          throw new FlowError(
-            "API endpoint not found - please check your API configuration.",
-            err
-          );
-        }
-
-        // If we have a response but it's an error
-        if (err.response?.data) {
-          throw new FlowError(
-            `Failed to create flow: ${
-              err.response.data.message || err.message
-            }`,
-            err
-          );
-        }
-
-        // Fallback
-        throw new FlowError(
-          "Failed to create flow - please check your configuration and try again.",
-          err
-        );
+        throw new FlowError(err, "Failed to create flow.");
       }
 
       const flow = new Flow(this.apiClient, flowObj);
 
       // 2) Create initial run
-      try {
-        await flow.createRun(runData, wait);
-      } catch (err: any) {
-        throw new FlowError("Failed to create initial run for new flow.", err);
-      }
-
+      await flow.createRun(runData, wait);
+      
       return flow;
     };
 
@@ -102,12 +63,13 @@ export class FlowService {
    */
   public async getFlow(id: string): Promise<Flow> {
     if (!id) throw new Error("Flow ID is required");
+    let flowData: FlowData;
     try {
-      const flowData = await this.apiClient.get<FlowData>(`/flows/${id}`);
-      return new Flow(this.apiClient, flowData);
+      flowData = await this.apiClient.get<FlowData>(`/flows/${id}`);
     } catch (err: any) {
-      throw new FlowError(`Failed to retrieve flow ID: ${id}`, err);
+      throw new FlowError(err, `Failed to retrieve flow ID: ${id}`, id);
     }
+    return new Flow(this.apiClient, flowData);
   }
 
   /**
@@ -115,24 +77,30 @@ export class FlowService {
    * but you can still do `flow.createRun(...)` after.
    */
   public async createFlow(data: CreateFlowDto): Promise<Flow> {
+    let flowData: FlowData;
     try {
-      const flowData = await this.apiClient.post<FlowData>("/flows", data);
-      return new Flow(this.apiClient, flowData);
+      flowData = await this.apiClient.post<FlowData>("/flows", data);
     } catch (err: any) {
-      throw new FlowError("Failed to create flow.", err);
+      throw new FlowError(err, "Failed to create flow.");
     }
+    return new Flow(this.apiClient, flowData);
   }
 
   /**
    * Retrieves all flows.
    */
   public async getFlows(page: number = 1, size: number = 50): Promise<Page<Flow>> {
-    const response = await this.apiClient.get<Page<FlowData>>("/flows", {
-      params: {
-        page,
-        size
+    let response: Page<FlowData>;
+    try {
+      response = await this.apiClient.get<Page<FlowData>>("/flows", {
+        params: {
+          page,
+          size
       }
     });
+    } catch (err: any) {
+      throw new FlowError(err, "Failed to retrieve flows.");
+    }
     return {
       items: response.items.map((flow) => new Flow(this.apiClient, flow)),
       total: response.total,
@@ -150,12 +118,17 @@ export class FlowService {
     page: number = 1,
     size: number = 50
   ): Promise<Page<Flow>> {
-    const response = await this.apiClient.post<Page<FlowData>>("/flows/search", searchDto, {
-      params: {
-        page, 
+    let response: Page<FlowData>;
+    try {
+      response = await this.apiClient.post<Page<FlowData>>("/flows/search", searchDto, {
+        params: {
+          page, 
         size
       }
     });
+    } catch (err: any) {
+      throw new FlowError(err, "Failed to search flows.");
+    }
     return {
       items: response.items.map((flow) => new Flow(this.apiClient, flow)),
       total: response.total,
